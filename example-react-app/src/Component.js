@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Component = (props) => {
+const ExampleComponent = (props) => {
     const [isHey, setHey] = React.useState(true);
 
     return (
@@ -8,9 +8,11 @@ const Component = (props) => {
             <button onClick={()=>{setHey(!isHey)}}>
                 Click
             </button>
-            <h1>{(isHey) ? "Hey" : "Yo"}</h1>
+            <h1>
+                {(isHey) ? "Hey" : "Yo"}
+            </h1>
         </div>
     );
 }
 
-export default Component;
+export default ExampleComponent;

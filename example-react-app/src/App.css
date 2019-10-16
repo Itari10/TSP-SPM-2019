@@ -1,7 +1,12 @@
 .Header {
   text-align: center;
 }
-
+h1 {
+  margin-block-start: 0;
+}
+body {
+  margin: 0;
+}
 .App {
   background-color: rgb(142, 147, 253);
   width: 100%;

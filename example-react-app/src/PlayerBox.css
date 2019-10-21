@@ -1,5 +1,10 @@
-.playerBox {
+.player1 {
     background-color: rgb(7, 175, 17);
+    width: 50%;
+    height: 200px;
+}
+.player2 {
+    background-color: rgb(7, 75, 17);
     width: 50%;
     height: 200px;
 }

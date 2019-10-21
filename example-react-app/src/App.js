@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import PlayerBox from './PlayerBox';
+import Board from './Board';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       </div>
       <PlayerBox playerNumber="1" />
       <PlayerBox playerNumber="2" />
+      <Board />
     </div>
   );
 }

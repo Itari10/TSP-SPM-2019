@@ -1,5 +1,5 @@
 import React from 'react';
-import './Square.css';
+import '../Style/Square.css';
 
 /*
 Square should be aware of it's coordinates, whether or not it's selected and whether or not it's highlighted

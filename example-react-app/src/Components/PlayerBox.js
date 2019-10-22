@@ -1,5 +1,5 @@
 import React from 'react';
-import './PlayerBox.css';
+import '../Style/PlayerBox.css';
 
 const PlayerBox = (props) => {
     return (

@@ -1,36 +1,46 @@
 import React from 'react';
 import Square from './Square';
 
-const Board = (props) => {
-    let someList = [];
+let curY = 0;
+
+function boardRow(){
+    let rowToReturn = [8];
+
     for (let i = 0; i < 8; i++) {
-        someList.push(<Square />);
+        rowToReturn.push(<Square x = {i} y = {curY}/>);
     }
+    curY++;
+    return rowToReturn;
+}
+
+const Board = (props) => {
+    let entireBoard = [][8];
+
     return (
         <div className="board">
             <div className="row">
-                {someList}
+                {boardRow()}
             </div>
             <div className="row">
-                {someList}
+                {boardRow()}
             </div>
             <div className="row">
-                {someList}
+                {boardRow()}
             </div>
             <div className="row">
-                {someList}
+                {boardRow()}
             </div>
             <div className="row">
-                {someList}
+                {boardRow()}
             </div>
             <div className="row">
-                {someList}
+                {boardRow()}
             </div>
             <div className="row">
-                {someList}
+                {boardRow()}
             </div>
             <div className="row">
-                {someList}
+                {boardRow()}
             </div>
         </div>
     ); 

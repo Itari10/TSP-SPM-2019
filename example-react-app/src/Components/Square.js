@@ -8,9 +8,14 @@ const Square = (props) => {
     const [isSelected, setSelected] = React.useState(0);
     const [isHighlighted, setHighlighted] = React.useState(0);
 
+    function onClick() {
+    }
+
     return (
-        <button className="square"></button>
+        <button className="square" onClick={props.onclick}>
+            {props.y} {props.x}
+        </button>
     );
-}
+};
 
 export default Square;

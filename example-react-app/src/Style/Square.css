@@ -5,4 +5,7 @@
     background: url("../Assets/dog-png-images-download-10180-png-resources-with-transparent-dogpng-360_360.png");
     position: relative;
     background-size: 50px;
+
+    font-size: 14pt;
+    font-weight: bold;
 }

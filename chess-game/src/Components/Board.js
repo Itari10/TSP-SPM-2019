@@ -1,20 +1,41 @@
 import React from 'react';
 import Square from './Square';
 
-const entireBoard = [8][8];
 
-// uses a loop to add 8 Squares to the main board array
-// method is called once for every square in the row (8 total)
-// returns the given ROW that we're working on
-function addSquaresToRow(curY){
-    for (let i = 0; i < 8; i++) {
-        entireBoard[curY].push(<Square x = {i} y = {curY}/>);
-    }
-    return entireBoard[curY];
+var entireBoard = Array(8).fill(Array(8).fill(<Square/>));
+
+const Board = (props) => {
+    //return createBoard();
+
+    return (
+        <div className="board">
+            {generateRow(0)}
+            {generateRow(1)}
+            {generateRow(2)}
+            {generateRow(3)}
+            {generateRow(4)}
+            {generateRow(5)}
+            {generateRow(6)}
+            {generateRow(7)}
+        </div>
+    );
+};
+
+//stitches together the HTML elements that make up the board
+function createBoard(){
+    return(
+        <div className="board">
+            {() => {                                 // Nick if you can look at this...
+                for (let i = 0; i < 8; i++){         // I don't understand why it doesn't work
+                    generateRow(i)                   // it compiles but doesn't show the board
+                }                                    // if you uncomment line 8   -Joe
+            }}
+        </div>
+    );
 }
 
-// HELPER METHOD that creates a row of tile squares
-// method is called once for every row in the board (8 total)
+
+// Creates a row of board squares. Called once for each of the 8 rows on the board
 function generateRow(currentY){
     return(
         <div className="row">
@@ -23,50 +44,14 @@ function generateRow(currentY){
     );
 }
 
-// stitches together the HTML elements that make up the board
-function createBoard(){
-    var htmlElements = '<div className="board">';
-    for (let i = 0; i < 8; i++){
-        htmlElements += generateRow(i);
+// HELPER METHOD that adds squares to the primary board data structure
+// then returns the given row so it can be rendered.
+function addSquaresToRow(curY){
+    for (let i = 0; i < 8; i++) {
+        entireBoard[curY][i] = <Square x = {i} y = {curY}/>;
     }
-    htmlElements += '</div>';
-    return htmlElements;
+    return entireBoard[curY];
 }
 
-
-const Board = (props) => {
-    return createBoard();
-
-
-    // return (
-    //     <div className="board">
-    //         <div className="row">
-    //             {addSquaresToRow(0)}
-    //         </div>
-    //         <div className="row">
-    //             {addSquaresToRow(1)}
-    //         </div>
-    //         <div className="row">
-    //             {addSquaresToRow()}
-    //         </div>
-    //         <div className="row">
-    //             {addSquaresToRow()}
-    //         </div>
-    //         <div className="row">
-    //             {addSquaresToRow()}
-    //         </div>
-    //         <div className="row">
-    //             {addSquaresToRow()}
-    //         </div>
-    //         <div className="row">
-    //             {addSquaresToRow()}
-    //         </div>
-    //         <div className="row">
-    //             {addSquaresToRow()}
-    //         </div>
-    //     </div>
-    // );
-};
-
-
 export default Board;
+export {entireBoard};

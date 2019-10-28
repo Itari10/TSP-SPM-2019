@@ -21,3 +21,15 @@ body {
   margin: 10px 10px;
   padding: 5px;
 }
+.board:nth-child(even) .row:nth-child(even) button:nth-child(even) {
+  background-color: black;
+}
+.board:nth-child(odd) .row:nth-child(even) button:nth-child(odd) {
+  background-color: white;
+}
+.board:nth-child(even) .row:nth-child(odd) button:nth-child(even) {
+  background-color: white;
+}
+.board:nth-child(odd) .row:nth-child(odd) button:nth-child(odd) {
+  background-color: black;
+}

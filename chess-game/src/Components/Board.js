@@ -6,15 +6,22 @@ import App from './App';
 //var entireBoard = Array(8).fill(Array(8).fill(<Square/>));
 
 class Board extends React.Component{
+                                                                    // we need a way to be able to pass
+    constructor(props) {                                            // the main board array from app downward
+        super(props);                                               // if it's just a part of the Board class,
+        this.entireBoard =  {                                       // App will not be able to change anything in it
+            board: Array(8).fill(Array(8).fill(null))
+            //board: this.props.board                               //  <<<     we need this line to work
+        };
 
-    //entireBoard = <Square/>[8][8];
 
-    constructor(props){
-        super(props);
-        this.entireBoard = props.entireBoard;
+        //this.entireBoard = props.board;                           // <<<      or this one
     }
 
-    render(){
+    render(props){
+
+        //const entireBoard = this.props.entireBoard;
+
         return (
             <div className="board">
                 {this.generateRow(0)}
@@ -73,9 +80,9 @@ class Board extends React.Component{
 // then returns the given row so it can be rendered.
     addSquaresToRow(curY){
         for (let i = 0; i < 8; i++) {
-            this.entireBoard[curY][i] = <Square x = {i} y = {curY}/>;
+            this.entireBoard.board[curY][i] = <Square x = {i} y = {curY}/>;
         }
-        return this.entireBoard[curY];
+        return this.entireBoard.board[curY];
     }
 }
 

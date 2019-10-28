@@ -5,13 +5,14 @@ import Board from './Board';
 
 class App extends React.Component{
 
-    entireBoard = Array(8).fill(Array(8).fill(null));
+    //entireBoard = Array(8).fill(Array(8).fill(null));
     //state;
 
     constructor(props){
         super(props);
-        //this.entireBoard = Array(8).fill(Array(8).fill(null));
-        //this.state = null;
+        this.entireBoard = {
+            board: Array(8).fill(Array(8).fill(null))
+        };
     }
 
 
@@ -23,7 +24,7 @@ class App extends React.Component{
                 </div>
                 <PlayerBox playerNumber="1" />
                 <PlayerBox playerNumber="2" />
-                <Board board = {this.entireBoard}/>
+                <Board entireBoard = {this.entireBoard.board}/>
             </div>
         );
     }

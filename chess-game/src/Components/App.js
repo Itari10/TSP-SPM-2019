@@ -6,16 +6,6 @@ import EndTurnBtn from './EndTurnBtn';
 
   class App extends React.Component{
     
-    entireBoard = Array(8).fill(Array(8).fill(null));
-    //state;
-    
-    constructor(props){
-      super(props);
-      //this.entireBoard = Array(8).fill(Array(8).fill(null));
-      //this.state = null;
-    }
-    
-    
     render() {
       //state of players turn in game
       const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
@@ -31,7 +21,7 @@ import EndTurnBtn from './EndTurnBtn';
                 <EndTurnBtn onClick={setTurn}/>
                 <PlayerBox playerNumber="1" />
                 <PlayerBox playerNumber="2" />
-                <Board board = {this.entireBoard}/>
+                <Board entireBoard = {this.entireBoard.board}/>
             </div>
         );
     }

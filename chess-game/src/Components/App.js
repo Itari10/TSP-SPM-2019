@@ -4,8 +4,13 @@ import PlayerBox from './PlayerBox';
 import Board from './Board';
 import EndTurnBtn from './EndTurnBtn';
 
+<<<<<<< HEAD
   class App extends React.Component{
     
+=======
+class App extends React.Component{
+
+>>>>>>> Cleaned up code in Board. Removed unnecessary code from App
     render() {
       //state of players turn in game
       const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
@@ -21,12 +26,10 @@ import EndTurnBtn from './EndTurnBtn';
                 <EndTurnBtn onClick={setTurn}/>
                 <PlayerBox playerNumber="1" />
                 <PlayerBox playerNumber="2" />
-                <Board entireBoard = {this.entireBoard.board}/>
+                <Board />
             </div>
         );
     }
 }
-
-
 
 export default App;

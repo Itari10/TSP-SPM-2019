@@ -12,7 +12,7 @@ const Square = (props) => {
     }
 
     return (
-        <button className="square" onClick={props.onclick}>
+        <button className={"square"} onClick={props.onclick}>
             {props.y} {props.x}
             <img className="piece" src={require("../Assets/dogtest2.png")}/>
         </button>

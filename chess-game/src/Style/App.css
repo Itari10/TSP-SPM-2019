@@ -19,15 +19,33 @@ body {
   margin: 10px 10px;
   padding: 5px;
 }
+/*
+Square color styling (Color#1)
+*/
 .board:nth-child(even) .row:nth-child(even) button:nth-child(even) {
   background-color: black;
 }
+.board:nth-child(odd) .row:nth-child(odd) button:nth-child(odd) {
+  background-color: black;
+}
+.board:nth-child(odd) .row:nth-child(even) button:nth-child(even) {
+  background-color: black;
+}
+.board:nth-child(even) .row:nth-child(odd) button:nth-child(odd) {
+    background-color: black;
+}
+/*
+Square color styling (Color#2)
+*/
 .board:nth-child(odd) .row:nth-child(even) button:nth-child(odd) {
   background-color: white;
 }
 .board:nth-child(even) .row:nth-child(odd) button:nth-child(even) {
   background-color: white;
 }
-.board:nth-child(odd) .row:nth-child(odd) button:nth-child(odd) {
-  background-color: black;
+.board:nth-child(even) .row:nth-child(even) button:nth-child(odd) {
+    background-color: white;
+}
+.board:nth-child(odd) .row:nth-child(odd) button:nth-child(even) {
+    background-color: white;
 }

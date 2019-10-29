@@ -11,8 +11,10 @@ const Square = (props) => {
     function onClick() {
     }
 
+    let color = props.x + props.y;
+
     return (
-        <button className="square" onClick={props.onclick}>
+        <button className={(color % 2 == 0) ? "square":"square2"} onClick={props.onclick}>
             {props.y} {props.x}
             <img className="piece" src={require("../Assets/dogtest2.png")}/>
         </button>

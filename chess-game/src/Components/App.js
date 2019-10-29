@@ -5,10 +5,13 @@ import Board from './Board';
 import EndTurnBtn from './EndTurnBtn';
 
 function App() {
+    //state of players turn in game
     const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
+    //changes the players turn in the game
     const setTurn = () => {
         setPlayerOneTurn(!playerOneTurn);
-    }
+    };
+
   return (
     <div className="App">
       <div className="Header">

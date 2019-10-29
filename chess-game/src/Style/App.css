@@ -1,5 +1,7 @@
 .Header {
   text-align: center;
+  text-shadow: -3px -1px darkgrey;
+  text-decoration: underline black;
 }
 h1 {
   padding-top: 10px;
@@ -12,22 +14,40 @@ body {
   background-color: rgb(79, 84, 203);
   width: 100%;
   height: 100vh;
-  padding: 0;
+  padding: 10px 20px 50px 20px;
   margin: 0;
 }
 .playerBox{
   margin: 10px 10px;
   padding: 5px;
 }
+/*
+Square color styling (Color#1)
+*/
 .board:nth-child(even) .row:nth-child(even) button:nth-child(even) {
   background-color: black;
 }
+.board:nth-child(odd) .row:nth-child(odd) button:nth-child(odd) {
+  background-color: black;
+}
+.board:nth-child(odd) .row:nth-child(even) button:nth-child(even) {
+  background-color: black;
+}
+.board:nth-child(even) .row:nth-child(odd) button:nth-child(odd) {
+    background-color: black;
+}
+/*
+Square color styling (Color#2)
+*/
 .board:nth-child(odd) .row:nth-child(even) button:nth-child(odd) {
   background-color: white;
 }
 .board:nth-child(even) .row:nth-child(odd) button:nth-child(even) {
   background-color: white;
 }
-.board:nth-child(odd) .row:nth-child(odd) button:nth-child(odd) {
-  background-color: black;
+.board:nth-child(even) .row:nth-child(even) button:nth-child(odd) {
+    background-color: white;
+}
+.board:nth-child(odd) .row:nth-child(odd) button:nth-child(even) {
+    background-color: white;
 }

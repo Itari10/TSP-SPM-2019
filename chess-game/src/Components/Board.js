@@ -3,15 +3,14 @@ import Square from './Square';
 
 class Board extends React.Component{
 
-
     // creates the Board, including the 2D-array data structure
     constructor(props) {
         super(props);
-
+        
         this.entireBoard = Array(8).fill(Array(8).fill(null));      // creates an 8x8 array of nulls
         this.addSquaresToBoard();
     }
-
+    
     // renders the board
     render(){
         return (

@@ -1,3 +1,3 @@
 import React from 'react';
-import Board from 'Board';
+import Board from '../Components/Board.js';
 

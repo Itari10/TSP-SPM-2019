@@ -21,7 +21,7 @@ const App = (props) => {
       <PlayerBox playerNumber="1" isTurn={playerOneTurn} />
       <PlayerBox playerNumber="2" isTurn={!playerOneTurn} />
       <Board />
-        </div>
+    </div>
     );
 }
 

@@ -28,9 +28,7 @@ const Square = (props) => {
     }
 
     return (
-        <button className={"square"}>
-            <img className="piece" src={"../Assets/dogtest2.png"} alt="Falied to load" />
-        </button>
+        <div className={"square"} />
     );
 };
 

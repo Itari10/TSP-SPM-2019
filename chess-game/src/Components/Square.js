@@ -12,11 +12,13 @@ State {
     isSelected- needs to be set to false when another square isSelected
 }
 */
+
 const Square = (props) => {
+    const pieceImagePath = "../Assets/" + props.piece;
     return (
-        <button className={"square"} onClick={props.onclick}>
+        <button className={"square"}>
             {props.y} {props.x}
-            <img className="piece" src={require("../Assets/dogtest2.png")}/>
+            <img className="piece" src={require("../Assets/dogtest2.png")} alt="Falied to load" />
         </button>
     );
 };

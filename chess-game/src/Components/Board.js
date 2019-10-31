@@ -1,7 +1,7 @@
 import React from 'react';
 import Square from './Square';
 
-export const entireBoard = Array(8).fill(Array(8).fill(null));      // creates an 8x8 array of nulls
+const entireBoard = Array(8).fill(Array(8).fill(null));      // creates an 8x8 array of nulls
 
 const Board = (props) => {
 
@@ -15,14 +15,14 @@ const Board = (props) => {
 };
 
 // Fills the board with 8 rows of Squares
-export function addSquaresToBoard(){
+function addSquaresToBoard(){
     for (let i = 0; i < 8; i++){
         entireBoard.push( createRow(i) );
     }
 }
 
 // HELPER METHOD that creates a row of Squares
-export function createRow(currentY){
+function createRow(currentY){
     return(
         <div className="row">
             {createSquares(currentY)}
@@ -31,7 +31,7 @@ export function createRow(currentY){
 }
 
 // HELPER METHOD that creates 8 squares and adds them to a row
-export function createSquares(currentY){
+function createSquares(currentY){
     let squareArray = [];
     for (let i = 0; i < 8; i++) {
         squareArray.push(<Square y = {currentY} x = {i} piece="dogtest2.png" />);
@@ -40,3 +40,4 @@ export function createSquares(currentY){
 }
 
 export default Board;
+// module.exports = {addSquaresToBoard, createRow, createSquares, entireBoard};

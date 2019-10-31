@@ -6,6 +6,7 @@
 h1 {
   padding-top: 10px;
   margin-block-start: 0;
+  font-size: 24px;
 }
 body {
   margin: 0;
@@ -17,24 +18,27 @@ body {
   padding: 10px 20px 50px 20px;
   margin: 0;
 }
-.playerBox{
-  margin: 10px 10px;
-  padding: 5px;
+.spacer {
+  height: 5%;
 }
+.board {
+  border: 2px black solid;
+}
+.
 /*
 Square color styling (Color#1)
 */
 .board:nth-child(even) .row:nth-child(even) button:nth-child(even) {
-  background-color: black;
+  background-color: lightblue;
 }
 .board:nth-child(odd) .row:nth-child(odd) button:nth-child(odd) {
-  background-color: black;
+  background-color: lightblue;
 }
 .board:nth-child(odd) .row:nth-child(even) button:nth-child(even) {
-  background-color: black;
+  background-color: lightblue;
 }
 .board:nth-child(even) .row:nth-child(odd) button:nth-child(odd) {
-    background-color: black;
+    background-color: lightblue;
 }
 /*
 Square color styling (Color#2)

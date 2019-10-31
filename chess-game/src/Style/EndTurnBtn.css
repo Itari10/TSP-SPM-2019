@@ -1,6 +1,8 @@
 .btn {
-    width: 150px;
-    height: 50px;
     Background-color: red;
     color: black;
+    margin-bottom: 15px;
+    text-align: center;
+    padding: 15px;
+    margin-left: 15px;
 }

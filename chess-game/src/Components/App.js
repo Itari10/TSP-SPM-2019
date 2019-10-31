@@ -14,13 +14,23 @@ const App = (props) => {
   };
   return (
     <div className="App">
-      <div className="Header">
-          <h1>CHESS</h1>
-      </div>
-      <EndTurnBtn onClick={setTurn}/>
-      <PlayerBox playerNumber="1" isTurn={playerOneTurn} />
-      <PlayerBox playerNumber="2" isTurn={!playerOneTurn} />
-      <Board />
+        <div className="Header">
+            <h1>CHESS</h1>
+        </div>
+
+        <div className="row">
+            <EndTurnBtn onClick={setTurn}/>
+        </div>
+        <div className="row">
+            <div className="col-sm-4">
+                <PlayerBox playerNumber="1" isTurn={playerOneTurn} />
+                <div className="spacer" />
+                <PlayerBox playerNumber="2" isTurn={!playerOneTurn} />
+            </div>
+            <div className="col-sm-8">
+                <Board />
+            </div>
+        </div>
     </div>
     );
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import Square from './Square';
 
-// const entireBoard = Array(8).fill(Array(8).fill(null));      // creates an 8x8 array of nulls
 let entireBoard = [];
 
 const Board = (props) => {

@@ -34,7 +34,7 @@ function createRow(currentY){
 function createSquares(currentY){
     let squareArray = [];
     for (let i = 0; i < 8; i++) {
-        squareArray.push(<Square y = {currentY} x = {i} piece="dogtest2.png" />);
+        squareArray.push(<Square y = {currentY} x = {i} piece={"do"} />);
     }
     return squareArray;
 }

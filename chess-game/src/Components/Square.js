@@ -1,5 +1,7 @@
 import React from 'react';
 import '../Style/Square.css';
+import dogtest2 from '../Assets/dogtest2.png';
+import tree from '../Assets/tree.jpg';
 
 /*
 Square should be aware of it's coordinates, whether or not it's selected and whether or not it's highlighted
@@ -14,11 +16,21 @@ State {
 */
 
 const Square = (props) => {
-    const pieceImagePath = "../Assets/" + props.piece;
+    function determineImage() {
+        switch (props.piece) {
+            case "dog":
+                return dogtest2;
+            case "tree":
+                return tree;
+            default:
+                return dogtest2;
+        }
+    }
+
     return (
         <button className={"square"}>
             {props.y} {props.x}
-            <img className="piece" src={require("../Assets/dogtest2.png")} alt="Falied to load" />
+            <img className="piece" src={"../Assets/dogtest2.png"} alt="Falied to load" />
         </button>
     );
 };

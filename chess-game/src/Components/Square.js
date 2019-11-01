@@ -2,6 +2,7 @@ import React from 'react';
 import '../Style/Square.css';
 import dogtest2 from '../Assets/dogtest2.png';
 import tree from '../Assets/tree.jpg';
+import test from '../Assets/test.png';
 
 /*
 Square should be aware of it's coordinates, whether or not it's selected and whether or not it's highlighted
@@ -22,13 +23,15 @@ const Square = (props) => {
                 return dogtest2;
             case "tree":
                 return tree;
+            case "test":
+                return test;
             default:
-                return dogtest2;
+                return test;
         }
     }
 
     return (
-        <button className={"square"} />
+        <button className={"square"} style={{backgroundImage: 'url('+ determineImage() + ')'}} />
     );
 };
 

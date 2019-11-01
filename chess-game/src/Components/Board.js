@@ -40,7 +40,7 @@ function createRow(currentY){
 function createSquares(currentY){
     let squareArray = [];
     for (let i = 0; i < 8; i++) {
-        squareArray.push(<Square y = {currentY} x = {i} piece={"do"} key = {currentY.toString() + i.toString()}/>);
+        squareArray.push(<Square y = {currentY} x = {i} piece={"dog"} key = {currentY.toString() + i.toString()}/>);
     }
     return squareArray;
 }

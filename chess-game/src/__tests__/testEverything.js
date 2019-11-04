@@ -1,9 +1,9 @@
-import React from 'react';                      // react
-import { shallow, mount } from 'enzyme';        // enzyme assertion methods
-import { expect } from 'chai';                  // chai assertion methods
+import React from 'react';                          // react
+import { shallow, mount, render } from 'enzyme';    // enzyme assertion methods
+import { expect } from 'chai';                      // chai assertion methods
 
-import App from '../Components/App';            // allows access to App Component
-import Board from '../Components/App';          // allows access to Board Component
+import App from '../Components/App';        // allows access to App Component
+import Board from '../Components/App';      // allows access to Board Component
 
 /************************  FOR INTELLIJ USERS  **************************************
  *                                                                                  *
@@ -56,7 +56,7 @@ import Board from '../Components/App';          // allows access to Board Compon
 
 
 // dummy test. if this one doesn't work we have major problems
-describe('JEST IS ONLINE', () => {
+describe('JEST ONLINE', () => {
     it('sums numbers', () => {
         expect(1 + 2).equals(3);
         expect(2 + 2).equals(4);
@@ -70,6 +70,8 @@ describe('APP TESTS', () => {
     let app = null;         // wrapper for the App Component
 
     test('renders without crashing', () => {
+
+        // this test WILL fail if <App /> doesn't render
         app = shallow(<App />);
     });
 
@@ -90,29 +92,45 @@ describe('APP TESTS', () => {
 // BOARD TESTS
 describe('BOARD TESTS', () => {
 
-    let app = mount(<App />);         // wrapper for the App Component
-    let board = null;                 // wrapper for the Board Component
+    let app = mount(<App />);       // wrapper for the App Component
+    let board = null;               // wrapper for the Board Component
+    let boardDiv = null;            // wrapper for the board div inside Board
+    let boardRows = null;           // wrapper for the 8 board rows
+    let currentRow = null;          // wrapper for current board row being tested
 
     test('found the board component', () => {
         board = app.find('Board');
+        expect(board).to.have.lengthOf(1);
     });
 
-    test('actual board div exists', () => {
-        expect(board.hasClass('board'));
+    test('actual board div exists inside Board component', () => {
+        boardDiv = board.find('div.board');
+        expect(boardDiv).to.have.lengthOf(1);
     });
 
-    test('tests the size of the board 2D array', () => {
-        expect(board.prop('entireBoard')).to.have.lengthOf(8);
-
-
-        // TODO: test the length of each row in each row
-        //
-        //  console.log(board.prop('entireBoard')[0].toString());
-        //
-        // for ( let y = 0; y < 8; y++ ){
-        //     expect(board.prop('entireBoard')[y]).to.have.lengthOf(8);
-        // }
+    test('exactly 8 row divs rendered', () => {
+        boardRows = boardDiv.find('div.boardRow');
+        expect(boardRows).to.have.lengthOf(8);
     });
+
+    // searches through the boardRow div and determines if there are 8
+    // divs inside it, each with their own UNIQUE id
+    test('each of the 8 divs is unique', () => {
+        let rowsFound = 0;                                          // counts each row as it's found
+        for ( let y = 0; y < 8; y++ ) {
+            currentRow = boardRows.find('div.boardRow#br' + y);     // finds a boardRow with a div id matching its row index
+            if ( currentRow !== null && currentRow.exists()  ){
+                rowsFound++;
+            }
+            currentRow = null;                                      // resets to null to ensure we're not counting
+        }                                                           // the same row twice
+        expect(rowsFound).to.equal(8);
+    });
+
+    // TODO
+    // test('determines that all 64 squares on the board are unique', () => {
+    //
+    // });
 });
 
 

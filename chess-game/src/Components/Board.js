@@ -48,7 +48,7 @@ function createSquares(currentY){
             <Square
                 y =     {currentY}
                 x =     {i}
-                piece = {"dog"}
+                piece = {""}
                 key =   {currentY + ',' + i}
             />
         );

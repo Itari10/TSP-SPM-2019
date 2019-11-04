@@ -20,6 +20,9 @@ body {
 .spacer {
   height: 5%;
 }
+.boardRow {
+  display: flex;
+}
 .
 /*
 Square color styling (Color#1)

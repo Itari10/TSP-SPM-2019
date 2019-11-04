@@ -30,7 +30,7 @@ const Square = (props) => {
             case "test":
                 return test;
             default:
-                return test;
+                return null;
         }
     }
 

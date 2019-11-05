@@ -3,6 +3,10 @@ import '../Style/Square.css';
 import dogtest2 from '../Assets/dogtest2.png';
 import tree from '../Assets/tree.jpg';
 import test from '../Assets/test.png';
+import bishopWhite from '../Assets/bishopWhite.png';
+import bishopBlack from '../Assets/bishopBlack.png';
+import rookWhite from '../Assets/rookWhite.png';
+import rookBlack from '../Assets/rookBlack.png';
 
 /**
  Square should be aware of it's coordinates
@@ -24,11 +28,15 @@ const Square = (props) => {
     function determineImage() {
         switch (props.piece) {
             case "WB":
-                return dogtest2;
+                return bishopWhite;
             case "WK":
                 return tree;
             case "WR":
-                return test;
+                return rookWhite;
+            case "BB":
+                return bishopBlack;
+            case "BR":
+                return rookBlack;
             default:
                 return null;
         }

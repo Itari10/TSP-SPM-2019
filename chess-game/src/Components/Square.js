@@ -33,6 +33,18 @@ const Square = (props) => {
                 return tree;
             case "WR":
                 return rookWhite;
+            case "WKi":
+                return test;
+            case "WQ":
+                return dogtest2;
+            case "WP":
+                return tree;
+            case "BP":
+                return tree;
+            case "BKi":
+                return test;
+            case "BQ":
+                return dogtest2;
             case "BB":
                 return bishopBlack;
             case "BR":

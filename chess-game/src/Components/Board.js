@@ -40,7 +40,7 @@ const Board = (props) => {
                 <Square
                     y =     {currentY}
                     x =     {i}
-                    piece = {props.boardMap[0][i]}
+                    piece = {props.boardMap[currentY][i]}
                     key =   {currentY + ',' + i}
                 />
             );

@@ -10,7 +10,14 @@ const App = (props) => {
     let defaultRowOne = ["WR", "WK", "WB", "WKi", "WQ", "WB", "WK", "WR"];
     let defaultRowTwo = ["WP", "WP", "WP", "WP", "WP", "WP", "WP", "WP"];
     let boardMap = [defaultRowOne, defaultRowTwo];
-
+    for (let i = 0; i < 4; i++) {
+        let blankRow = ["E","E","E","E","E","E","E","E"]
+        boardMap.push(blankRow);
+    }
+    defaultRowOne = ["BP","BP","BP","BP","BP","BP","BP","BP"];
+    defaultRowTwo = ["BR","BK", "BB", "BKi", "BQ", "BB", "BK", "BR"];
+    boardMap.push(defaultRowOne);
+    boardMap.push(defaultRowTwo);
 
     //state of players turn in game
     const [playerOneTurn, setPlayerOneTurn] = React.useState(true);

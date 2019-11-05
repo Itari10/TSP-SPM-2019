@@ -7,6 +7,10 @@ import EndTurnBtn from './EndTurnBtn';
 const App = (props) => {
 
     let entireBoard = [];       // primary chessboard 2D array, passed to Board through props
+    let defaultRowOne = ["WR", "WK", "WB", "WKi", "WQ", "WB", "WK", "WR"];
+    let defaultRowTwo = ["WP", "WP", "WP", "WP", "WP", "WP", "WP", "WP"];
+    let boardMap = [defaultRowOne, defaultRowTwo];
+
 
     //state of players turn in game
     const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
@@ -30,7 +34,7 @@ const App = (props) => {
                     <PlayerBox playerNumber="2" isTurn={!playerOneTurn}/>
                 </div>
                 <div className="col-sm-8">
-                    <Board entireBoard = {entireBoard}/>
+                    <Board entireBoard = {entireBoard} boardMap={boardMap} />
                 </div>
             </div>
         </div>

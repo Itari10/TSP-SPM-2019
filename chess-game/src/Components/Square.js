@@ -23,11 +23,11 @@ import test from '../Assets/test.png';
 const Square = (props) => {
     function determineImage() {
         switch (props.piece) {
-            case "dog":
+            case "WB":
                 return dogtest2;
-            case "tree":
+            case "WK":
                 return tree;
-            case "test":
+            case "WR":
                 return test;
             default:
                 return null;

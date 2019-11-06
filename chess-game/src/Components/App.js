@@ -7,8 +7,6 @@ import EndTurnBtn from './EndTurnBtn';
 const App = (props) => {
 
     let entireBoard = [];       // primary chessboard 2D array, passed to Board through props
-    console.log(entireBoard);
-    console.log(props.boardMap);
     
     function changePiece(row, col) {
 

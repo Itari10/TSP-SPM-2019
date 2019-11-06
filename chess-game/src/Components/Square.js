@@ -7,7 +7,6 @@ import bishopWhite from '../Assets/bishopWhite.png';
 import bishopBlack from '../Assets/bishopBlack.png';
 import rookWhite from '../Assets/rookWhite.png';
 import rookBlack from '../Assets/rookBlack.png';
-import { prependToMemberExpression } from '@babel/types';
 
 /**
  Square should be aware of it's coordinates

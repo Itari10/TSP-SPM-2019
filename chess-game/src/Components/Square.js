@@ -73,10 +73,8 @@ class Square extends React.Component {
 
     render() {
         return (
-            <button className={"square"} style={{backgroundImage: 'url'+ this.determineImage() + ')'}} onClick={()=>{this.props.onClick(this.props.y, this.props.x)}} 
-            >
-                {this.props.piece}
-                </button>
+            <button className={"square"} style={{backgroundImage: 'url('+ this.determineImage() + ')'}} onClick={()=>{this.props.onClick(this.props.y, this.props.x)}} 
+            />
         );
     }
 };

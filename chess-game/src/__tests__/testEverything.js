@@ -1,6 +1,6 @@
-import React from 'react';                          // react
-import { shallow, mount, render } from 'enzyme';    // enzyme assertion methods
-import { expect } from 'chai';                      // chai assertion methods
+import React from 'react';                  // react
+import { shallow, mount } from 'enzyme';    // enzyme assertion methods
+import { expect } from 'chai';              // chai assertion methods
 
 import App from '../Components/App';        // allows access to App Component
 import Board from '../Components/App';      // allows access to Board Component
@@ -94,9 +94,7 @@ describe('BOARD TESTS', () => {
 
     let app = mount(<App />);       // wrapper for the App Component
     let board = null;               // wrapper for the Board Component
-    let boardDiv = null;            // wrapper for the board div inside Board
-    let boardRows = null;           // wrapper for the 8 board rows
-    let currentRow = null;          // wrapper for current board row being tested
+    let boardDiv = null;            // wrapper for the actual board div inside Board Component
 
     test('found the board component', () => {
         board = app.find('Board');
@@ -109,28 +107,56 @@ describe('BOARD TESTS', () => {
     });
 
     test('exactly 8 row divs rendered', () => {
-        boardRows = boardDiv.find('div.boardRow');
+        let boardRows = boardDiv.find('div.boardRow');
         expect(boardRows).to.have.lengthOf(8);
     });
 
     // searches through the boardRow div and determines if there are 8
     // divs inside it, each with their own UNIQUE id
     test('each of the 8 divs is unique', () => {
-        let rowsFound = 0;                                          // counts each row as it's found
+        let currentRow = null;                                      // wrapper for current row is Squares being tested
+        let rowsFound = 0;
         for ( let y = 0; y < 8; y++ ) {
-            currentRow = boardRows.find('div.boardRow#br' + y);     // finds a boardRow with a div id matching its row index
-            if ( currentRow !== null && currentRow.exists()  ){
-                rowsFound++;
-            }
-            currentRow = null;                                      // resets to null to ensure we're not counting
-        }                                                           // the same row twice
+            currentRow = boardDiv.childAt(y);
+            expect(currentRow.type()).to.equal('div');
+            expect(currentRow.prop('id')).to.equal('br' + y);       // ensures the div has the expected unique id
+            rowsFound++;
+        }
         expect(rowsFound).to.equal(8);
     });
 
-    // TODO
-    // test('determines that all 64 squares on the board are unique', () => {
-    //
-    // });
+    // makes sure that each row contains 8 Squares
+    // uniqueness is not tested yet
+    test('each div contains 8 Squares', () =>{
+        let currentRow = null;
+        let squaresInRow = null;                                    // counts Squares in each row
+        for ( let y = 0; y < 8; y++ ) {
+            currentRow = boardDiv.childAt(y);                       // row divs are the children of the main boardDiv
+            squaresInRow = currentRow.find('Square');
+            expect(squaresInRow.length).to.equal(8);
+            currentRow = null;
+        }
+    });
+
+    // traverses the entire board and makes sure all 64 Squares
+    // are found and they all have unique coordinates and ids.
+    test('all 64 Squares are unique and have the correct coordinates', () => {
+        let currentRow = null;
+        let currentSquare = null;                                   // wrapper for current Square being tested
+        let uniqueSquares = 0;                                      // counts each Square as it's found
+        for ( let y = 0; y < 8; y++ ) {
+            currentRow = boardDiv.childAt(y);                       // iterates over each Square in each row
+            for ( let x = 0; x < 8; x++ ){
+                currentSquare = currentRow.childAt(x);              // Squares are children of the boardRow div
+                expect(currentSquare.name()).to.equal('Square');
+                expect(currentSquare.prop('id')).to.equal(y+'.'+x);
+                expect(currentSquare.prop('x')).to.equal(x);
+                expect(currentSquare.prop('y')).to.equal(y);
+                uniqueSquares++;
+            }
+        }
+        expect(uniqueSquares).to.equal(64);
+    });
 });
 
 

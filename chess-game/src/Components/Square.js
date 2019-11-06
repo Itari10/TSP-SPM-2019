@@ -55,7 +55,9 @@ const Square = (props) => {
     }
 
     return (
-        <button className={"square"} style={{backgroundImage: 'url('+ determineImage() + ')'}} />
+        <button className=  {"square"}
+                style=      {{backgroundImage: 'url('+ determineImage() + ')'}}
+        />
     );
 };
 

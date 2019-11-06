@@ -160,6 +160,85 @@ describe('BOARD TESTS', () => {
 });
 
 
+// BOARD SETUP TESTS
+describe('BOARD SETUP', () => {
+    let boardDiv = mount(<App />).find('Board').find('div.board');
+
+    // Makes sure all the WHITE pieces are placed in the correct slots
+    // and are displaying the correct images.
+    test('WHITE pieces are placed correctly', () => {
+        let currentRow = null;
+        let currentButton = null;                   // wrapper for button inside the Square
+
+        // MAJOR PIECES
+        currentRow = boardDiv.childAt(0);
+        for ( let x = 0; x < 8; x++ ){
+            currentButton = currentRow.childAt(x).childAt(0);
+            switch (x){
+                case 0: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookWhite.png)');     break;
+                case 1: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightWhite.png)');   break;
+                case 2: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopWhite.png)');   break;
+                case 3: expect(currentButton.prop('style').backgroundImage).to.equal('url(kingWhite.png)');     break;
+                case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(queenWhite.png)');    break;
+                case 5: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopWhite.png)');   break;
+                case 6: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightWhite.png)');   break;
+                case 7: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookWhite.png)');     break;
+            }
+        }
+
+        // PAWNS
+        currentRow = boardDiv.childAt(1);
+        for ( let x = 0; x < 8; x++ ){
+            currentButton = currentRow.childAt(x).childAt(0);
+            expect(currentButton.prop('style').backgroundImage).to.equal('url(pawnWhite.png)');
+        }
+    });
+
+    // Makes sure all the BLACK pieces are placed in the correct slots
+    // and are displaying the correct images.
+    test('BLACK pieces are placed correctly', () => {
+        let currentRow = null;
+        let currentButton = null;                   // wrapper for button inside the Square
+
+        // MAJOR PIECES
+        currentRow = boardDiv.childAt(7);
+        for ( let x = 0; x < 8; x++ ){
+            currentButton = currentRow.childAt(x).childAt(0);
+            switch (x){
+                case 0: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookBlack.png)');     break;
+                case 1: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightBlack.png)');   break;
+                case 2: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopBlack.png)');   break;
+                case 3: expect(currentButton.prop('style').backgroundImage).to.equal('url(kingBlack.png)');     break;
+                case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(queenBlack.png)');    break;
+                case 5: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopBlack.png)');   break;
+                case 6: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightBlack.png)');   break;
+                case 7: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookBlack.png)');     break;
+            }
+        }
+
+        // PAWNS
+        currentRow = boardDiv.childAt(6);
+        for ( let x = 0; x < 8; x++ ){
+            currentButton = currentRow.childAt(x).childAt(0);
+            expect(currentButton.prop('style').backgroundImage).to.equal('url(pawnBlack.png)');
+        }
+    });
+
+    // Makes sure the center 4 rows of the board are not displaying any pieces
+    test('center 4 rows are empty', () => {
+        let currentRow = null;
+        let currentButton = null;
+
+        for ( let y = 2; y > 6; y++ ){
+            currentRow = boardDiv.childAt(y);
+            for ( let x = 0; x < 8; x++ ){
+                currentButton = currentRow.childAt(x).childAt(0);
+                expect(currentButton.prop('style').backgroundImage).to.equal('url(null)');
+            }
+        }
+    });
+});
+
 // SQUARE TESTS
 describe('SQUARE TESTS', () => {
     // TODO

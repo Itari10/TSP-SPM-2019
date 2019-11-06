@@ -7,18 +7,26 @@ import EndTurnBtn from './EndTurnBtn';
 const App = (props) => {
 
     let entireBoard = [];       // primary chessboard 2D array, passed to Board through props
-    let defaultRowOne = ["WR", "WK", "WB", "WKi", "WQ", "WB", "WK", "WR"];
-    let defaultRowTwo = ["WP", "WP", "WP", "WP", "WP", "WP", "WP", "WP"];
-    let boardMap = [defaultRowOne, defaultRowTwo];
-    for (let i = 0; i < 4; i++) {
-        let blankRow = ["E","E","E","E","E","E","E","E"]
-        boardMap.push(blankRow);
-    }
-    defaultRowOne = ["BP","BP","BP","BP","BP","BP","BP","BP"];
-    defaultRowTwo = ["BR","BK", "BB", "BKi", "BQ", "BB", "BK", "BR"];
-    boardMap.push(defaultRowOne);
-    boardMap.push(defaultRowTwo);
+    console.log(entireBoard);
+    console.log(props.boardMap);
+    
+    function changePiece(row, col) {
 
+        setBoardState(boardState.map((mapRow, rowIndex) => {
+            mapRow.map((square, colIndex) => {
+                if (row === rowIndex && col === colIndex) {
+                    square = "WP";
+                }
+                return square;
+            })
+        }));
+        // let tempBoard = boardState;
+        // tempBoard[row][col] = "WP";
+        // setBoardState(tempBoard);
+        console.log("Function Fired!");
+    }
+    
+    const [boardState, setBoardState] = React.useState(props.boardMap);
     //state of players turn in game
     const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
     //changes the players turn in the game
@@ -41,7 +49,7 @@ const App = (props) => {
                     <PlayerBox playerNumber="2" isTurn={!playerOneTurn}/>
                 </div>
                 <div className="col-sm-8">
-                    <Board entireBoard = {entireBoard} boardMap={boardMap} />
+                    <Board entireBoard = {entireBoard} boardMap={props.boardMap} cp={changePiece} />
                 </div>
             </div>
         </div>

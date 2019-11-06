@@ -7,6 +7,7 @@ import bishopWhite from '../Assets/bishopWhite.png';
 import bishopBlack from '../Assets/bishopBlack.png';
 import rookWhite from '../Assets/rookWhite.png';
 import rookBlack from '../Assets/rookBlack.png';
+import { prependToMemberExpression } from '@babel/types';
 
 /**
  Square should be aware of it's coordinates
@@ -24,9 +25,25 @@ import rookBlack from '../Assets/rookBlack.png';
  isSelected:      needs to be set to false when another square isSelected
 **/
 
-const Square = (props) => {
-    function determineImage() {
-        switch (props.piece) {
+class Square extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            piece: true
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.piece !== this.props.piece) {
+            this.setState({
+                piece: !this.state.piece
+            })
+        }
+    }
+    
+    determineImage() {
+        switch (this.props.piece) {
             case "WB":
                 return bishopWhite;
             case "WK":
@@ -54,9 +71,14 @@ const Square = (props) => {
         }
     }
 
-    return (
-        <button className={"square"} style={{backgroundImage: 'url('+ determineImage() + ')'}} />
-    );
+    render() {
+        return (
+            <button className={"square"} style={{backgroundImage: 'url'+ this.determineImage() + ')'}} onClick={()=>{this.props.onClick(this.props.y, this.props.x)}} 
+            >
+                {this.props.piece}
+                </button>
+        );
+    }
 };
 
 export default Square;

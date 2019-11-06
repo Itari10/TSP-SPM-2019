@@ -31,6 +31,7 @@ const Board = (props) => {
      *  y:      current y index on the board AND inside the 8x8 board array
      *  x:      current x index on the board AND inside the 8x8 board array
      *  id:     unique identifier that can be searched for using the html div "id" syntax
+     *  piece:  the image representing the piece that's on the board
      *  key:    unique identifier so that React stops complaining
      */
     function createSquares(currentY){
@@ -40,6 +41,7 @@ const Board = (props) => {
                 <Square
                     y =     {currentY}
                     x =     {i}
+                    id =    {currentY + '.' + i}
                     piece = {props.boardMap[currentY][i]}
                     key =   {currentY + ',' + i}
                     onClick = {props.cp}

@@ -56,16 +56,18 @@ class Square extends React.Component {
                 return dogtest2;
             case "WP":
                 return tree;
-            case "BP":
+            case "BB":
+                return bishopBlack;
+            case "BK":
                 return tree;
+            case "BR":
+                return rookBlack;
             case "BKi":
                 return test;
             case "BQ":
                 return dogtest2;
-            case "BB":
-                return bishopBlack;
-            case "BR":
-                return rookBlack;
+            case "BP":
+                return tree;
             default:
                 return null;
         }
@@ -73,7 +75,10 @@ class Square extends React.Component {
 
     render() {
         return (
-            <button className={"square"} style={{backgroundImage: 'url('+ this.determineImage() + ')'}} onClick={()=>{this.props.onClick(this.props.y, this.props.x)}} 
+            <button 
+                className={"square"} 
+                style={{backgroundImage: 'url('+ this.determineImage() + ')'}} 
+                onClick={()=>{this.props.onClick(this.props.y, this.props.x)}} 
             />
         );
     }

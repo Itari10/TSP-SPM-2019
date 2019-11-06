@@ -44,7 +44,7 @@ const Board = (props) => {
                     id =    {currentY + '.' + i}
                     piece = {props.boardMap[currentY][i]}
                     key =   {currentY + ',' + i}
-                    onClick = {props.cp}
+                    onClick = {props.changePiece}
                 />
             );
         }

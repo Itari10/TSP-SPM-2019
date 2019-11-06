@@ -5,10 +5,22 @@ import Board from './Board';
 import EndTurnBtn from './EndTurnBtn';
 
 const App = (props) => {
+    
+    //State management
+    const [updateBoard, setUpdateBoard] = React.useState(true);
+    const [boardState, setBoardState] = React.useState(props.boardMap);
+    const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
 
-    let entireBoard = [];       // primary chessboard 2D array, passed to Board through props
+    // primary chessboard 2D array, passed to Board through props
+    let entireBoard = [];
     
     function changePiece(row, col) {
+
+        /*
+        This commented out code is just trying to make it so we don't
+        have to force the re-render using updateboard everytime the 
+        boardstate is updated. Currently is broken code
+        */
 
         // setBoardState(boardState.map((mapRow, rowIndex) => {
         //     mapRow.map((square, colIndex) => {
@@ -26,14 +38,12 @@ const App = (props) => {
         setUpdateBoard(!updateBoard);
     }
 
-    const [updateBoard, setUpdateBoard] = React.useState(true);
-    const [boardState, setBoardState] = React.useState(props.boardMap);
-    //state of players turn in game
-    const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
+
     //changes the players turn in the game
     const setTurn = () => {
         setPlayerOneTurn(!playerOneTurn);
     };
+
     return (
         <div className="App">
             <div className="Header">
@@ -50,7 +60,7 @@ const App = (props) => {
                     <PlayerBox playerNumber="2" isTurn={!playerOneTurn}/>
                 </div>
                 <div className="col-sm-8">
-                    <Board entireBoard = {entireBoard} boardMap={props.boardMap} cp={changePiece} />
+                    <Board entireBoard = {entireBoard} boardMap={props.boardMap} changePiece={changePiece} />
                 </div>
             </div>
         </div>

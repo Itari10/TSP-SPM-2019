@@ -12,20 +12,23 @@ const App = (props) => {
     
     function changePiece(row, col) {
 
-        setBoardState(boardState.map((mapRow, rowIndex) => {
-            mapRow.map((square, colIndex) => {
-                if (row === rowIndex && col === colIndex) {
-                    square = "WP";
-                }
-                return square;
-            })
-        }));
-        // let tempBoard = boardState;
-        // tempBoard[row][col] = "WP";
-        // setBoardState(tempBoard);
-        console.log("Function Fired!");
+        // setBoardState(boardState.map((mapRow, rowIndex) => {
+        //     mapRow.map((square, colIndex) => {
+        //         if (row === rowIndex && col === colIndex) {
+        //             console.log("foudn match");
+        //             square = "WP";
+        //         }
+        //         return square;
+        //     })
+        //     return mapRow;
+        // }));
+        let tempBoard = boardState;
+        tempBoard[row][col] = "WP";
+        setBoardState(tempBoard);
+        setUpdateBoard(!updateBoard);
     }
-    
+
+    const [updateBoard, setUpdateBoard] = React.useState(true);
     const [boardState, setBoardState] = React.useState(props.boardMap);
     //state of players turn in game
     const [playerOneTurn, setPlayerOneTurn] = React.useState(true);

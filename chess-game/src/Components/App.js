@@ -14,6 +14,7 @@ const App = (props) => {
 
     const squareClicked = (y, x) => {
 
+<<<<<<< HEAD
         // JANK
         // let temp = bState;
         // temp[y][x].pieceID = "BQ";          // sets the (y, x) that was clicked to queen
@@ -27,6 +28,13 @@ const App = (props) => {
             return;
         }        
         setSelectedSquare([y,x]);
+=======
+
+        /*
+         This commented out code is just trying to make it so we don't
+         have to force the re-render using updateboard everytime the
+         boardstate is updated. Currently is broken code
+>>>>>>> 6756c76b306def1200db05f69da6adf5115fb232
 
 
 

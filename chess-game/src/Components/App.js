@@ -14,7 +14,6 @@ const App = (props) => {
 
     const squareClicked = (y, x) => {
 
-<<<<<<< HEAD
         // JANK
         // let temp = bState;
         // temp[y][x].pieceID = "BQ";          // sets the (y, x) that was clicked to queen
@@ -23,21 +22,27 @@ const App = (props) => {
 
         let boardMap = bState;
 
+        //If you click the same square as the currently selected square, deselect the sqaure
         if (selectedSquare[0] === y && selectedSquare[1] === x) {
             setSelectedSquare([-1,-1]);
-            return;
-        }        
-        setSelectedSquare([y,x]);
-=======
+            
+        //If there is no currently selected square, select the square that was clicked
+        } else if (selectedSquare[0] === -1 && selectedSquare[1] === -1) {       
+            setSelectedSquare([y,x]);
+            if ( boardMap[y][x].pieceID === null ) {
+                setSelectedSquare([-1,-1]);
+            }
 
-        /*
-         This commented out code is just trying to make it so we don't
-         have to force the re-render using updateboard everytime the
-         boardstate is updated. Currently is broken code
->>>>>>> 6756c76b306def1200db05f69da6adf5115fb232
-
-
-
+        //Move piece
+        } else {
+            let selectedPiece = boardMap[selectedSquare[0]][selectedSquare[1]];
+            boardMap[y][x].pieceID = selectedPiece.pieceID;
+            boardMap[selectedSquare[0]][selectedSquare[1]].pieceID = null;
+            setSelectedSquare([-1,-1]);
+            setBoardState(boardMap);
+            setUpdateBoard(!updateBoard);
+        }
+        return;
     };
 
     //changes the players turn in the game

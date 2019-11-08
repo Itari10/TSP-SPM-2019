@@ -5,26 +5,45 @@ import Board from './Board';
 import EndTurnBtn from './EndTurnBtn';
 
 const App = (props) => {
-
-    let entireBoard = [];       // primary chessboard 2D array, passed to Board through props
-    let defaultRowOne = ["WR", "WK", "WB", "WKi", "WQ", "WB", "WK", "WR"];
-    let defaultRowTwo = ["WP", "WP", "WP", "WP", "WP", "WP", "WP", "WP"];
-    let boardMap = [defaultRowOne, defaultRowTwo];
-    for (let i = 0; i < 4; i++) {
-        let blankRow = ["E","E","E","E","E","E","E","E"]
-        boardMap.push(blankRow);
-    }
-    defaultRowOne = ["BP","BP","BP","BP","BP","BP","BP","BP"];
-    defaultRowTwo = ["BR","BK", "BB", "BKi", "BQ", "BB", "BK", "BR"];
-    boardMap.push(defaultRowOne);
-    boardMap.push(defaultRowTwo);
-
-    //state of players turn in game
+    
+    //State management
+    const [updateBoard, setUpdateBoard] = React.useState(true);
+    const [boardState, setBoardState] = React.useState(props.boardMap);
     const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
+
+    // primary chessboard 2D array, passed to Board through props
+    let entireBoard = [];
+    
+    function changePiece(row, col) {
+
+        /*
+        This commented out code is just trying to make it so we don't
+        have to force the re-render using updateboard everytime the 
+        boardstate is updated. Currently is broken code
+        */
+
+        // setBoardState(boardState.map((mapRow, rowIndex) => {
+        //     mapRow.map((square, colIndex) => {
+        //         if (row === rowIndex && col === colIndex) {
+        //             console.log("foudn match");
+        //             square = "WP";
+        //         }
+        //         return square;
+        //     })
+        //     return mapRow;
+        // }));
+        let tempBoard = boardState;
+        tempBoard[row][col] = "WP";
+        setBoardState(tempBoard);
+        setUpdateBoard(!updateBoard);
+    }
+
+
     //changes the players turn in the game
     const setTurn = () => {
         setPlayerOneTurn(!playerOneTurn);
     };
+
     return (
         <div className="App">
             <div className="Header">
@@ -41,7 +60,7 @@ const App = (props) => {
                     <PlayerBox playerNumber="2" isTurn={!playerOneTurn}/>
                 </div>
                 <div className="col-sm-8">
-                    <Board entireBoard = {entireBoard} boardMap={boardMap} />
+                    <Board entireBoard = {entireBoard} boardMap={props.boardMap} changePiece={changePiece} />
                 </div>
             </div>
         </div>

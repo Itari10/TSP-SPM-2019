@@ -24,9 +24,25 @@ import rookBlack from '../Assets/rookBlack.png';
  isSelected:      needs to be set to false when another square isSelected
 **/
 
-const Square = (props) => {
-    function determineImage() {
-        switch (props.piece) {
+class Square extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            piece: true
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.piece !== this.props.piece) {
+            this.setState({
+                piece: !this.state.piece
+            })
+        }
+    }
+    
+    determineImage() {
+        switch (this.props.piece) {
             case "WB":
                 return bishopWhite;
             case "WK":
@@ -39,26 +55,32 @@ const Square = (props) => {
                 return dogtest2;
             case "WP":
                 return tree;
-            case "BP":
+            case "BB":
+                return bishopBlack;
+            case "BK":
                 return tree;
+            case "BR":
+                return rookBlack;
             case "BKi":
                 return test;
             case "BQ":
                 return dogtest2;
-            case "BB":
-                return bishopBlack;
-            case "BR":
-                return rookBlack;
+            case "BP":
+                return tree;
             default:
                 return null;
         }
     }
 
-    return (
-        <button className=  {"square"}
-                style=      {{backgroundImage: 'url('+ determineImage() + ')'}}
-        />
-    );
+    render() {
+        return (
+            <button 
+                className={"square"} 
+                style={{backgroundImage: 'url('+ this.determineImage() + ')'}} 
+                onClick={()=>{this.props.onClick(this.props.y, this.props.x)}} 
+            />
+        );
+    }
 };
 
 export default Square;

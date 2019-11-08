@@ -1,27 +1,27 @@
 import React from 'react';
 import '../Style/App.css';
 import PlayerBox from './PlayerBox';
-import Board from './Board';
+import Board, {initializeBoard} from './Board';
 import EndTurnBtn from './EndTurnBtn';
 
 const App = (props) => {
-    
-    //State management
-    const [updateBoard, setUpdateBoard] = React.useState(true);
-    const [boardState, setBoardState] = React.useState(props.boardMap);
-    const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
 
-    // primary chessboard 2D array, passed to Board through props
-    let entireBoard = [];
-    
-    function changePiece(row, col) {
+    // state management
+    const [bState, setBoardState] = React.useState( initializeBoard() );
+    const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
+    const [updateBoard, setUpdateBoard] = React.useState(true);             // band-aid state
+
+    const pieceClicked = (y, x) => {
 
         /*
-        This commented out code is just trying to make it so we don't
-        have to force the re-render using updateboard everytime the 
-        boardstate is updated. Currently is broken code
-        */
+         This commented out code is just trying to make it so we don't
+         have to force the re-render using updateboard everytime the
+         boardstate is updated. Currently is broken code
 
+         This is probably just how we're going to have to do it because
+         React is annoying when it comes to arrays. It won't scan the whole
+         thing to see if something has changed.
+        */
         // setBoardState(boardState.map((mapRow, rowIndex) => {
         //     mapRow.map((square, colIndex) => {
         //         if (row === rowIndex && col === colIndex) {
@@ -32,18 +32,21 @@ const App = (props) => {
         //     })
         //     return mapRow;
         // }));
-        let tempBoard = boardState;
-        tempBoard[row][col] = "WP";
-        setBoardState(tempBoard);
-        setUpdateBoard(!updateBoard);
-    }
 
+
+        // JANK
+        let temp = bState;
+        temp[y][x].pieceID = "BQ";          // sets the (y, x) that was clicked to queen
+        setBoardState( temp );              // updates the actual board state
+        setUpdateBoard( !updateBoard );       // triggers the app to re-render
+    };
 
     //changes the players turn in the game
     const setTurn = () => {
         setPlayerOneTurn(!playerOneTurn);
     };
 
+    // renders the game
     return (
         <div className="App">
             <div className="Header">
@@ -60,7 +63,7 @@ const App = (props) => {
                     <PlayerBox playerNumber="2" isTurn={!playerOneTurn}/>
                 </div>
                 <div className="col-sm-8">
-                    <Board entireBoard = {entireBoard} boardMap={props.boardMap} changePiece={changePiece} />
+                    <Board bState = {bState} pieceClicked = {pieceClicked}/>
                 </div>
             </div>
         </div>

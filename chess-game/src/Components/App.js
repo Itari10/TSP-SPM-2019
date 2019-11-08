@@ -13,6 +13,7 @@ const App = (props) => {
 
     const pieceClicked = (y, x) => {
 
+
         /*
          This commented out code is just trying to make it so we don't
          have to force the re-render using updateboard everytime the

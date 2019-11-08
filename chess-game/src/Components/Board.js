@@ -29,27 +29,39 @@ const Board = (props) => {
      *  onClick:  FUNCTION passed from App that activates when Square is clicked
      */
     function createBoardJSX( boardState ){
-        let boardJSX = new Array(8);
-        for ( let i = 0; i < 8; i++ ){      // initializes a 2D array
-            boardJSX[i] = new Array(8);
-        }
-
+        let boardJSX = [];
         for ( let y = 0; y < 8; y++ ){
-            for ( let x = 0; x < 8; x++ ){
-                boardJSX.push(
-                    <Square
-                        y =             {y}
-                        x =             {x}
-                        isHighlighted = {boardState[y][x].isHighlighted}
-                        isSelected =    {boardState[y][x].isSelected}
-                        piece =         {determineImage(boardState[y][x].pieceID)}
-                        key =           {y + ',' + x}
-                        onClick =       {props.pieceClicked}
-                    />
-                );
-            }
+            boardJSX.push(createRow(y, boardState));
         }
         return boardJSX;
+    }
+
+    // creates a row of squares
+    function createRow(currentY, boardState){
+        return(
+            <div className="boardRow" id={'br' + currentY} key={'key' + currentY}>
+                {create8squares(currentY, boardState)}
+            </div>
+        );
+    }
+
+    // adds 8 squares to board
+    function create8squares(curY, boardState){
+        let currentRow = [];
+        for ( let x = 0; x < 8; x++ ){
+            currentRow.push(
+                <Square
+                    y =             {curY}
+                    x =             {x}
+                    isHighlighted = {boardState[curY][x].isHighlighted}
+                    isSelected =    {boardState[curY][x].isSelected}
+                    piece =         {determineImage(boardState[curY][x].pieceID)}
+                    key =           {curY + ',' + x}
+                    onClick =       {props.pieceClicked}
+                />
+            );
+        }
+        return currentRow;
     }
 
     // renders the board based on the boardState passed from App

@@ -3,14 +3,17 @@ import '../Style/App.css';
 import PlayerBox from './PlayerBox';
 import Board, {initializeBoard} from './Board';
 import EndTurnBtn from './EndTurnBtn';
+import pieces from './Board';
+import players from './Board';
 
 const App = (props) => {
 
     // state management
     const [bState, setBoardState] = React.useState( initializeBoard() );
     const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
-    const [updateBoard, setUpdateBoard] = React.useState(true);             // band-aid state
+    const [updateBoard, setUpdateBoard] = React.useState(true);             // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState([-1,-1]);
+
 
     const squareClicked = (y, x) => {
 
@@ -29,15 +32,17 @@ const App = (props) => {
         //If there is no currently selected square, select the square that was clicked
         } else if (selectedSquare[0] === -1 && selectedSquare[1] === -1) {       
             setSelectedSquare([y,x]);
-            if ( boardMap[y][x].pieceID === null ) {
+            if ( boardMap[y][x].pcType === pieces.EMPTY ) {
                 setSelectedSquare([-1,-1]);
             }
 
         //Move piece
         } else {
             let selectedPiece = boardMap[selectedSquare[0]][selectedSquare[1]];
-            boardMap[y][x].pieceID = selectedPiece.pieceID;
-            boardMap[selectedSquare[0]][selectedSquare[1]].pieceID = null;
+            boardMap[y][x].pcType = selectedPiece.pcType;
+            boardMap[y][x].pcOwner = selectedPiece.pcOwner;
+            boardMap[selectedSquare[0]][selectedSquare[1]].pcType = pieces.EMPTY;    // the space the piece just moved
+            boardMap[selectedSquare[0]][selectedSquare[1]].pcOwner = players.NONE;      // from is now empty
             setSelectedSquare([-1,-1]);
             setBoardState(boardMap);
             setUpdateBoard(!updateBoard);

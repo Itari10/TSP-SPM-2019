@@ -149,7 +149,7 @@ describe('BOARD TESTS', () => {
             for ( let x = 0; x < 8; x++ ){
                 currentSquare = currentRow.childAt(x);              // Squares are children of the boardRow div
                 expect(currentSquare.name()).to.equal('Square');
-                expect(currentSquare.prop('id')).to.equal(y+'.'+x);
+                expect(currentSquare.key()).to.equal(y+'.'+x);
                 expect(currentSquare.prop('x')).to.equal(x);
                 expect(currentSquare.prop('y')).to.equal(y);
                 uniqueSquares++;

@@ -1,38 +1,17 @@
 import React from 'react';
 import '../Style/Square.css';
 
-/**
- Square should be aware of it's coordinates
- whether or not it's selected
- and whether or not it's highlighted
-
- PROPS
- key:            unused unique identifier so that we'd stop getting React warnings
- y:              Y coordinate on the board and inside the main 2D array
- x:              X coordinate on the board and inside the main 2D array
- piece:          current piece "on" the square
- isHighlighted   whether or not the given square is currently highlighted
-
- STATE
- isSelected:      needs to be set to false when another square isSelected
+/** Properties you can access through props
+ *
+ *  key             unique identifier for the Component (so React stops complaining)
+ *  y               Y-coordinate on the board AND inside the 8x8 board array
+ *  x               Y-coordinate on the board AND inside the 8x8 board array
+ *  pieceType       the type of piece on this square
+ *  ownedBy         the player who owns the piece on this square
+ *  image           the image that will be rendered of this square
+ *  onClick:  FUNCTION passed from App that activates when Square is clicked
 **/
 const Square = (props) => {
-
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         piece: true
-    //     }
-    // }
-
-    // componentDidUpdate(prevProps) {
-    //     if (prevProps.piece !== this.props.piece) {
-    //         this.setState({
-    //             piece: !this.state.piece
-    //         })
-    //     }
-    // }
-
 
     // onClick() triggers the pieceClicked()
     // method located in App. The coordinates of the
@@ -40,7 +19,7 @@ const Square = (props) => {
     return (
         <button
             className={"square"}
-            style={{backgroundImage: 'url('+ props.piece + ')'}}
+            style={{backgroundImage: 'url('+ props.image + ')'}}
             onClick={() => props.onClick(props.y, props.x)}
         />
     );

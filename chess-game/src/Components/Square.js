@@ -1,12 +1,5 @@
 import React from 'react';
 import '../Style/Square.css';
-import dogtest2 from '../Assets/dogtest2.png';
-import tree from '../Assets/tree.jpg';
-import test from '../Assets/test.png';
-import bishopWhite from '../Assets/bishopWhite.png';
-import bishopBlack from '../Assets/bishopBlack.png';
-import rookWhite from '../Assets/rookWhite.png';
-import rookBlack from '../Assets/rookBlack.png';
 
 /**
  Square should be aware of it's coordinates
@@ -23,64 +16,34 @@ import rookBlack from '../Assets/rookBlack.png';
  STATE
  isSelected:      needs to be set to false when another square isSelected
 **/
+const Square = (props) => {
 
-class Square extends React.Component {
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         piece: true
+    //     }
+    // }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            piece: true
-        }
-    }
+    // componentDidUpdate(prevProps) {
+    //     if (prevProps.piece !== this.props.piece) {
+    //         this.setState({
+    //             piece: !this.state.piece
+    //         })
+    //     }
+    // }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.piece !== this.props.piece) {
-            this.setState({
-                piece: !this.state.piece
-            })
-        }
-    }
-    
-    determineImage() {
-        switch (this.props.piece) {
-            case "WB":
-                return bishopWhite;
-            case "WK":
-                return tree;
-            case "WR":
-                return rookWhite;
-            case "WKi":
-                return test;
-            case "WQ":
-                return dogtest2;
-            case "WP":
-                return tree;
-            case "BB":
-                return bishopBlack;
-            case "BK":
-                return tree;
-            case "BR":
-                return rookBlack;
-            case "BKi":
-                return test;
-            case "BQ":
-                return dogtest2;
-            case "BP":
-                return tree;
-            default:
-                return null;
-        }
-    }
 
-    render() {
-        return (
-            <button 
-                className={"square"} 
-                style={{backgroundImage: 'url('+ this.determineImage() + ')'}} 
-                onClick={()=>{this.props.onClick(this.props.y, this.props.x)}} 
-            />
-        );
-    }
+    // onClick() triggers the pieceClicked()
+    // method located in App. The coordinates of the
+    // piece that was clicked are sent through the callback
+    return (
+        <button
+            className={"square"}
+            style={{backgroundImage: 'url('+ props.piece + ')'}}
+            onClick={() => props.onClick(props.y, props.x)}
+        />
+    );
 };
 
 export default Square;

@@ -114,12 +114,12 @@ describe('BOARD TESTS', () => {
     // searches through the boardRow div and determines if there are 8
     // divs inside it, each with their own UNIQUE id
     test('each of the 8 divs is unique', () => {
-        let currentRow = null;                                      // wrapper for current row is Squares being tested
+        let currentRow = null;                                  // wrapper for current row is Squares being tested
         let rowsFound = 0;
         for ( let y = 0; y < 8; y++ ) {
             currentRow = boardDiv.childAt(y);
             expect(currentRow.type()).to.equal('div');
-            expect(currentRow.prop('id')).to.equal('br' + y);       // ensures the div has the expected unique id
+            expect(currentRow.key()).to.equal('bRow' + y);        // ensures the div has the expected unique id
             rowsFound++;
         }
         expect(rowsFound).to.equal(8);
@@ -129,9 +129,9 @@ describe('BOARD TESTS', () => {
     // uniqueness is not tested yet
     test('each div contains 8 Squares', () =>{
         let currentRow = null;
-        let squaresInRow = null;                                    // counts Squares in each row
+        let squaresInRow = null;                            // counts Squares in each row
         for ( let y = 0; y < 8; y++ ) {
-            currentRow = boardDiv.childAt(y);                       // row divs are the children of the main boardDiv
+            currentRow = boardDiv.childAt(y);               // row divs are the children of the main boardDiv
             squaresInRow = currentRow.find('Square');
             expect(squaresInRow.length).to.equal(8);
             currentRow = null;
@@ -149,7 +149,7 @@ describe('BOARD TESTS', () => {
             for ( let x = 0; x < 8; x++ ){
                 currentSquare = currentRow.childAt(x);              // Squares are children of the boardRow div
                 expect(currentSquare.name()).to.equal('Square');
-                expect(currentSquare.key()).to.equal(y+'.'+x);
+                expect(currentSquare.key()).to.equal('Sq'+y+'.'+x);
                 expect(currentSquare.prop('x')).to.equal(x);
                 expect(currentSquare.prop('y')).to.equal(y);
                 uniqueSquares++;

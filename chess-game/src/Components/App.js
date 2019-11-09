@@ -13,7 +13,7 @@ const App = (props) => {
     const [bState, setBoardState] = React.useState( initializeBoard() );
     const [playerOneTurn, setPlayerOneTurn] = React.useState(true);
     const [updateBoard, setUpdateBoard] = React.useState(true);             // call setUpdateBoard() to re-render
-    const [selectedSquare, setSelectedSquare] = React.useState([-1,-1]);
+    const [selectedSquare, setSelectedSquare] = React.useState([-1,-1]);    // [-1,-1] means "NOTHING SELECTED"
 
 
     const squareClicked = (y, x) => {
@@ -29,9 +29,8 @@ const App = (props) => {
         // Otherwise, if there is nothing selected, select the square that was clicked
         else if (selectedSquare[0] === -1 && selectedSquare[1] === -1) {
 
-            // as long as there is a piece on that square, select it
+            // ...and as long as there is a piece on that square, select it
             if ( boardMap[y][x].pcType !== Pieces.EMPTY ) {
-                console.log(Pieces.EMPTY);
                 setSelectedSquare( [y, x] );
                 boardMap[y][x].isSelected = true;
             }

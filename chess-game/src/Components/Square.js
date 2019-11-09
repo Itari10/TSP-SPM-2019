@@ -44,7 +44,6 @@ const Square = (props) => {
     );
 };
 
-
 // sets the background color of the Square based on its properties
 function determineBgColor(props){
     if ( props.isHighlighted ){
@@ -57,14 +56,14 @@ function determineBgColor(props){
         return props.defaultColor;
 }
 
-// sets the piece image color of the Square based on its properties
+// sets the piece image on the Square based on its properties
 function determineImage( props ){
     switch ( props.ownedBy ){
         case Players.WHITE: {
             switch( props.pieceType ){
                 case Pieces.ROOK:   return rookWhite;
                 case Pieces.PAWN:   return pawnWhite;
-                case Pieces.KNIGHT: return knightWhite;            // white Pieces
+                case Pieces.KNIGHT: return knightWhite;     // white Pieces
                 case Pieces.BISHOP: return bishopWhite;
                 case Pieces.QUEEN:  return queenWhite;
                 case Pieces.KING:   return kingWhite;
@@ -76,7 +75,7 @@ function determineImage( props ){
             switch( props.pieceType ){
                 case Pieces.ROOK:   return rookBlack;
                 case Pieces.PAWN:   return pawnBlack;
-                case Pieces.KNIGHT: return knightBlack;            // black Pieces
+                case Pieces.KNIGHT: return knightBlack;     // black Pieces
                 case Pieces.BISHOP: return bishopBlack;
                 case Pieces.QUEEN:  return queenBlack;
                 case Pieces.KING:   return kingBlack;

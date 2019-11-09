@@ -3,7 +3,6 @@ import Square from './Square';
 
 // class used as a container to hold piece info
 class Piece{
-
     constructor(pieceType, ownedBy, isHighlighted, isSelected, defaultColor){
         this.pcType = pieceType;
         this.pcOwner = ownedBy;
@@ -15,9 +14,9 @@ class Piece{
 
 // player enum
 export const Players = {
+    NONE: 0,
     WHITE: 1,
     BLACK: 2,
-    NONE: -1
 };
 
 // piece enum
@@ -52,26 +51,26 @@ const Board = (props) => {
      *  ownedBy         the player who owns the piece on this square
      *  onClick:        FUNCTION passed from App that activates when Square is clicked
      */
-    function create8squares(curY, bState){
-        let currentRow = [];
-        let piece = null;                       // current piece
+    function create8squares(curY, boardState){
+        let curRow = [];
+        let curSquare = null;                           // current piece
         for ( let x = 0; x < 8; x++ ){
-            piece = bState[curY][x];            // to make code concise
-            currentRow.push(
+            curSquare = boardState[curY][x];            // makes code easier to read
+            curRow.push(
                 <Square
-                    key =           {curY + '.' + x}
+                    key =           {'Sq'+curY+'.'+x}
                     y =             {curY}
                     x =             {x}
-                    defaultColor =  {piece.defaultColor}
-                    isHighlighted = {piece.isHighlighted}
-                    isSelected =    {piece.isSelected}
-                    pieceType =     {piece.pcType}
-                    ownedBy =       {piece.pcOwner}
+                    defaultColor =  {curSquare.defaultColor}
+                    isHighlighted = {curSquare.isHighlighted}
+                    isSelected =    {curSquare.isSelected}
+                    pieceType =     {curSquare.pcType}
+                    ownedBy =       {curSquare.pcOwner}
                     onClick =       {props.pieceClicked}
                 />
             );
         }
-        return currentRow;
+        return curRow;
     }
 
     // converts boardState into JSX
@@ -83,10 +82,10 @@ const Board = (props) => {
         return boardJSX;
     }
 
-// creates a row of squares
+    // creates a row of squares
     function createRow(currentY, boardState){
         return(
-            <div className="boardRow" id={'br' + currentY} key={'key' + currentY}>
+            <div className="boardRow" key={'bRow' + currentY}>
                 {create8squares(currentY, boardState)}
             </div>
         );
@@ -107,35 +106,35 @@ export function initializeBoard(){
     }
 
     // white Pieces
-    defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false, 'white');
-    defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false, 'white');
-    defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false, 'white');
-    defaultBoard[0][3] = new Piece(Pieces.KING, Players.WHITE, false, false, 'white');
-    defaultBoard[0][4] = new Piece(Pieces.QUEEN, Players.WHITE, false, false, 'white');
-    defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false, 'white');
-    defaultBoard[0][6] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false, 'white');
-    defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false, 'white');
+    defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
+    defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
+    defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
+    defaultBoard[0][3] = new Piece(Pieces.KING, Players.WHITE, false, false);
+    defaultBoard[0][4] = new Piece(Pieces.QUEEN, Players.WHITE, false, false);
+    defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
+    defaultBoard[0][6] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
+    defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
 
     // black Pieces
-    defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false, 'white');
-    defaultBoard[7][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false, 'white');
-    defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false, 'white');
-    defaultBoard[7][3] = new Piece(Pieces.KING, Players.BLACK, false, false, 'white');
-    defaultBoard[7][4] = new Piece(Pieces.QUEEN, Players.BLACK, false, false, 'white');
-    defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false, 'white');
-    defaultBoard[7][6] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false, 'white');
-    defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false, 'white');
+    defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
+    defaultBoard[7][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
+    defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
+    defaultBoard[7][3] = new Piece(Pieces.KING, Players.BLACK, false, false);
+    defaultBoard[7][4] = new Piece(Pieces.QUEEN, Players.BLACK, false, false);
+    defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
+    defaultBoard[7][6] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
+    defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
 
     // pawns
     for ( let x = 0; x < 8; x++ ){
-        defaultBoard[1][x] = new Piece(Pieces.PAWN, Players.WHITE, false, false, 'white');
-        defaultBoard[6][x] = new Piece(Pieces.PAWN, Players.BLACK, false, false, 'white');
+        defaultBoard[1][x] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
+        defaultBoard[6][x] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
     }
 
-    // blank Pieces
+    // blank squares
     for ( let y = 2; y < 6; y++ ){
         for ( let x = 0; x < 8; x++ ){
-            defaultBoard[y][x] = new Piece(Pieces.EMPTY, Players.NONE, false, false, 'white');
+            defaultBoard[y][x] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         }
     }
 

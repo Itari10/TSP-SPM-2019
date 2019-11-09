@@ -28,10 +28,9 @@ body {
 .boardRow {
   display: flex;
 }
-.
-/*
-Square color styling (Color#1)
-*/
+
+
+/* Square color styling (Color#1)
 .board:nth-child(even) .boardRow:nth-child(even) button:nth-child(even) {
   background-color: lightblue;
 }
@@ -44,9 +43,8 @@ Square color styling (Color#1)
 .board:nth-child(even) .boardRow:nth-child(odd) button:nth-child(odd) {
     background-color: lightblue;
 }
-/*
-Square color styling (Color#2)
-*/
+
+/* Square color styling (Color#2)
 .board:nth-child(odd) .boardRow:nth-child(even) button:nth-child(odd) {
   background-color: white;
 }
@@ -59,3 +57,4 @@ Square color styling (Color#2)
 .board:nth-child(odd) .boardRow:nth-child(odd) button:nth-child(even) {
     background-color: white;
 }
+*/

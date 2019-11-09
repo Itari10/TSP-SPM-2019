@@ -1,40 +1,28 @@
 import React from 'react';
 import Square from './Square';
-import rookWhite from "../Assets/rookWhite.png";
-import knightWhite from "../Assets/knightWhite.png";
-import bishopWhite from "../Assets/bishopWhite.png";
-import kingWhite from "../Assets/kingWhite.png";
-import queenWhite from "../Assets/queenWhite.png";
-import pawnWhite from "../Assets/pawnWhite.png";
-import rookBlack from "../Assets/rookBlack.png";
-import knightBlack from "../Assets/knightBlack.png";
-import bishopBlack from "../Assets/bishopBlack.png";
-import kingBlack from "../Assets/kingBlack.png";
-import queenBlack from "../Assets/queenBlack.png";
-import pawnBlack from "../Assets/pawnBlack.png";
-import error from "../Assets/error.png";
-
 
 // class used as a container to hold piece info
 class Piece{
-    constructor(pieceType, ownedBy, isHighlighted, isSelected){
-        this.isHighlighted = isHighlighted;
-        this.isSelected = isSelected;
+
+    constructor(pieceType, ownedBy, isHighlighted, isSelected, defaultColor){
         this.pcType = pieceType;
         this.pcOwner = ownedBy;
+        this.isHighlighted = isHighlighted;
+        this.isSelected = isSelected;
+        this.defaultColor = defaultColor;       // THIS VALUE SHOULD NEVER CHANGE
     }
 }
 
 // player enum
-export const players = {
+export const Players = {
     WHITE: 1,
     BLACK: 2,
     NONE: -1
 };
 
 // piece enum
-export const pieces = {
-    EMPTY: null,
+export const Pieces = {
+    EMPTY: 0,
     ROOK: 1,
     KNIGHT: 2,
     BISHOP: 3,
@@ -59,9 +47,9 @@ const Board = (props) => {
      *  key             unique identifier for the Component (so React stops complaining)
      *  y               Y-coordinate on the board AND inside the 8x8 board array
      *  x               Y-coordinate on the board AND inside the 8x8 board array
+     *  defaultColor    the default color of this Square
      *  pieceType       the type of piece on this square
      *  ownedBy         the player who owns the piece on this square
-     *  image           the image that will be rendered om this square
      *  onClick:        FUNCTION passed from App that activates when Square is clicked
      */
     function create8squares(curY, bState){
@@ -74,11 +62,11 @@ const Board = (props) => {
                     key =           {curY + '.' + x}
                     y =             {curY}
                     x =             {x}
+                    defaultColor =  {piece.defaultColor}
                     isHighlighted = {piece.isHighlighted}
                     isSelected =    {piece.isSelected}
                     pieceType =     {piece.pcType}
                     ownedBy =       {piece.pcOwner}
-                    image =         {determineImage(piece.pcType, piece.pcOwner)}
                     onClick =       {props.pieceClicked}
                 />
             );
@@ -105,36 +93,6 @@ const Board = (props) => {
     }
 };
 
-// Determines the image that will be displayed on a square based on
-// the square's pcType and ownedBy properties
-function determineImage(pieceType, ownedBy){
-    switch ( ownedBy ){
-        case players.WHITE: {
-            switch( pieceType ){
-                case pieces.ROOK:   return rookWhite;
-                case pieces.PAWN:   return pawnWhite;
-                case pieces.KNIGHT: return knightWhite;            // white pieces
-                case pieces.BISHOP: return bishopWhite;
-                case pieces.QUEEN:  return queenWhite;
-                case pieces.KING:   return kingWhite;
-                default:            return error;
-            }
-        }
-        case players.BLACK: {
-            switch( pieceType ){
-                case pieces.ROOK:   return rookBlack;
-                case pieces.PAWN:   return pawnBlack;
-                case pieces.KNIGHT: return knightBlack;            // black pieces
-                case pieces.BISHOP: return bishopBlack;
-                case pieces.QUEEN:  return queenBlack;
-                case pieces.KING:   return kingBlack;
-                default:            return error;
-            }
-        }
-        case players.NONE:
-        default:                    return null;            // empty spaces
-    }
-}
 
 // Performs the initial first-time board creation
 // when the game starts. Fills an [8][8] array with
@@ -148,39 +106,45 @@ export function initializeBoard(){
         }
     }
 
-    // white pieces
-    defaultBoard[0][0] = new Piece(pieces.ROOK, players.WHITE, false, false);
-    defaultBoard[0][1] = new Piece(pieces.KNIGHT, players.WHITE, false, false);
-    defaultBoard[0][2] = new Piece(pieces.BISHOP, players.WHITE, false, false);
-    defaultBoard[0][3] = new Piece(pieces.KING, players.WHITE, false, false);
-    defaultBoard[0][4] = new Piece(pieces.QUEEN, players.WHITE, false, false);
-    defaultBoard[0][5] = new Piece(pieces.BISHOP, players.WHITE, false, false);
-    defaultBoard[0][6] = new Piece(pieces.KNIGHT, players.WHITE, false, false);
-    defaultBoard[0][7] = new Piece(pieces.ROOK, players.WHITE, false, false);
+    // white Pieces
+    defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false, 'white');
+    defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false, 'white');
+    defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false, 'white');
+    defaultBoard[0][3] = new Piece(Pieces.KING, Players.WHITE, false, false, 'white');
+    defaultBoard[0][4] = new Piece(Pieces.QUEEN, Players.WHITE, false, false, 'white');
+    defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false, 'white');
+    defaultBoard[0][6] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false, 'white');
+    defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false, 'white');
 
-    // black pieces
-    defaultBoard[7][0] = new Piece(pieces.ROOK, players.BLACK, false, false);
-    defaultBoard[7][1] = new Piece(pieces.KNIGHT, players.BLACK, false, false);
-    defaultBoard[7][2] = new Piece(pieces.BISHOP, players.BLACK, false, false);
-    defaultBoard[7][3] = new Piece(pieces.KING, players.BLACK, false, false);
-    defaultBoard[7][4] = new Piece(pieces.QUEEN, players.BLACK, false, false);
-    defaultBoard[7][5] = new Piece(pieces.BISHOP, players.BLACK, false, false);
-    defaultBoard[7][6] = new Piece(pieces.KNIGHT, players.BLACK, false, false);
-    defaultBoard[7][7] = new Piece(pieces.ROOK, players.BLACK, false, false);
+    // black Pieces
+    defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false, 'white');
+    defaultBoard[7][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false, 'white');
+    defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false, 'white');
+    defaultBoard[7][3] = new Piece(Pieces.KING, Players.BLACK, false, false, 'white');
+    defaultBoard[7][4] = new Piece(Pieces.QUEEN, Players.BLACK, false, false, 'white');
+    defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false, 'white');
+    defaultBoard[7][6] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false, 'white');
+    defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false, 'white');
 
     // pawns
     for ( let x = 0; x < 8; x++ ){
-        defaultBoard[1][x] = new Piece(pieces.PAWN, players.WHITE, false, false);
-        defaultBoard[6][x] = new Piece(pieces.PAWN, players.BLACK, false, false);
+        defaultBoard[1][x] = new Piece(Pieces.PAWN, Players.WHITE, false, false, 'white');
+        defaultBoard[6][x] = new Piece(Pieces.PAWN, Players.BLACK, false, false, 'white');
     }
 
-    // blank pieces
+    // blank Pieces
     for ( let y = 2; y < 6; y++ ){
         for ( let x = 0; x < 8; x++ ){
-            defaultBoard[y][x] = new Piece(pieces.EMPTY, players.NONE, false, false);
+            defaultBoard[y][x] = new Piece(Pieces.EMPTY, Players.NONE, false, false, 'white');
         }
     }
 
+    // sets default board square colors
+    for ( let y = 0; y < 8; y++ ){
+        for ( let x = 0; x < 8; x++ ){
+            defaultBoard[y][x].defaultColor = ((x % 2) - (y % 2)) === 0 ? 'lightBlue' : 'white';
+        }
+    }
     return defaultBoard;
 }
 

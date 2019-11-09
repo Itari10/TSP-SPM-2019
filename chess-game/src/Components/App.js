@@ -3,8 +3,9 @@ import '../Style/App.css';
 import PlayerBox from './PlayerBox';
 import Board, {initializeBoard} from './Board';
 import EndTurnBtn from './EndTurnBtn';
-import pieces from './Board';
-import players from './Board';
+import {Pieces} from './Board';
+import {Players} from './Board';
+
 
 const App = (props) => {
 
@@ -17,37 +18,41 @@ const App = (props) => {
 
     const squareClicked = (y, x) => {
 
-        // JANK
-        // let temp = bState;
-        // temp[y][x].pieceID = "BQ";          // sets the (y, x) that was clicked to queen
-        // setBoardState( temp );              // updates the actual board state
-        // setUpdateBoard( !updateBoard );       // triggers the app to re-render
-
         let boardMap = bState;
 
-        //If you click the same square as the currently selected square, deselect the sqaure
-        if (selectedSquare[0] === y && selectedSquare[1] === x) {
+        // If you click the same square as the currently selected square, deselect the square
+        if ( y === selectedSquare[0] && x === selectedSquare[1] ) {
             setSelectedSquare([-1,-1]);
-            
-        //If there is no currently selected square, select the square that was clicked
-        } else if (selectedSquare[0] === -1 && selectedSquare[1] === -1) {       
-            setSelectedSquare([y,x]);
-            if ( boardMap[y][x].pcType === pieces.EMPTY ) {
-                setSelectedSquare([-1,-1]);
-            }
-
-        //Move piece
-        } else {
-            let selectedPiece = boardMap[selectedSquare[0]][selectedSquare[1]];
-            boardMap[y][x].pcType = selectedPiece.pcType;
-            boardMap[y][x].pcOwner = selectedPiece.pcOwner;
-            boardMap[selectedSquare[0]][selectedSquare[1]].pcType = pieces.EMPTY;    // the space the piece just moved
-            boardMap[selectedSquare[0]][selectedSquare[1]].pcOwner = players.NONE;      // from is now empty
-            setSelectedSquare([-1,-1]);
-            setBoardState(boardMap);
-            setUpdateBoard(!updateBoard);
+            boardMap[y][x].isSelected = false;
         }
-        return;
+
+        // Otherwise, if there is nothing selected, select the square that was clicked
+        else if (selectedSquare[0] === -1 && selectedSquare[1] === -1) {
+
+            // as long as there is a piece on that square, select it
+            if ( boardMap[y][x].pcType !== Pieces.EMPTY ) {
+                console.log(Pieces.EMPTY);
+                setSelectedSquare( [y, x] );
+                boardMap[y][x].isSelected = true;
+            }
+        }
+
+        // If there is a selected piece, and you click on another square
+        // move the selected piece to that square and remove it from its previous square
+        else {
+            let selectedPiece = boardMap[ selectedSquare[0] ][ selectedSquare[1] ];
+            let clickedPiece = boardMap[y][x];
+
+            clickedPiece.pcType = selectedPiece.pcType;         // move piece from selected square to clicked square
+            clickedPiece.pcOwner = selectedPiece.pcOwner;
+            selectedPiece.pcType = Pieces.EMPTY;
+            selectedPiece.pcOwner = Players.NONE;               // clear the selected square
+            selectedPiece.isSelected = false;                   // and de-select it
+
+            setSelectedSquare( [-1,-1] );                       // set the SelectedSquare state to "nothing selected"
+            setBoardState(boardMap);                            // update board
+            setUpdateBoard(!updateBoard);                       // and re-render
+        }
     };
 
     //changes the players turn in the game

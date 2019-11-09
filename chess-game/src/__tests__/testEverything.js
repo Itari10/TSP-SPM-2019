@@ -79,9 +79,10 @@ describe('APP TESTS', () => {
         expect(app.find('Board')).to.have.lengthOf(1);
     });
 
-    test('loads the End-Turn Button component', () => {
-        expect(app.find('EndTurnBtn')).to.have.lengthOf(1);
-    });
+    // END TURN BUTTON WAS REMOVED
+    // test('loads the End-Turn Button component', () => {
+    //     expect(app.find('EndTurnBtn')).to.have.lengthOf(1);
+    // });
 
     test('loads two PlayerBoxes component', () => {
         expect(app.find('PlayerBox')).to.have.lengthOf(2);

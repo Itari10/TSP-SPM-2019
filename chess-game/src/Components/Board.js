@@ -141,7 +141,7 @@ export function initializeBoard(){
     // sets default board square colors
     for ( let y = 0; y < 8; y++ ){
         for ( let x = 0; x < 8; x++ ){
-            defaultBoard[y][x].defaultColor = ((x % 2) - (y % 2)) === 0 ? 'lightBlue' : 'white';
+            defaultBoard[y][x].defaultColor = ((x + y) % 2) === 0 ? 'lightBlue' : 'white';
         }
     }
     return defaultBoard;

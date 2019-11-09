@@ -37,7 +37,7 @@ const Square = (props) => {
             className={"square"}
             style={{
                 backgroundImage: 'url('+ determineImage(props) + ')',
-                backgroundColor: determineBgColor(props)
+                backgroundColor: determineBG(props)
             }}
             onClick={() => props.onClick(props.y, props.x)}
         />
@@ -45,12 +45,12 @@ const Square = (props) => {
 };
 
 // sets the background color of the Square based on its properties
-function determineBgColor(props){
-    if ( props.isHighlighted ){
-        return 'green';
-    }
-    else if ( props.isSelected ){
+function determineBG(props){
+    if ( props.isSelected){
         return 'red';
+    }
+    else if ( props.isHighlighted  ){
+        return 'green';
     }
     else
         return props.defaultColor;

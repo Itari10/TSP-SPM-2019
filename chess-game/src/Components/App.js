@@ -19,7 +19,7 @@ const App = (props) => {
     // REMEMBER: These states CANNOT be changed without using the corresponding SET methods.
     // Attempting to set them manually will NOT result in errors, but WILL cause unintended buggy behavior
     const [boardState, setBoardState] =         React.useState( initializeBoard() );
-    const [currentPlayerTurn, swapPlayerTurn] = React.useState( Players.WHITE );
+    const [currentPlayer, swapPlayer] = React.useState( Players.WHITE );
     const [updateBoard, setUpdateBoard] =       React.useState( true );             // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
@@ -41,7 +41,7 @@ const App = (props) => {
 
 
         // if you click on YOUR OWN piece...
-        else if (boardMap[y][x].pcOwner === currentPlayerTurn ) {
+        else if (boardMap[y][x].pcOwner === currentPlayer ) {
 
             // and nothing is selected...
             // then select that piece
@@ -50,7 +50,7 @@ const App = (props) => {
                 boardMap[y][x].isSelected = true;
             }
 
-            // if you already have a piece selected...
+            // or if you already have a piece selected...
             // de-select it and select the new piece
             else{
                 deHighlightAllSquares();
@@ -59,14 +59,8 @@ const App = (props) => {
                 boardMap[y][x].isSelected = true;
             }
 
-            // now highlight all possible moves for the selected piece
+            // now highlight all possible moves for that selected piece
             switch ( boardMap[y][x].pcType ){
-
-                // FOR DEVELOPMENT:
-                //
-                // IF MAY BE EASIER TO JUST WRITE THE CODE FOR YOUR PIECE HERE
-                // AND PUT IT IN ITS RESPECTIVE METHOD LATER.
-                //
                 case Pieces.ROOK: showRookMoves(); break;
                 case Pieces.KNIGHT: showKnightMoves(); break;
                 case Pieces.BISHOP: showBishopMoves(); break;
@@ -85,6 +79,12 @@ const App = (props) => {
             selectedPiece.pcType = Pieces.EMPTY;
             selectedPiece.pcOwner = Players.NONE;               // clear the selected square
             selectedPiece.isSelected = false;
+
+            // transforms pawns into queens if they reach the other side of the board
+            // no need to check which player because pawns will only ever reach one side
+            if ((y === 0 || y === 7) && boardMap[y][x].pcType === Pieces.PAWN ){
+                boardMap[y][x].pcType = Pieces.QUEEN;
+            }
 
             deHighlightAllSquares();
             setSelectedSquare( [-1,-1] );
@@ -118,8 +118,8 @@ const App = (props) => {
 
             possibleMoves.push( new Move(y-2,x+1) );
             possibleMoves.push( new Move(y-2,x-1) );
-            possibleMoves.push( new Move(y+2,x+1) );      // creates the list of ALL moves
-            possibleMoves.push( new Move(y+2,x-1) );      // this piece can theoretically make
+            possibleMoves.push( new Move(y+2,x+1) );
+            possibleMoves.push( new Move(y+2,x-1) );
             possibleMoves.push( new Move(y+1,x+2) );
             possibleMoves.push( new Move(y+1,x-2) );
             possibleMoves.push( new Move(y-1,x-2) );
@@ -132,7 +132,7 @@ const App = (props) => {
                     continue;
                 if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
                     continue;
-                if ( boardMap[move.y][move.x].pcOwner === currentPlayerTurn )        // discard if attacking your own piece
+                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
                     continue;
 
                 goodMoves.push(move);
@@ -150,10 +150,61 @@ const App = (props) => {
 
         // highlights all the acceptable moves that the PAWN piece can make
         function showPawnMoves() {
-            let possibleMoves = [];                     // all theoretical moves the PAWN can make
-            let goodMoves = [];                         // moves that are allowed
+            let possibleMoves = [];
+            let goodMoves = [];
 
-            // TODO: where can the Pawn move?
+            // pawn movement is dependant upon the player
+            switch( currentPlayer ){
+                case Players.WHITE: {
+                    possibleMoves.push( new Move(y+1,x+1) );        // diagonal attacks
+                    possibleMoves.push( new Move(y+1,x-1) );
+
+                    // add forward moves until a collision occurs
+                    for ( let curY = y + 1; curY <= y + 2 && curY < 8; curY++){
+                        if (boardMap[ curY ][ x ].pcType !== Pieces.EMPTY)
+                            break;
+                        possibleMoves.push( new Move(curY,x) )
+                    }
+                    break;
+                }
+                case Players.BLACK: {
+                    possibleMoves.push( new Move(y-1,x+1) );        // diagonal attacks
+                    possibleMoves.push( new Move(y-1,x-1) );
+
+                    // add forward moves until a collision occurs
+                    for ( let curY = y - 1; curY >= y - 2 && curY > 0; curY--){
+                        if (boardMap[ curY ][ x ].pcType !== Pieces.EMPTY)
+                            break;
+                        possibleMoves.push( new Move(curY,x) )
+                    }
+                    break;
+                }
+            }
+
+            // for each of the possible moves, remove any that are not allowed
+            for ( let i = 0; i < possibleMoves.length; i++ ){
+                let move = possibleMoves[i];
+                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
+                    continue;
+                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
+                    continue;
+                if (move.y === y+2 && y !== 1)          // discard WHITE double moves if not on starting row
+                    continue;
+                if (move.y === y-2 && y !== 6)          // discard BLACK double moves if not on starting row
+                    continue;
+                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )       // discard if attacking your own piece
+                    continue;
+                if ((currentPlayer === Players.WHITE) &&
+                    (move.x !== x) &&
+                    (boardMap[move.y][move.x].pcOwner !== Players.BLACK))       // discard WHITE diagonals if no enemy piece
+                    continue;
+                if ((currentPlayer === Players.BLACK) &&
+                    (move.x !== x) &&
+                    (boardMap[move.y][move.x].pcOwner !== Players.WHITE))       // discard BLACK diagonals if no enemy piece
+                    continue;
+
+                goodMoves.push(move);
+            }
 
             let goodMove = null;
             for ( let i = 0; i < goodMoves.length; i++ ){
@@ -226,21 +277,20 @@ const App = (props) => {
 
     // swaps the player turn
     const swapTurn = () => {
-        swapPlayerTurn( currentPlayerTurn === Players.WHITE ? Players.BLACK : Players.WHITE )
-
+        swapPlayer( currentPlayer === Players.WHITE ? Players.BLACK : Players.WHITE )
     };
 
     // renders the game
     return (
         <div className="App">
             <div className="Header">
-                <h1>BEAST WARS</h1>
+                <h1>COWS, HORSES, AND PAWNS</h1>
             </div>
             <div className="row">
                 <div className="col-sm-4">
-                    <PlayerBox playerNumber="1" isTurn={currentPlayerTurn === Players.WHITE}/>
+                    <PlayerBox playerNumber="1" isTurn={currentPlayer === Players.WHITE}/>
                     <div className="spacer"/>
-                    <PlayerBox playerNumber="2" isTurn={currentPlayerTurn === Players.BLACK}/>
+                    <PlayerBox playerNumber="2" isTurn={currentPlayer === Players.BLACK}/>
                 </div>
                 <div className="col-sm-8">
                     <Board bState = {boardState} pieceClicked = {squareClicked}/>
@@ -250,8 +300,10 @@ const App = (props) => {
     );
 };
 
-{/*<div className="row">*/}
-    {/*<EndTurnBtn onClick={swapTurn}/>*/}
-{/*</div>*/}
+// deprecated End-Turn Button component
+//
+// <div className="row">
+//    <EndTurnBtn onClick={swapTurn}/>
+// </div>*/}
 
 export default App;

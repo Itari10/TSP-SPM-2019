@@ -52,7 +52,7 @@ function determineBG(props){
         return 'red';
     }
     else if ( props.isHighlighted  ){
-        if ( props.defaultColor === 'white' )
+        if ( props.defaultColor === '#d9a989' )
              return '#0da653';
          else
              return '#0c954b';      // slightly darker color for dark squares

@@ -7,7 +7,7 @@
 }
 
 .notTurn {
-    background-color: rgba(175,175,175,1);
+    background-color: rgb(125, 125, 125);
     color: rgb(48, 48, 48);
     height: 47.5%;
     border: 6px solid #2c2c2c;

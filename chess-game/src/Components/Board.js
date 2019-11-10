@@ -16,7 +16,7 @@ class Piece{
 export const Players = {
     NONE: 0,
     WHITE: 1,
-    BLACK: 2,
+    BLACK: 2
 };
 
 // piece enum
@@ -35,13 +35,31 @@ const Board = (props) => {
     // renders the board based on the boardState passed from App
     return (
         <div className="board">
-            {createBoardJSX(props.bState)};
+            {createBoardJSX()};
         </div>
     );
 
+    // converts boardState into JSX
+    function createBoardJSX(){
+        let boardJSX = [];
+        for ( let y = 0; y < 8; y++ ){
+            boardJSX.push( createRow(y) );
+        }
+        return boardJSX;
+    }
+
+    // creates a row of squares
+    function createRow(currentY){
+        return(
+            <div className="boardRow" key={'bRow' + currentY}>
+                {create8squares(currentY)}
+            </div>
+        );
+    }
+
     /** DATA-TO-COMPONENT CONVERSION
      * Converts the 2D-array of Piece objects into their JSX React-component
-     * equivalent. This is then passed back up to app and is then rendered
+     * equivalent. This is then passed back up to app to be rendered
      *
      *  key             unique identifier for the Component (so React stops complaining)
      *  y               Y-coordinate on the board AND inside the 8x8 board array
@@ -51,15 +69,15 @@ const Board = (props) => {
      *  ownedBy         the player who owns the piece on this square
      *  onClick:        FUNCTION passed from App that activates when Square is clicked
      */
-    function create8squares(curY, boardState){
+    function create8squares(currentY){
         let curRow = [];
-        let curSquare = null;                           // current piece
+        let curSquare = null;                       // current piece
         for ( let x = 0; x < 8; x++ ){
-            curSquare = boardState[curY][x];            // makes code easier to read
+            curSquare = props.bState[currentY][x];      // makes code easier to read
             curRow.push(
                 <Square
-                    key =           {'Sq'+curY+'.'+x}
-                    y =             {curY}
+                    key =           {'Sq'+currentY+'.'+x}
+                    y =             {currentY}
                     x =             {x}
                     defaultColor =  {curSquare.defaultColor}
                     isHighlighted = {curSquare.isHighlighted}
@@ -71,24 +89,6 @@ const Board = (props) => {
             );
         }
         return curRow;
-    }
-
-    // converts boardState into JSX
-    function createBoardJSX( boardState ){
-        let boardJSX = [];
-        for ( let y = 0; y < 8; y++ ){
-            boardJSX.push(createRow(y, boardState));
-        }
-        return boardJSX;
-    }
-
-    // creates a row of squares
-    function createRow(currentY, boardState){
-        return(
-            <div className="boardRow" key={'bRow' + currentY}>
-                {create8squares(currentY, boardState)}
-            </div>
-        );
     }
 };
 

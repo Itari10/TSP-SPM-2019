@@ -92,13 +92,12 @@ const App = (props) => {
         }
         setBoardState(boardMap);                // updates the board with all changes made
         setUpdateBoard(!updateBoard);           // and triggers a re-render
-
+        // END OF FUNCTION EXECUTION
 
 
         // ******************************************************************************************
         // ************************************ HELPER FUNCTIONS ************************************
         // ******************************************************************************************
-
 
         // de-highlights all squares in the highlight list
         function deHighlightAllSquares(){
@@ -110,11 +109,21 @@ const App = (props) => {
             setHighlights( [] );                    // reset highlighted squares state to an empty array
         }
 
+        // iterates through a list of acceptable moves that a piece can make
+        // highlights them on the board, and updates the state to match
+        function highlightGoodMoves( goodMoves ){
+            for ( let i = 0; i < goodMoves.length; i++ ){
+                boardMap[ goodMoves[i].y ][ goodMoves[i].x ].isHighlighted = true;
+            }
+            setHighlights( goodMoves );
+        }
+
         // highlights all the acceptable moves
         // that the KNIGHT piece can make
         function showKnightMoves() {
             let possibleMoves = [];                     // all theoretical moves the KNIGHT can make
             let goodMoves = [];                         // moves that are allowed
+            let move = null;                            // current move being tested
 
             possibleMoves.push( new Move(y-2,x+1) );
             possibleMoves.push( new Move(y-2,x-1) );
@@ -127,7 +136,7 @@ const App = (props) => {
 
             // for each of the possible moves, remove any that are not allowed
             for ( let i = 0; i < possibleMoves.length; i++ ){
-                let move = possibleMoves[i];
+                move = possibleMoves[i];
                 if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
                     continue;
                 if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
@@ -140,18 +149,14 @@ const App = (props) => {
 
             // finally, highlight all board squares that are in the list good moves
             // then update the highlightedSquares state to match
-            let goodMove = null;
-            for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;      // highlight all moves in the goodMove list
-            }
-            setHighlights( goodMoves );
+            highlightGoodMoves( goodMoves );
         }
 
         // highlights all the acceptable moves that the PAWN piece can make
         function showPawnMoves() {
             let possibleMoves = [];
             let goodMoves = [];
+            let move = null;
 
             // pawn movement is dependant upon the player
             switch( currentPlayer ){
@@ -183,7 +188,7 @@ const App = (props) => {
 
             // for each of the possible moves, remove any that are not allowed
             for ( let i = 0; i < possibleMoves.length; i++ ){
-                let move = possibleMoves[i];
+                move = possibleMoves[i];
                 if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
                     continue;
                 if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
@@ -205,73 +210,51 @@ const App = (props) => {
 
                 goodMoves.push(move);
             }
-
-            let goodMove = null;
-            for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
-            }
-            setHighlights( goodMoves );
+            highlightGoodMoves( goodMoves );
         }
 
         // highlights all the acceptable moves that the ROOK piece can make
         function showRookMoves() {
             let possibleMoves = [];                     // all theoretical moves the ROOK can make
             let goodMoves = [];                         // moves that are allowed
+            let move = null;
 
             // TODO: where can the Rook move?
 
-            let goodMove = null;
-            for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
-            }
-            setHighlights( goodMoves );
+            highlightGoodMoves( goodMoves );
         }
 
         // highlights all the acceptable moves that the BISHOP piece can make
         function showBishopMoves() {
             let possibleMoves = [];                     // all theoretical moves the BISHOP can make
             let goodMoves = [];                         // moves that are allowed
+            let move = null;
 
             // TODO: where can the Bishop move?
 
-            let goodMove = null;
-            for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
-            }
-            setHighlights( goodMoves );
+            highlightGoodMoves( goodMoves );
         }
 
         // highlights all the acceptable moves that the QUEEN piece can make
         function showQueenMoves() {
             let possibleMoves = [];                     // all theoretical moves the QUEEN can make
             let goodMoves = [];                         // moves that are allowed
+            let move = null;
 
             // TODO: where can the Queen move?
 
-            let goodMove = null;
-            for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
-            }
-            setHighlights( goodMoves );
+            highlightGoodMoves( goodMoves );
         }
 
         // highlights all the acceptable moves that the KING piece can make
         function showKingMoves() {
             let possibleMoves = [];                     // all theoretical moves the KING can make
             let goodMoves = [];                         // moves that are allowed
+            let move = null;
 
             // TODO: where can the King move?
 
-            let goodMove = null;
-            for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
-            }
-            setHighlights( goodMoves );
+            highlightGoodMoves( goodMoves );
         }
     };
 

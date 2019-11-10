@@ -214,12 +214,109 @@ const App = (props) => {
 
         // highlights all the acceptable moves that the ROOK piece can make
         function showRookMoves() {
-            let possibleMoves = [];                     // all theoretical moves the ROOK can make
-            let goodMoves = [];                         // moves that are allowed
+            let possibleMovesU = [];                     // all theoretical moves the ROOK can make upwards
+            let possibleMovesD = [];                     // all theoretical moves the ROOK can make downwards
+            let possibleMovesR = [];                     // all theoretical moves the ROOK can make rightwards
+            let possibleMovesL = [];                     // all theoretical moves the ROOK can make leftwards
+            let goodMoves = [];                          // moves that are allowed
             let move = null;
 
-            // TODO: where can the Rook move?
+            //adds all possible moves when starting from worst case scenarios
+            //rook is on the left edge of the board, moving right
+            possibleMovesR.push(new Move(y,x+1));
+            possibleMovesR.push(new Move(y,x+2));
+            possibleMovesR.push(new Move(y,x+3));
+            possibleMovesR.push(new Move(y,x+4));
+            possibleMovesR.push(new Move(y,x+5));
+            possibleMovesR.push(new Move(y,x+6));
+            possibleMovesR.push(new Move(y,x+7));
+            //rook is on the right edge of the board, moving left
+            possibleMovesL.push(new Move(y,x-1));
+            possibleMovesL.push(new Move(y,x-2));
+            possibleMovesL.push(new Move(y,x-3));
+            possibleMovesL.push(new Move(y,x-4));
+            possibleMovesL.push(new Move(y,x-5));
+            possibleMovesL.push(new Move(y,x-6));
+            possibleMovesL.push(new Move(y,x-7));
+            //rook is on the top edge of the board, moving down
+            possibleMovesD.push(new Move(y+1,x));
+            possibleMovesD.push(new Move(y+2,x));
+            possibleMovesD.push(new Move(y+3,x));
+            possibleMovesD.push(new Move(y+4,x));
+            possibleMovesD.push(new Move(y+5,x));
+            possibleMovesD.push(new Move(y+6,x));
+            possibleMovesD.push(new Move(y+7,x));
+            //rook is on the bottom edge of the board, moving up
+            possibleMovesU.push(new Move(y-1,x));
+            possibleMovesU.push(new Move(y-2,x));
+            possibleMovesU.push(new Move(y-3,x));
+            possibleMovesU.push(new Move(y-4,x));
+            possibleMovesU.push(new Move(y-5,x));
+            possibleMovesU.push(new Move(y-6,x));
+            possibleMovesU.push(new Move(y-7,x));
 
+            // for each of the possible moves in the rightwards direction, remove any that are not allowed
+            for ( let i = 0; i < possibleMovesR.length; i++ ) {
+                move = possibleMovesR[i];
+                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
+                    continue;
+                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
+                    continue;
+                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
+                    break; //there is a collision so it needs to stop
+                if ( boardMap[move.y][move.x].pcOwner !== currentPlayer && boardMap[move.y][move.x].pcOwner !== Players.NONE ) {
+                    goodMoves.push(move); //if the piece is the opposite players then push the move
+                    break; //then break since there is a collision
+                }
+                goodMoves.push(move);
+            }
+            // for each of the possible moves in the leftwards direction, remove any that are not allowed
+            for ( let i = 0; i < possibleMovesL.length; i++ ) {
+                move = possibleMovesL[i];
+                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
+                    continue;
+                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
+                    continue;
+                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
+                    break; //there is a collision so it needs to stop
+                if ( boardMap[move.y][move.x].pcOwner !== currentPlayer && boardMap[move.y][move.x].pcOwner !== Players.NONE ) {
+                    goodMoves.push(move); //if the piece is the opposite players then push the move
+                    break; //then break since there is a collision
+                }
+                goodMoves.push(move);
+            }
+            // for each of the possible moves in the upwards direction, remove any that are not allowed
+            for ( let i = 0; i < possibleMovesU.length; i++ ) {
+                move = possibleMovesU[i];
+                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
+                    continue;
+                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
+                    continue;
+                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
+                    break; //there is a collision so it needs to stop
+                if ( boardMap[move.y][move.x].pcOwner !== currentPlayer && boardMap[move.y][move.x].pcOwner !== Players.NONE ) {
+                    goodMoves.push(move); //if the piece is the opposite players then push the move
+                    break; //then break since there is a collision
+                }
+                goodMoves.push(move);
+            }
+            // for each of the possible moves in the downwards direction, remove any that are not allowed
+            for ( let i = 0; i < possibleMovesD.length; i++ ) {
+                move = possibleMovesD[i];
+                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
+                    continue;
+                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
+                    continue;
+                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
+                    break; //there is a collision so it needs to stop
+                if ( boardMap[move.y][move.x].pcOwner !== currentPlayer && boardMap[move.y][move.x].pcOwner !== Players.NONE ) {
+                    goodMoves.push(move); //if the piece is the opposite players then push the move
+                    break; //then break since there is a collision
+                }
+                goodMoves.push(move);
+            }
+
+            //highlight the good moves
             highlightGoodMoves( goodMoves );
         }
 

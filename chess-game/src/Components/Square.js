@@ -51,20 +51,11 @@ function determineBG(props){
     if ( props.isSelected ) {
         return 'red';
     }
-
-    // TODO: We need slightly different highlighting colors for the different
-    // TODO: shades of squares so that the highlight is not just a big blob of color
-    // TODO: and the individual squares are distinguishable from one another
     else if ( props.isHighlighted  ){
-
-        if ( props.defaultColor === 'white' ) {
-            // TODO: darker green for darker squares
-            return 'green';
-
-        } else {
-            // TODO: lighter green for darker squares
-            return 'green';
-        }
+        if ( props.defaultColor === 'white' )
+             return '#0da653';
+         else
+             return '#0c954b';      // slightly darker color for dark squares
     }
     else
         return props.defaultColor;

@@ -17,20 +17,18 @@ class Move{
 const App = (props) => {
 
     // REMEMBER: These states CANNOT be changed without using the corresponding SET methods.
-    // Attempting to set them manually will NOT result in errors, but will cause unintended buggy behavior
-    // The values inside useState() are the INITIAL values set when the game first loads.
+    // Attempting to set them manually will NOT result in errors, but WILL cause unintended buggy behavior
     const [boardState, setBoardState] =         React.useState( initializeBoard() );
     const [currentPlayerTurn, swapPlayerTurn] = React.useState( Players.WHITE );
     const [updateBoard, setUpdateBoard] =       React.useState( true );             // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
 
-
     const squareClicked = (y, x) => {
 
         let boardMap = boardState;          // current state of the board when the square is clicked
 
-        // If you click the square that's already selected...
+        // If you've click the square that's already selected...
         // deselect the square and unhighlight any highlighted squares
         if ( y === selectedSquare[0] && x === selectedSquare[1] ) {
             setSelectedSquare([-1,-1]);
@@ -42,10 +40,10 @@ const App = (props) => {
         }
 
 
-        // if you click on YOUR OWN piece
+        // if you click on YOUR OWN piece...
         else if (boardMap[y][x].pcOwner === currentPlayerTurn ) {
 
-            // and nothing is selected..
+            // and nothing is selected...
             // then select that piece
             if ( selectedSquare[0] === -1 ) {
                 setSelectedSquare( [y, x] );
@@ -61,7 +59,7 @@ const App = (props) => {
                 boardMap[y][x].isSelected = true;
             }
 
-            // highlight all possible moves for the piece that's selected
+            // now highlight all possible moves for the selected piece
             switch ( boardMap[y][x].pcType ){
 
                 // FOR DEVELOPMENT:
@@ -69,17 +67,17 @@ const App = (props) => {
                 // IF MAY BE EASIER TO JUST WRITE THE CODE FOR YOUR PIECE HERE
                 // AND PUT IT IN ITS RESPECTIVE METHOD LATER.
                 //
-                case Pieces.ROOK: highlightRookMoves(); break;
-                case Pieces.KNIGHT: highlightKnightMoves(); break;
-                case Pieces.BISHOP: highlightBishopMoves(); break;
-                case Pieces.QUEEN: highlightQueenMoves(); break;
-                case Pieces.KING: highlightKingMoves(); break;
-                case Pieces.PAWN: highlightPawnMoves(); break;
+                case Pieces.ROOK: showRookMoves(); break;
+                case Pieces.KNIGHT: showKnightMoves(); break;
+                case Pieces.BISHOP: showBishopMoves(); break;
+                case Pieces.QUEEN: showQueenMoves(); break;
+                case Pieces.KING: showKingMoves(); break;
+                case Pieces.PAWN: showPawnMoves(); break;
             }
         }
 
         // Here a square is ALREADY selected and you've clicked on a highlighted square
-        // This is a successful move and so the turn is swapped to the next player upon completion
+        // This is a successful move so the turn is swapped to the next player upon completion
         else if ( selectedSquare[0] !== -1 && boardMap[y][x].isHighlighted === true ){
             let selectedPiece = boardMap[selectedSquare[0]][selectedSquare[1]];
             boardMap[y][x].pcType = selectedPiece.pcType;
@@ -89,7 +87,7 @@ const App = (props) => {
             selectedPiece.isSelected = false;
 
             deHighlightAllSquares();
-            setSelectedSquare([-1, -1]);        // set the SelectedSquare state to "nothing selected"
+            setSelectedSquare( [-1,-1] );
             swapTurn();                         // next player's turn
         }
         setBoardState(boardMap);                // updates the board with all changes made
@@ -100,6 +98,7 @@ const App = (props) => {
         // ******************************************************************************************
         // ************************************ HELPER FUNCTIONS ************************************
         // ******************************************************************************************
+
 
         // de-highlights all squares in the highlight list
         function deHighlightAllSquares(){
@@ -113,7 +112,7 @@ const App = (props) => {
 
         // highlights all the acceptable moves
         // that the KNIGHT piece can make
-        function highlightKnightMoves() {
+        function showKnightMoves() {
             let possibleMoves = [];                     // all theoretical moves the KNIGHT can make
             let goodMoves = [];                         // moves that are allowed
 
@@ -126,29 +125,31 @@ const App = (props) => {
             possibleMoves.push( new Move(y-1,x-2) );
             possibleMoves.push( new Move(y-1,x+2) );
 
+            // for each of the possible moves, remove any that are not allowed
             for ( let i = 0; i < possibleMoves.length; i++ ){
                 let move = possibleMoves[i];
-                if ( move.x > 7 || move.x < 0 )                     // discard if move is out of Y-range
+                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
                     continue;
-                if ( move.y > 7 || move.y < 0 )                     // discard if move is out of X-range
+                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
                     continue;
                 if ( boardMap[move.y][move.x].pcOwner === currentPlayerTurn )        // discard if attacking your own piece
                     continue;
 
-                goodMoves.push(move);                               // otherwise add it to the list of good moves
+                goodMoves.push(move);
             }
 
+            // finally, highlight all board squares that are in the list good moves
+            // then update the highlightedSquares state to match
             let goodMove = null;
             for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];                                        // highlight all moves in the goodMove list
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;      // and record them to the highlight-squares state
-                setHighlights( goodMoves )                                      // to increase efficiency when de-selecting them
+                goodMove = goodMoves[i];
+                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;      // highlight all moves in the goodMove list
             }
+            setHighlights( goodMoves );
         }
 
-
         // highlights all the acceptable moves that the PAWN piece can make
-        function highlightPawnMoves() {
+        function showPawnMoves() {
             let possibleMoves = [];                     // all theoretical moves the PAWN can make
             let goodMoves = [];                         // moves that are allowed
 
@@ -156,15 +157,14 @@ const App = (props) => {
 
             let goodMove = null;
             for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];                                        // highlight all moves in the goodMove list
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;      // and record them to the highlight-squares state
-                setHighlights( goodMoves )                                      // to increase efficiency when de-selecting them
+                goodMove = goodMoves[i];
+                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
             }
+            setHighlights( goodMoves );
         }
 
-
         // highlights all the acceptable moves that the ROOK piece can make
-        function highlightRookMoves() {
+        function showRookMoves() {
             let possibleMoves = [];                     // all theoretical moves the ROOK can make
             let goodMoves = [];                         // moves that are allowed
 
@@ -172,14 +172,14 @@ const App = (props) => {
 
             let goodMove = null;
             for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];                                        // highlight all moves in the goodMove list
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;      // and record them to the highlight-squares state
-                setHighlights( goodMoves )                                      // to increase efficiency when de-selecting them
+                goodMove = goodMoves[i];
+                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
             }
+            setHighlights( goodMoves );
         }
 
         // highlights all the acceptable moves that the BISHOP piece can make
-        function highlightBishopMoves() {
+        function showBishopMoves() {
             let possibleMoves = [];                     // all theoretical moves the BISHOP can make
             let goodMoves = [];                         // moves that are allowed
 
@@ -187,15 +187,14 @@ const App = (props) => {
 
             let goodMove = null;
             for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];                                        // highlight all moves in the goodMove list
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;      // and record them to the highlight-squares state
-                setHighlights( goodMoves )                                      // to increase efficiency when de-selecting them
+                goodMove = goodMoves[i];
+                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
             }
+            setHighlights( goodMoves );
         }
 
-
         // highlights all the acceptable moves that the QUEEN piece can make
-        function highlightQueenMoves() {
+        function showQueenMoves() {
             let possibleMoves = [];                     // all theoretical moves the QUEEN can make
             let goodMoves = [];                         // moves that are allowed
 
@@ -203,15 +202,14 @@ const App = (props) => {
 
             let goodMove = null;
             for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];                                        // highlight all moves in the goodMove list
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;      // and record them to the highlight-squares state
-                setHighlights( goodMoves )                                      // to increase efficiency when de-selecting them
+                goodMove = goodMoves[i];
+                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
             }
+            setHighlights( goodMoves );
         }
 
-
         // highlights all the acceptable moves that the KING piece can make
-        function highlightKingMoves() {
+        function showKingMoves() {
             let possibleMoves = [];                     // all theoretical moves the KING can make
             let goodMoves = [];                         // moves that are allowed
 
@@ -219,10 +217,10 @@ const App = (props) => {
 
             let goodMove = null;
             for ( let i = 0; i < goodMoves.length; i++ ){
-                goodMove = goodMoves[i];                                        // highlight all moves in the goodMove list
-                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;      // and record them to the highlight-squares state
-                setHighlights( goodMoves )                                      // to increase efficiency when de-selecting them
+                goodMove = goodMoves[i];
+                boardMap[ goodMove.y ][ goodMove.x ].isHighlighted = true;
             }
+            setHighlights( goodMoves );
         }
     };
 

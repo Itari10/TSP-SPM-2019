@@ -23,6 +23,8 @@ import error from "../Assets/error.png";
  *  y               Y-coordinate on the board AND inside the 8x8 board array
  *  x               Y-coordinate on the board AND inside the 8x8 board array
  *  defaultColor    the default color of this Square
+ *  isHighlighted   whether or not this Square is highlighted
+ *  isSelected      whether or not this Square is selected
  *  pieceType       the type of piece on this square
  *  ownedBy         the player who owns the piece on this square
  *  onClick:        FUNCTION passed from App that activates when Square is clicked
@@ -46,11 +48,23 @@ const Square = (props) => {
 
 // sets the background color of the Square based on its properties
 function determineBG(props){
-    if ( props.isSelected){
+    if ( props.isSelected ) {
         return 'red';
     }
+
+    // TODO: We need slightly different highlighting colors for the different
+    // TODO: shades of squares so that the highlight is not just a big blob of color
+    // TODO: and the individual squares are distinguishable from one another
     else if ( props.isHighlighted  ){
-        return 'green';
+
+        if ( props.defaultColor === 'white' ) {
+            // TODO: darker green for darker squares
+            return 'green';
+
+        } else {
+            // TODO: lighter green for darker squares
+            return 'green';
+        }
     }
     else
         return props.defaultColor;

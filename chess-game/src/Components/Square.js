@@ -49,13 +49,13 @@ const Square = (props) => {
 // sets the background color of the Square based on its properties
 function determineBG(props){
     if ( props.isSelected ) {
-        return 'red';
+        return '#aae7ff';
     }
     else if ( props.isHighlighted  ){
         if ( props.defaultColor === '#d9a989' )
-             return '#0da653';
+             return '#64b17d';
          else
-             return '#0c954b';      // slightly darker color for dark squares
+             return '#73ca8e';      // slightly darker color for dark squares
     }
     else
         return props.defaultColor;

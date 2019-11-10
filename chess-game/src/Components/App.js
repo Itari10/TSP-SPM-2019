@@ -19,7 +19,7 @@ const App = (props) => {
     // REMEMBER: These states CANNOT be changed without using the corresponding SET methods.
     // Attempting to set them manually will NOT result in errors, but WILL cause unintended buggy behavior
     const [boardState, setBoardState] =         React.useState( initializeBoard() );
-    const [currentPlayer, swapPlayer] = React.useState( Players.WHITE );
+    const [currentPlayer, swapPlayer] =         React.useState( Players.WHITE );
     const [updateBoard, setUpdateBoard] =       React.useState( true );             // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
@@ -38,7 +38,6 @@ const App = (props) => {
             // associated with the selected square
             deHighlightAllSquares();
         }
-
 
         // if you click on YOUR OWN piece...
         else if (boardMap[y][x].pcOwner === currentPlayer ) {
@@ -92,7 +91,7 @@ const App = (props) => {
         }
         setBoardState(boardMap);                // updates the board with all changes made
         setUpdateBoard(!updateBoard);           // and triggers a re-render
-        // END OF FUNCTION EXECUTION
+        // END OF MAIN FUNCTION EXECUTION
 
 
         // ******************************************************************************************

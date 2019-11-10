@@ -1,9 +1,8 @@
-import React from 'react';                  // react
+import React from 'react';
 import { shallow, mount } from 'enzyme';    // enzyme assertion methods
 import { expect } from 'chai';              // chai assertion methods
-
-import App from '../Components/App';        // allows access to App Component
-import Board from '../Components/App';      // allows access to Board Component
+import App from '../Components/App';
+import Board from '../Components/App';
 
 /************************  FOR INTELLIJ USERS  **************************************
  *                                                                                  *
@@ -38,21 +37,6 @@ import Board from '../Components/App';      // allows access to Board Component
 
 //  CHAI DOCUMENTATION:
 //  https://www.chaijs.com/api/bdd/#method_lengthof
-
-
-//  describe(): An optional method to wrap a group of tests with.
-//  describe() allows us to write some text that explains the nature of
-//  the group of tests conducted within it. As you can see in the Terminal,
-//  the describe() text acts as a header before the test results are shown.
-
-//  it(): Similar in nature to describe()
-//  it() allows us to write some text describing what a test should successfully achieve.
-//  You may see that the test() method is used instead of it() throughout the Jest documentation,
-//  and vice-versa in the Create React App documentation. Both are valid methods.
-
-//  expect() and .toEqual(): Here we carry out the test itself.
-//  The expect() method carries a result of a function, and toEqual(), in this case,
-//  carries a value that expect() should match.
 
 
 // dummy test. if this one doesn't work we have major problems

@@ -1,141 +1,151 @@
 import React from 'react';
 import Square from './Square';
-import rookWhite from "../Assets/rookWhite.png";
-import tree from "../Assets/tree.jpg";
-import bishopWhite from "../Assets/bishopWhite.png";
-import dogtest2 from "../Assets/dogtest2.png";
-import test from "../Assets/test.png";
-import rookBlack from "../Assets/rookBlack.png";
-import bishopBlack from "../Assets/bishopBlack.png";
 
 // class used as a container to hold piece info
 class Piece{
-    constructor(pieceImage, isHighlighted, isSelected){
+    constructor(pieceType, ownedBy, isHighlighted, isSelected, defaultColor){
+        this.pcType = pieceType;
+        this.pcOwner = ownedBy;
         this.isHighlighted = isHighlighted;
         this.isSelected = isSelected;
-        this.pieceID = pieceImage;
+        this.defaultColor = defaultColor;       // THIS VALUE SHOULD NEVER CHANGE
     }
 }
 
+// player enum
+export const Players = {
+    NONE: 0,
+    WHITE: 1,
+    BLACK: 2
+};
+
+// piece enum
+export const Pieces = {
+    EMPTY: 0,
+    ROOK: 1,
+    KNIGHT: 2,
+    BISHOP: 3,
+    QUEEN: 4,
+    KING: 5,
+    PAWN: 6
+};
+
 const Board = (props) => {
 
-    /** CONVERTS THE BOARD-STATE INTO JSX
-     *  which is then rendered by App
-     *
-     *  y:        current y index on the board AND inside the 8x8 board array
-     *  x:        current x index on the board AND inside the 8x8 board array
-     *  piece:    the image representing the piece that's on the board
-     *  key:      unique identifier so that React stops complaining
-     *  onClick:  FUNCTION passed from App that activates when Square is clicked
-     */
-    function createBoardJSX( boardState ){
+    // renders the board based on the boardState passed from App
+    return (
+        <div className="board">
+            {createBoardJSX()};
+        </div>
+    );
+
+    // converts boardState into JSX
+    function createBoardJSX(){
         let boardJSX = [];
         for ( let y = 0; y < 8; y++ ){
-            boardJSX.push(createRow(y, boardState));
+            boardJSX.push( createRow(y) );
         }
         return boardJSX;
     }
 
     // creates a row of squares
-    function createRow(currentY, boardState){
+    function createRow(currentY){
         return(
-            <div className="boardRow" id={'br' + currentY} key={'key' + currentY}>
-                {create8squares(currentY, boardState)}
+            <div className="boardRow" key={'bRow' + currentY}>
+                {create8squares(currentY)}
             </div>
         );
     }
 
-    // adds 8 squares to board
-    function create8squares(curY, boardState){
-        let currentRow = [];
+    /** DATA-TO-COMPONENT CONVERSION
+     * Converts the 2D-array of Piece objects into their JSX React-component
+     * equivalent. This is then passed back up to app to be rendered
+     *
+     *  key             unique identifier for the Component
+     *  y               Y-coordinate of this Square
+     *  x               X-coordinate of this Square
+     *  defaultColor    default color of this Square
+     *  isHighlighted   whether or not this Square is highlighted
+     *  isSelected      whether or not this Square is selected
+     *  pieceType       the type of piece on this square
+     *  ownedBy         the player who owns the piece on this square
+     *  onClick:        FUNCTION passed from App that activates when Square is clicked
+     */
+    function create8squares(currentY){
+        let curRow = [];
+        let curSquare = null;
         for ( let x = 0; x < 8; x++ ){
-            currentRow.push(
+            curSquare = props.bState[currentY][x];      // makes code easier to read
+            curRow.push(
                 <Square
-                    y =             {curY}
+                    key =           {'Sq'+currentY+'.'+x}
+                    y =             {currentY}
                     x =             {x}
-                    isHighlighted = {boardState[curY][x].isHighlighted}
-                    isSelected =    {boardState[curY][x].isSelected}
-                    piece =         {determineImage(boardState[curY][x].pieceID)}
-                    key =           {curY + ',' + x}
+                    defaultColor =  {curSquare.defaultColor}
+                    isHighlighted = {curSquare.isHighlighted}
+                    isSelected =    {curSquare.isSelected}
+                    pieceType =     {curSquare.pcType}
+                    ownedBy =       {curSquare.pcOwner}
                     onClick =       {props.pieceClicked}
                 />
             );
         }
-        return currentRow;
+        return curRow;
     }
-
-    // renders the board based on the boardState passed from App
-    return (
-        <div className="board">
-            {createBoardJSX(props.bState)};
-        </div>
-    );
 };
 
-// maps piece ID's onto their respective image filenames
-function determineImage(pieceID){
-    switch (pieceID) {
-        case "WR":  return rookWhite;       // white pieces
-        case "WK":  return tree;
-        case "WB":  return bishopWhite;
-        case "WQ":  return dogtest2;
-        case "WKi": return test;
-        case "WP":  return tree;
 
-        case "BR":  return rookBlack;       // black pieces
-        case "BK":  return tree;
-        case "BB":  return bishopBlack;
-        case "BQ":  return dogtest2;
-        case "BKi": return test;
-        case "BP":  return tree;
-
-        default:    return null;            // empty spaces
-    }
-}
-
-// FIRST TIME BOARD SETUP
+// Performs the initial first-time board creation
+// when the game starts. Fills an [8][8] array with
+// Piece objects containing starting-state of a chessboard
 export function initializeBoard(){
     let defaultBoard = new Array(8);
     for ( let y = 0; y < 8; y++ ){
-        defaultBoard[y] = new Array(8);
+        defaultBoard[y] = new Array(8);     // creates an [8][8] of nulls
         for ( let x = 0; x < 8; x++ ){
             defaultBoard[y][x] = null;
         }
     }
 
-    // white pieces
-    defaultBoard[0][0] = new Piece("BR", false, false);
-    defaultBoard[0][1] = new Piece("BK", false, false);
-    defaultBoard[0][2] = new Piece("BB", false, false);
-    defaultBoard[0][3] = new Piece("BKi", false, false);
-    defaultBoard[0][4] = new Piece("BQ", false, false);
-    defaultBoard[0][5] = new Piece("BB", false, false);
-    defaultBoard[0][6] = new Piece("BK", false, false);
-    defaultBoard[0][7] = new Piece("BR", false, false);
+    // white Pieces
+    defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
+    defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
+    defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
+    defaultBoard[0][3] = new Piece(Pieces.KING, Players.WHITE, false, false);
+    defaultBoard[0][4] = new Piece(Pieces.QUEEN, Players.WHITE, false, false);
+    defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
+    defaultBoard[0][6] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
+    defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
 
-    // black pieces
-    defaultBoard[7][0] = new Piece("BR", false, false);
-    defaultBoard[7][1] = new Piece("BK", false, false);
-    defaultBoard[7][2] = new Piece("BB", false, false);
-    defaultBoard[7][3] = new Piece("BKi", false, false);
-    defaultBoard[7][4] = new Piece("BQ", false, false);
-    defaultBoard[7][5] = new Piece("BB", false, false);
-    defaultBoard[7][6] = new Piece("BK", false, false);
-    defaultBoard[7][7] = new Piece("BR", false, false);
+    // black Pieces
+    defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
+    defaultBoard[7][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
+    defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
+    defaultBoard[7][3] = new Piece(Pieces.KING, Players.BLACK, false, false);
+    defaultBoard[7][4] = new Piece(Pieces.QUEEN, Players.BLACK, false, false);
+    defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
+    defaultBoard[7][6] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
+    defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
 
     // pawns
     for ( let x = 0; x < 8; x++ ){
-        defaultBoard[1][x] = new Piece("WP", false, false);
-        defaultBoard[6][x] = new Piece("BP", false, false);
+        defaultBoard[1][x] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
+        defaultBoard[6][x] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
     }
 
-    // blank pieces
+    // blank squares
     for ( let y = 2; y < 6; y++ ){
         for ( let x = 0; x < 8; x++ ){
-            defaultBoard[y][x] = new Piece(null, false, false);
+            defaultBoard[y][x] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         }
     }
 
+    // sets default board square colors
+    for ( let y = 0; y < 8; y++ ){
+        for ( let x = 0; x < 8; x++ ){
+            defaultBoard[y][x].defaultColor = ((x + y) % 2) === 0 ? '#ffddca' : '#d9a989';
+        }
+    }
     return defaultBoard;
 }
 

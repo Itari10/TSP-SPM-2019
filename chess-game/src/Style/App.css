@@ -1,7 +1,9 @@
 .Header {
   text-align: center;
-  text-shadow: -3px -1px darkgrey;
-  text-decoration: underline black;
+  text-shadow: -2px -2px #a7384b;
+
+  color: red;
+  font-size: 30px;
 }
 h1 {
   padding-top: 10px;
@@ -17,7 +19,7 @@ body {
   margin: 0;
 }
 .App {
-  background-color: rgb(79, 84, 203);
+  background-color: rgb(55, 57, 57);
   width: 100%;
   padding: 10px 20px 50px 20px;
   margin: 0;
@@ -28,10 +30,9 @@ body {
 .boardRow {
   display: flex;
 }
-.
-/*
-Square color styling (Color#1)
-*/
+
+
+/* Square color styling (Color#1)
 .board:nth-child(even) .boardRow:nth-child(even) button:nth-child(even) {
   background-color: lightblue;
 }
@@ -44,9 +45,8 @@ Square color styling (Color#1)
 .board:nth-child(even) .boardRow:nth-child(odd) button:nth-child(odd) {
     background-color: lightblue;
 }
-/*
-Square color styling (Color#2)
-*/
+
+/* Square color styling (Color#2)
 .board:nth-child(odd) .boardRow:nth-child(even) button:nth-child(odd) {
   background-color: white;
 }
@@ -59,3 +59,4 @@ Square color styling (Color#2)
 .board:nth-child(odd) .boardRow:nth-child(odd) button:nth-child(even) {
     background-color: white;
 }
+*/

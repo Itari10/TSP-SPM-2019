@@ -1,9 +1,8 @@
-import React from 'react';                  // react
+import React from 'react';
 import { shallow, mount } from 'enzyme';    // enzyme assertion methods
 import { expect } from 'chai';              // chai assertion methods
-
-import App from '../Components/App';        // allows access to App Component
-import Board from '../Components/App';      // allows access to Board Component
+import App from '../Components/App';
+import Board from '../Components/App';
 
 /************************  FOR INTELLIJ USERS  **************************************
  *                                                                                  *
@@ -40,21 +39,6 @@ import Board from '../Components/App';      // allows access to Board Component
 //  https://www.chaijs.com/api/bdd/#method_lengthof
 
 
-//  describe(): An optional method to wrap a group of tests with.
-//  describe() allows us to write some text that explains the nature of
-//  the group of tests conducted within it. As you can see in the Terminal,
-//  the describe() text acts as a header before the test results are shown.
-
-//  it(): Similar in nature to describe()
-//  it() allows us to write some text describing what a test should successfully achieve.
-//  You may see that the test() method is used instead of it() throughout the Jest documentation,
-//  and vice-versa in the Create React App documentation. Both are valid methods.
-
-//  expect() and .toEqual(): Here we carry out the test itself.
-//  The expect() method carries a result of a function, and toEqual(), in this case,
-//  carries a value that expect() should match.
-
-
 // dummy test. if this one doesn't work we have major problems
 describe('JEST ONLINE', () => {
     it('sums numbers', () => {
@@ -79,9 +63,10 @@ describe('APP TESTS', () => {
         expect(app.find('Board')).to.have.lengthOf(1);
     });
 
-    test('loads the End-Turn Button component', () => {
-        expect(app.find('EndTurnBtn')).to.have.lengthOf(1);
-    });
+    // END TURN BUTTON WAS REMOVED
+    // test('loads the End-Turn Button component', () => {
+    //     expect(app.find('EndTurnBtn')).to.have.lengthOf(1);
+    // });
 
     test('loads two PlayerBoxes component', () => {
         expect(app.find('PlayerBox')).to.have.lengthOf(2);
@@ -114,12 +99,12 @@ describe('BOARD TESTS', () => {
     // searches through the boardRow div and determines if there are 8
     // divs inside it, each with their own UNIQUE id
     test('each of the 8 divs is unique', () => {
-        let currentRow = null;                                      // wrapper for current row is Squares being tested
+        let currentRow = null;                                  // wrapper for current row is Squares being tested
         let rowsFound = 0;
         for ( let y = 0; y < 8; y++ ) {
             currentRow = boardDiv.childAt(y);
             expect(currentRow.type()).to.equal('div');
-            expect(currentRow.prop('id')).to.equal('br' + y);       // ensures the div has the expected unique id
+            expect(currentRow.key()).to.equal('bRow' + y);        // ensures the div has the expected unique id
             rowsFound++;
         }
         expect(rowsFound).to.equal(8);
@@ -129,9 +114,9 @@ describe('BOARD TESTS', () => {
     // uniqueness is not tested yet
     test('each div contains 8 Squares', () =>{
         let currentRow = null;
-        let squaresInRow = null;                                    // counts Squares in each row
+        let squaresInRow = null;                            // counts Squares in each row
         for ( let y = 0; y < 8; y++ ) {
-            currentRow = boardDiv.childAt(y);                       // row divs are the children of the main boardDiv
+            currentRow = boardDiv.childAt(y);               // row divs are the children of the main boardDiv
             squaresInRow = currentRow.find('Square');
             expect(squaresInRow.length).to.equal(8);
             currentRow = null;
@@ -149,7 +134,7 @@ describe('BOARD TESTS', () => {
             for ( let x = 0; x < 8; x++ ){
                 currentSquare = currentRow.childAt(x);              // Squares are children of the boardRow div
                 expect(currentSquare.name()).to.equal('Square');
-                expect(currentSquare.prop('id')).to.equal(y+'.'+x);
+                expect(currentSquare.key()).to.equal('Sq'+y+'.'+x);
                 expect(currentSquare.prop('x')).to.equal(x);
                 expect(currentSquare.prop('y')).to.equal(y);
                 uniqueSquares++;

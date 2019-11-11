@@ -6,7 +6,7 @@ const PlayerBox = (props) => {
 
     return (
         <div className={(props.isTurn) ? "turn" : "notTurn"} id={props.playerNumber}>
-            <h2>Player {props.playerNumber}:</h2>
+            <h2>{props.playerTitle}</h2>
         </div>
     );
 };

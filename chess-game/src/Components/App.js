@@ -139,7 +139,7 @@ const App = (props) => {
         // Searches in the four CARDINAL directions for acceptable moves for a given piece
         // Uses variable-swapping depending on the direction parameter passed in
         // Updates the goodMoves array based on good moves that were found in the given direction
-        function findStraightMoves(goodMoves, direction){
+        function findCardinalMoves(goodMoves, direction){
 
             let yDir = null;            // amount to increment y by when searching
             let xDir = null;            // amount to increment x by when searching
@@ -272,7 +272,7 @@ const App = (props) => {
 
             // pawn movement is dependant upon the player
             switch( currentPlayer ){
-                case Players.WHITE: {
+                case Players.BLACK: {
                     possibleMoves.push( new Move(y+1,x+1) );        // diagonal attacks
                     possibleMoves.push( new Move(y+1,x-1) );
 
@@ -284,7 +284,7 @@ const App = (props) => {
                     }
                     break;
                 }
-                case Players.BLACK: {
+                case Players.WHITE: {
                     possibleMoves.push( new Move(y-1,x+1) );        // diagonal attacks
                     possibleMoves.push( new Move(y-1,x-1) );
 
@@ -334,10 +334,10 @@ const App = (props) => {
         // **********************************************************************************
         function showRookMoves() {
             let goodMoves = [];
-            goodMoves = findStraightMoves(goodMoves, Directions.DOWN);
-            goodMoves = findStraightMoves(goodMoves, Directions.UP);
-            goodMoves = findStraightMoves(goodMoves, Directions.LEFT);
-            goodMoves = findStraightMoves(goodMoves, Directions.RIGHT);
+            goodMoves = findCardinalMoves(goodMoves, Directions.DOWN);
+            goodMoves = findCardinalMoves(goodMoves, Directions.UP);
+            goodMoves = findCardinalMoves(goodMoves, Directions.LEFT);
+            goodMoves = findCardinalMoves(goodMoves, Directions.RIGHT);
             highlightGoodMoves( goodMoves );
         }
 
@@ -360,10 +360,10 @@ const App = (props) => {
         // **********************************************************************************
         function showQueenMoves() {
             let goodMoves = [];
-            goodMoves = findStraightMoves(goodMoves, Directions.DOWN);
-            goodMoves = findStraightMoves(goodMoves, Directions.UP);
-            goodMoves = findStraightMoves(goodMoves, Directions.LEFT);
-            goodMoves = findStraightMoves(goodMoves, Directions.RIGHT);
+            goodMoves = findCardinalMoves(goodMoves, Directions.DOWN);
+            goodMoves = findCardinalMoves(goodMoves, Directions.UP);
+            goodMoves = findCardinalMoves(goodMoves, Directions.LEFT);
+            goodMoves = findCardinalMoves(goodMoves, Directions.RIGHT);
 
             goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_RIGHT);
             goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_LEFT);
@@ -511,13 +511,13 @@ const App = (props) => {
                 for (let checkY = move.y-1, checkX = move.x-1; checkY > -1 && checkX > -1; checkY--, checkX--) {
                     potDangerSquare = boardMap[checkY][checkX];
 
-                    if ( potDangerSquare.pcOwner === currentPlayer )
-                        break;
+                    if ( potDangerSquare.pcOwner === currentPlayer )        // search ran into your own piece.
+                        break;                                              // stop looking
 
                     if ((checkY === move.y-1 && checkX === move.x-1) &&     // pawns only can attack in the direction
                         (potDangerSquare.pcType === Pieces.KING  ||         // they move, so need to check ownership
                         (potDangerSquare.pcType === Pieces.PAWN
-                             && currentPlayer === Players.BLACK))) {
+                             && currentPlayer === Players.WHITE))) {
                         foundDanger = true;                                 // ran into a NEARBY enemy pawn or King.
                         break;                                              // we're in danger, stop looking
                     }
@@ -542,7 +542,7 @@ const App = (props) => {
                     if ((checkY === move.y-1 && checkX === move.x+1) &&
                         (potDangerSquare.pcType === Pieces.KING  ||
                         (potDangerSquare.pcType === Pieces.PAWN
-                            && currentPlayer === Players.BLACK))) {
+                            && currentPlayer === Players.WHITE))) {
                         foundDanger = true;
                         break;
                     }
@@ -567,7 +567,7 @@ const App = (props) => {
                     if ((checkY === move.y+1 && checkX === move.x-1) &&
                         (potDangerSquare.pcType === Pieces.KING  ||
                         (potDangerSquare.pcType === Pieces.PAWN
-                            && currentPlayer === Players.WHITE))) {
+                            && currentPlayer === Players.BLACK))) {
                         foundDanger = true;
                         break;
                     }
@@ -592,7 +592,7 @@ const App = (props) => {
                     if ((checkY === move.y+1 && checkX === move.x+1) &&
                         (potDangerSquare.pcType === Pieces.KING  ||
                         (potDangerSquare.pcType === Pieces.PAWN
-                            && currentPlayer === Players.WHITE))) {
+                            && currentPlayer === Players.BLACK))) {
                         foundDanger = true;
                         break;
                     }
@@ -654,9 +654,9 @@ const App = (props) => {
             </div>
             <div className="row">
                 <div className="col-sm-4">
-                    <PlayerBox playerNumber="1" isTurn={currentPlayer === Players.WHITE}/>
+                    <PlayerBox playerTitle="CATS" isTurn={currentPlayer === Players.BLACK}/>
                     <div className="spacer"/>
-                    <PlayerBox playerNumber="2" isTurn={currentPlayer === Players.BLACK}/>
+                    <PlayerBox playerTitle="DOGS" isTurn={currentPlayer === Players.WHITE}/>
                 </div>
                 <div className="col-sm-8">
                     <Board bState = {boardState} pieceClicked = {squareClicked}/>

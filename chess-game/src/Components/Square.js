@@ -28,7 +28,7 @@ import error from "../Assets/error.png";
  *  pieceType       the type of piece on this square
  *  ownedBy         the player who owns the piece on this square
  *  onClick:        FUNCTION passed from App that activates when Square is clicked
-**/
+ **/
 const Square = (props) => {
 
     // onClick() triggers the pieceClicked()
@@ -53,9 +53,9 @@ function determineBG(props){
     }
     else if ( props.isHighlighted  ){
         if ( props.defaultColor === '#d9a989' )
-             return '#64b17d';
-         else
-             return '#73ca8e';      // slightly darker color for dark squares
+            return '#5da675';
+        else
+            return '#68b780';      // slightly darker color for dark squares
     }
     else
         return props.defaultColor;

@@ -289,7 +289,7 @@ const App = (props) => {
                     possibleMoves.push( new Move(y-1,x-1) );
 
                     // add forward moves until a collision occurs
-                    for ( let curY = y - 1; curY >= y - 2 && curY > 0; curY--){
+                    for ( let curY = y - 1; curY >= y - 2 && curY > -1; curY--){
                         if (boardMap[ curY ][ x ].pcType !== Pieces.EMPTY)
                             break;
                         possibleMoves.push( new Move(curY,x) )

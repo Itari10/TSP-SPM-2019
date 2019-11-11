@@ -14,6 +14,18 @@ class Move{
     }
 }
 
+// directions enum
+const Directions = {
+    UP: 0,
+    DOWN: 1,
+    LEFT: 2,
+    RIGHT: 3,
+    DOWN_RIGHT: 4,
+    DOWN_LEFT: 5,
+    UP_RIGHT: 6,
+    UP_LEFT: 7,
+};
+
 const App = (props) => {
 
     // REMEMBER: These states CANNOT be changed without using the corresponding SET methods.
@@ -23,6 +35,11 @@ const App = (props) => {
     const [updateBoard, setUpdateBoard] =       React.useState( true );             // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
+
+    // swaps the player turn
+    const swapTurn = () => {
+        swapPlayer( currentPlayer === Players.WHITE ? Players.BLACK : Players.WHITE )
+    };
 
     const squareClicked = (y, x) => {
 
@@ -117,8 +134,95 @@ const App = (props) => {
             setHighlights( goodMoves );
         }
 
-        // highlights all the acceptable moves
-        // that the KNIGHT piece can make
+        // Searches in the four CARDINAL directions for acceptable moves for a given piece
+        // Uses variable-swapping depending on the direction parameter passed in
+        // updates the goodMoves array based on acceptable moves that were found in the given direction
+        function findStraightMoves(goodMoves, direction){
+            let yDir = null;            // amount to increment y by when searching
+            let xDir = null;            // amount to increment x by when searching
+            let yLimit = null;          // limit placed on y variable in loops
+            let xLimit = null;          // limit placed on x variable in loops
+
+            switch (direction) {
+                case Directions.DOWN:   yDir = 1;   yLimit = 8;   break;
+                case Directions.UP:     yDir = -1;  yLimit = -1;   break;
+                case Directions.LEFT:   xDir = -1;  xLimit = -1;   break;
+                case Directions.RIGHT:  xDir = 1;   xLimit = 8;  break;
+            }
+
+            // UP and DOWN
+            if ( direction === Directions.UP || direction === Directions.DOWN ){
+                for ( let curY = y + yDir; (curY !== y + (8 * yDir)) && (curY !== yLimit); curY += yDir){
+                    if (boardMap[ curY ][ x ].pcType === Pieces.EMPTY) {
+                        goodMoves.push( new Move(curY,x) );                     // if square is empty, the move is good
+                        continue;                                               // add and continue moving forward
+                    }
+                    if (boardMap[ curY ][ x ].pcOwner === currentPlayer)        // discard if you run into your own piece
+                        break;
+                    if (boardMap[ curY ][ x ].pcOwner !== currentPlayer ){
+                        goodMoves.push( new Move(curY,x) );                     // if square contains enemy, move is good
+                        break;                                                  // but we can no longer move forward
+                    }
+                }
+            }
+
+            // LEFT and RIGHT
+            else{
+                for ( let curX = x + xDir; (curX !== x + (8 * xDir)) && (curX !== xLimit); curX += xDir){
+                    if (boardMap[ y ][ curX ].pcType === Pieces.EMPTY) {
+                        goodMoves.push( new Move(y,curX) );
+                        continue;
+                    }
+                    if (boardMap[ y ][ curX ].pcOwner === currentPlayer)
+                        break;
+                    if (boardMap[ y ][ curX ].pcOwner !== currentPlayer ){
+                        goodMoves.push( new Move(y,curX) );
+                        break;
+                    }
+                }
+            }
+            return goodMoves;
+        }
+
+        // Searches in DIAGONAL directions for acceptable moves for a given piece
+        // Uses variable-swapping depending on the direction parameter passed in
+        // updates the goodMoves array based on good moves that were found in the given direction
+        function findDiagonalMoves(goodMoves, direction){
+            let yDir = null;            // amount to increment y by when searching
+            let xDir = null;            // amount to increment x by when searching
+            let yLimit = null;          // limit placed on y variable in loops
+            let xLimit = null;          // limit placed on x variable in loops
+
+            switch (direction) {
+                case Directions.DOWN_RIGHT: yDir = 1;   xDir = 1;   yLimit = 8;   xLimit = 8;   break;
+                case Directions.DOWN_LEFT:  yDir = 1;   xDir = -1;  yLimit = 8;   xLimit = -1;  break;
+                case Directions.UP_RIGHT:   yDir = -1;  xDir = 1;   yLimit = -1;  xLimit = 8;   break;
+                case Directions.UP_LEFT:    yDir = -1;  xDir = -1;  yLimit = -1;  xLimit = -1;  break;
+            }
+
+            // add moves based on given direction
+            for ( let curY = y + yDir, curX = x + xDir;
+                  curY !== y + (8 * yDir) && curX !== x + (8 * xDir) &&
+                  curY !== yLimit && curX !== xLimit; curY += yDir, curX += xDir){
+
+                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
+                    goodMoves.push( new Move(curY,curX) );                  // if square is empty, the move is good
+                    continue;                                               // add and continue moving forward
+                }
+                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)     // discard if you run into your own piece
+                    break;
+                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
+                    goodMoves.push( new Move(curY,curX) );                  // if square contains enemy, move is good
+                    break;                                                  // but we can no longer move forward
+                }
+            }
+            return goodMoves;
+        }
+
+
+        // **********************************************************************************
+        // ***************************** KNIGHT FUNCTIONALITY *******************************
+        // **********************************************************************************
         function showKnightMoves() {
             let possibleMoves = [];                     // all theoretical moves the KNIGHT can make
             let goodMoves = [];                         // moves that are allowed
@@ -151,7 +255,10 @@ const App = (props) => {
             highlightGoodMoves( goodMoves );
         }
 
-        // highlights all the acceptable moves that the PAWN piece can make
+
+        // **********************************************************************************
+        // ***************************** PAWN FUNCTIONALITY *********************************
+        // **********************************************************************************
         function showPawnMoves() {
             let possibleMoves = [];
             let goodMoves = [];
@@ -212,186 +319,54 @@ const App = (props) => {
             highlightGoodMoves( goodMoves );
         }
 
-        // highlights all the acceptable moves that the ROOK piece can make
+
+        // **********************************************************************************
+        // ******************************* ROOK FUNCTIONALITY *******************************
+        // **********************************************************************************
         function showRookMoves() {
-            let possibleMovesU = [];                     // all theoretical moves the ROOK can make upwards
-            let possibleMovesD = [];                     // all theoretical moves the ROOK can make downwards
-            let possibleMovesR = [];                     // all theoretical moves the ROOK can make rightwards
-            let possibleMovesL = [];                     // all theoretical moves the ROOK can make leftwards
-            let goodMoves = [];                          // moves that are allowed
-            let move = null;
-
-            //adds all possible moves when starting from worst case scenarios
-            //rook is on the left edge of the board, moving right
-            possibleMovesR.push(new Move(y,x+1));
-            possibleMovesR.push(new Move(y,x+2));
-            possibleMovesR.push(new Move(y,x+3));
-            possibleMovesR.push(new Move(y,x+4));
-            possibleMovesR.push(new Move(y,x+5));
-            possibleMovesR.push(new Move(y,x+6));
-            possibleMovesR.push(new Move(y,x+7));
-            //rook is on the right edge of the board, moving left
-            possibleMovesL.push(new Move(y,x-1));
-            possibleMovesL.push(new Move(y,x-2));
-            possibleMovesL.push(new Move(y,x-3));
-            possibleMovesL.push(new Move(y,x-4));
-            possibleMovesL.push(new Move(y,x-5));
-            possibleMovesL.push(new Move(y,x-6));
-            possibleMovesL.push(new Move(y,x-7));
-            //rook is on the top edge of the board, moving down
-            possibleMovesD.push(new Move(y+1,x));
-            possibleMovesD.push(new Move(y+2,x));
-            possibleMovesD.push(new Move(y+3,x));
-            possibleMovesD.push(new Move(y+4,x));
-            possibleMovesD.push(new Move(y+5,x));
-            possibleMovesD.push(new Move(y+6,x));
-            possibleMovesD.push(new Move(y+7,x));
-            //rook is on the bottom edge of the board, moving up
-            possibleMovesU.push(new Move(y-1,x));
-            possibleMovesU.push(new Move(y-2,x));
-            possibleMovesU.push(new Move(y-3,x));
-            possibleMovesU.push(new Move(y-4,x));
-            possibleMovesU.push(new Move(y-5,x));
-            possibleMovesU.push(new Move(y-6,x));
-            possibleMovesU.push(new Move(y-7,x));
-
-            // for each of the possible moves in the rightwards direction, remove any that are not allowed
-            for ( let i = 0; i < possibleMovesR.length; i++ ) {
-                move = possibleMovesR[i];
-                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
-                    continue;
-                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
-                    continue;
-                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
-                    break; //there is a collision so it needs to stop
-                if ( boardMap[move.y][move.x].pcOwner !== currentPlayer && boardMap[move.y][move.x].pcOwner !== Players.NONE ) {
-                    goodMoves.push(move); //if the piece is the opposite players then push the move
-                    break; //then break since there is a collision
-                }
-                goodMoves.push(move);
-            }
-            // for each of the possible moves in the leftwards direction, remove any that are not allowed
-            for ( let i = 0; i < possibleMovesL.length; i++ ) {
-                move = possibleMovesL[i];
-                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
-                    continue;
-                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
-                    continue;
-                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
-                    break; //there is a collision so it needs to stop
-                if ( boardMap[move.y][move.x].pcOwner !== currentPlayer && boardMap[move.y][move.x].pcOwner !== Players.NONE ) {
-                    goodMoves.push(move); //if the piece is the opposite players then push the move
-                    break; //then break since there is a collision
-                }
-                goodMoves.push(move);
-            }
-            // for each of the possible moves in the upwards direction, remove any that are not allowed
-            for ( let i = 0; i < possibleMovesU.length; i++ ) {
-                move = possibleMovesU[i];
-                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
-                    continue;
-                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
-                    continue;
-                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
-                    break; //there is a collision so it needs to stop
-                if ( boardMap[move.y][move.x].pcOwner !== currentPlayer && boardMap[move.y][move.x].pcOwner !== Players.NONE ) {
-                    goodMoves.push(move); //if the piece is the opposite players then push the move
-                    break; //then break since there is a collision
-                }
-                goodMoves.push(move);
-            }
-            // for each of the possible moves in the downwards direction, remove any that are not allowed
-            for ( let i = 0; i < possibleMovesD.length; i++ ) {
-                move = possibleMovesD[i];
-                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
-                    continue;
-                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
-                    continue;
-                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
-                    break; //there is a collision so it needs to stop
-                if ( boardMap[move.y][move.x].pcOwner !== currentPlayer && boardMap[move.y][move.x].pcOwner !== Players.NONE ) {
-                    goodMoves.push(move); //if the piece is the opposite players then push the move
-                    break; //then break since there is a collision
-                }
-                goodMoves.push(move);
-            }
+            let goodMoves = [];
+            goodMoves = findStraightMoves(goodMoves, Directions.DOWN);
+            goodMoves = findStraightMoves(goodMoves, Directions.UP);
+            goodMoves = findStraightMoves(goodMoves, Directions.LEFT);
+            goodMoves = findStraightMoves(goodMoves, Directions.RIGHT);
             highlightGoodMoves( goodMoves );
         }
 
-        // highlights all the acceptable moves that the BISHOP piece can make
+
+        // **********************************************************************************
+        // ******************************* BISHOP FUNCTIONALITY *****************************
+        // **********************************************************************************
         function showBishopMoves() {
             let goodMoves = [];
-
-            // add BOTTOM-RIGHT moves until a collision occurs
-            for ( let curY = y + 1, curX = x + 1; curY <= y + 7 && curX <= x + 7 && curY < 8 && curX < 8; curY++, curX++){
-                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
-                    goodMoves.push( new Move(curY,curX) );                  // if square is empty move is good
-                    continue;                                               // add and continue forward
-                }
-                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)     // discard if attacking your own piece
-                    break;
-                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
-                    goodMoves.push( new Move(curY,curX) );                  // if square contains enemy, move is good
-                    break;                                                  // but we can no longer move forward
-                }
-            }
-
-            // add BOTTOM-LEFT moves until a collision occurs
-            for ( let curY = y + 1, curX = x - 1; curY <= y + 7 && curX >= x - 7 && curY < 8 && curX > -1; curY++, curX--){
-                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
-                    goodMoves.push( new Move(curY,curX) );
-                    continue;
-                }
-                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)
-                    break;
-                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
-                    goodMoves.push( new Move(curY,curX) );
-                    break;
-                }
-            }
-
-            // add TOP-RIGHT moves until a collision occurs
-            for ( let curY = y - 1, curX = x + 1; curY >= y - 7 && curX <= x + 7 && curY > -1 && curX < 8; curY--, curX++){
-                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
-                    goodMoves.push( new Move(curY,curX) );
-                    continue;
-                }
-                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)
-                    break;
-                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
-                    goodMoves.push( new Move(curY,curX) );
-                    break;
-                }
-            }
-
-            // add TOP-LEFT moves until a collision occurs
-            for ( let curY = y - 1, curX = x - 1; curY >= y - 7 && curX >= x - 7 && curY > -1 && curX > -1; curY--, curX--){
-                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
-                    goodMoves.push( new Move(curY,curX) );
-                    continue;
-                }
-                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)
-                    break;
-                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
-                    goodMoves.push( new Move(curY,curX) );
-                    break;
-                }
-            }
+            goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_RIGHT);
+            goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_LEFT);
+            goodMoves = findDiagonalMoves(goodMoves, Directions.UP_RIGHT);
+            goodMoves = findDiagonalMoves(goodMoves, Directions.UP_LEFT);
             highlightGoodMoves( goodMoves );
         }
 
-        // highlights all the acceptable moves that the QUEEN piece can make
+
+        // **********************************************************************************
+        // ******************************* QUEEN FUNCTIONALITY ******************************
+        // **********************************************************************************
         function showQueenMoves() {
-            let possibleMoves = [];                     // all theoretical moves the QUEEN can make
-            let goodMoves = [];                         // moves that are allowed
-            let move = null;
+            let goodMoves = [];
+            goodMoves = findStraightMoves(goodMoves, Directions.DOWN);
+            goodMoves = findStraightMoves(goodMoves, Directions.UP);
+            goodMoves = findStraightMoves(goodMoves, Directions.LEFT);
+            goodMoves = findStraightMoves(goodMoves, Directions.RIGHT);
 
-            // TODO: where can the Queen move?
-
+            goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_RIGHT);
+            goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_LEFT);
+            goodMoves = findDiagonalMoves(goodMoves, Directions.UP_RIGHT);
+            goodMoves = findDiagonalMoves(goodMoves, Directions.UP_LEFT);
             highlightGoodMoves( goodMoves );
         }
 
-        // highlights all the acceptable moves that the KING piece can make
+
+        // **********************************************************************************
+        // ******************************* KING FUNCTIONALITY *******************************
+        // **********************************************************************************
         function showKingMoves() {
             let possibleMoves = [];
             let safeMoves = [];
@@ -653,10 +628,6 @@ const App = (props) => {
         }
     };
 
-    // swaps the player turn
-    const swapTurn = () => {
-        swapPlayer( currentPlayer === Players.WHITE ? Players.BLACK : Players.WHITE )
-    };
 
     // renders the game
     return (

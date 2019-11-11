@@ -2,7 +2,6 @@ import React from 'react';
 import '../Style/App.css';
 import PlayerBox from './PlayerBox';
 import Board, {initializeBoard} from './Board';
-import EndTurnBtn from './EndTurnBtn';
 import {Pieces} from './Board';
 import {Players} from './Board';
 
@@ -83,6 +82,7 @@ const App = (props) => {
                 case Pieces.QUEEN: showQueenMoves(); break;
                 case Pieces.KING: showKingMoves(); break;
                 case Pieces.PAWN: showPawnMoves(); break;
+                default: return;
             }
         }
 
@@ -151,6 +151,7 @@ const App = (props) => {
                 case Directions.UP:     yDir = -1;  yLimit = -1;   break;       // sets up logic variables based on
                 case Directions.LEFT:   xDir = -1;  xLimit = -1;   break;       // direction being searched
                 case Directions.RIGHT:  xDir = 1;   xLimit = 8;    break;
+                default: return;
             }
 
             // UP and DOWN
@@ -202,6 +203,7 @@ const App = (props) => {
                 case Directions.DOWN_LEFT:  yDir = 1;   xDir = -1;  yLimit = 8;   xLimit = -1;  break;
                 case Directions.UP_RIGHT:   yDir = -1;  xDir = 1;   yLimit = -1;  xLimit = 8;   break;
                 case Directions.UP_LEFT:    yDir = -1;  xDir = -1;  yLimit = -1;  xLimit = -1;  break;
+                default: return;
             }
 
             // add moves based on given direction
@@ -294,6 +296,9 @@ const App = (props) => {
                     }
                     break;
                 }
+
+                default:
+                    return;
             }
 
             // for each of the possible moves, remove any that are not allowed

@@ -650,7 +650,7 @@ const App = (props) => {
     return (
         <div className="App">
             <div className="Header">
-                <h1>COWS, HORSES, AND PAWNS</h1>
+                <h1>CHESS</h1>
             </div>
             <div className="row">
                 <div className="col-sm-4">

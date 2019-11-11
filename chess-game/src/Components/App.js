@@ -86,7 +86,7 @@ const App = (props) => {
             }
         }
 
-        // Here a square is ALREADY selected and you've clicked on a highlighted square
+        // Here a square is ALREADY SELECTED and you've clicked on one of the HIGHLIGHTED SQUARES
         // This is a successful move so the turn is swapped to the next player upon completion
         else if ( selectedSquare[0] !== -1 && boardMap[y][x].isHighlighted === true ){
             let selectedPiece = boardMap[selectedSquare[0]][selectedSquare[1]];
@@ -109,6 +109,7 @@ const App = (props) => {
         setBoardState(boardMap);                // updates the board with all changes made
         setUpdateBoard(!updateBoard);           // and triggers a re-render
         // END OF MAIN FUNCTION EXECUTION
+
 
 
         // ******************************************************************************************
@@ -134,20 +135,22 @@ const App = (props) => {
             setHighlights( goodMoves );
         }
 
+
         // Searches in the four CARDINAL directions for acceptable moves for a given piece
         // Uses variable-swapping depending on the direction parameter passed in
-        // updates the goodMoves array based on acceptable moves that were found in the given direction
+        // Updates the goodMoves array based on good moves that were found in the given direction
         function findStraightMoves(goodMoves, direction){
+
             let yDir = null;            // amount to increment y by when searching
             let xDir = null;            // amount to increment x by when searching
             let yLimit = null;          // limit placed on y variable in loops
             let xLimit = null;          // limit placed on x variable in loops
 
             switch (direction) {
-                case Directions.DOWN:   yDir = 1;   yLimit = 8;   break;
-                case Directions.UP:     yDir = -1;  yLimit = -1;   break;
-                case Directions.LEFT:   xDir = -1;  xLimit = -1;   break;
-                case Directions.RIGHT:  xDir = 1;   xLimit = 8;  break;
+                case Directions.DOWN:   yDir = 1;   yLimit = 8;    break;
+                case Directions.UP:     yDir = -1;  yLimit = -1;   break;       // sets up logic variables based on
+                case Directions.LEFT:   xDir = -1;  xLimit = -1;   break;       // direction being searched
+                case Directions.RIGHT:  xDir = 1;   xLimit = 8;    break;
             }
 
             // UP and DOWN
@@ -186,8 +189,9 @@ const App = (props) => {
 
         // Searches in DIAGONAL directions for acceptable moves for a given piece
         // Uses variable-swapping depending on the direction parameter passed in
-        // updates the goodMoves array based on good moves that were found in the given direction
+        // Updates the goodMoves array based on good moves that were found in the given direction
         function findDiagonalMoves(goodMoves, direction){
+
             let yDir = null;            // amount to increment y by when searching
             let xDir = null;            // amount to increment x by when searching
             let yLimit = null;          // limit placed on y variable in loops
@@ -295,9 +299,9 @@ const App = (props) => {
             // for each of the possible moves, remove any that are not allowed
             for ( let i = 0; i < possibleMoves.length; i++ ){
                 move = possibleMoves[i];
-                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
-                    continue;
-                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
+                if ( move.x > 7 || move.x < 0 )
+                    continue;                           // discard if move is off the board
+                if ( move.y > 7 || move.y < 0 )
                     continue;
                 if (move.y === y+2 && y !== 1)          // discard WHITE double moves if not on starting row
                     continue;
@@ -368,9 +372,11 @@ const App = (props) => {
         // ******************************* KING FUNCTIONALITY *******************************
         // **********************************************************************************
         function showKingMoves() {
-            let possibleMoves = [];
-            let safeMoves = [];
-            let move = null;
+            let possibleMoves = [];                 // all possible moves the king can make
+            let safeMoves = [];                     // list of moves the king can make without being put into check
+            let potDangerSquare = null;             // current square being tested for a potential enemy
+            let foundDanger = false;                // whether or not an enemy has been found
+            let move = null;                        // current move being examined
 
             for ( let yOffset = -1; yOffset < 2; yOffset++ ){             // adds 1 move in every direction
                 for ( let xOffset = -1; xOffset < 2; xOffset++){          // skips the Square the king is already on
@@ -380,12 +386,12 @@ const App = (props) => {
                 }
             }
 
-            boardMap[y][x].pcType = Pieces.EMPTY;
-            boardMap[y][x].pcOwner = Players.NONE;          // pretends the king is not there for the sake of "in danger" tests
+            boardMap[y][x].pcType = Pieces.EMPTY;       // temporarily removes king from actual spot for "in danger" tests
+            boardMap[y][x].pcOwner = Players.NONE;
 
-            // for each possible move, remove any that are not allowed OR put the king in check
-            let potDangerSquare = null;
-            let foundDanger = false;
+
+            // for each of the possible moves the king can make
+            // test to see if they are valid and will NOT put the king in check
             for ( let i = 0; i < possibleMoves.length; i++ ) {
                 move = possibleMoves[i];
 
@@ -393,11 +399,17 @@ const App = (props) => {
                     continue;                           // discard if the move itself is off the board
                 if (move.x > 7 || move.x < 0)
                     continue;
-                if (boardMap[move.y][move.x].pcOwner === currentPlayer)   // discard if the move itself collides with your own piece
+                if (boardMap[move.y][move.x].pcOwner === currentPlayer)   // discard if the move collides with your own piece
                     continue;
 
 
+                // **************************************************
                 // ********* DANGER-AVOIDANCE FUNCTIONALITY *********
+                // **************************************************
+                //
+                // For each of the 8 moves around the king, "search" cursors are sent out in ALL directions
+                // FROM THAT POINT and they each look for a potential threat. If one is found, that particular
+                // move is NOT added to the list of good moves because it will put the King in check.
 
                 foundDanger = false;
 
@@ -409,7 +421,7 @@ const App = (props) => {
                         break;                                              // own pieces so stop looking
 
                     if (checkY === move.y + 1
-                        && potDangerSquare.pcType === Pieces.KING ) {       // ran into an enemy king
+                        && potDangerSquare.pcType === Pieces.KING ) {       // ran into a NEARBY enemy king
                         foundDanger = true;                                 // we're in danger, stop looking
                         break;
                     }
@@ -421,7 +433,7 @@ const App = (props) => {
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )          // we're not in danger
                         break;                                              // but ran into something, stop looking
                 }
-                if (foundDanger)        // this move is not safe, try next move
+                if (foundDanger)        // this move is not safe, discard and try next move
                     continue;
 
                 // searches UP looking for danger
@@ -501,12 +513,12 @@ const App = (props) => {
                         (potDangerSquare.pcType === Pieces.KING  ||         // they move, so need to check ownership
                         (potDangerSquare.pcType === Pieces.PAWN
                              && currentPlayer === Players.BLACK))) {
-                        foundDanger = true;                                 // ran into an enemy pawn or king
+                        foundDanger = true;                                 // ran into a NEARBY enemy pawn or King.
                         break;                                              // we're in danger, stop looking
                     }
                     if ((potDangerSquare.pcType === Pieces.BISHOP) ||
                         (potDangerSquare.pcType === Pieces.QUEEN)) {
-                        foundDanger = true;                                 // ran into an enemy bishop or queen
+                        foundDanger = true;                                 // ran into an enemy Bishop or Queen.
                         break;                                              // we're in danger, stop looking
                     }
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )
@@ -615,7 +627,7 @@ const App = (props) => {
                         break;
                     }
                 }
-                if ( foundDanger )
+                if (foundDanger)
                     continue;
 
                 // FINALLY, if all checks are exhausted,

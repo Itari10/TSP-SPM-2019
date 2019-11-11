@@ -19,10 +19,10 @@ import error from "../Assets/error.png";
 
 /** Properties you can access through props
  *
- *  key             unique identifier for the Component (so React stops complaining)
- *  y               Y-coordinate on the board AND inside the 8x8 board array
- *  x               Y-coordinate on the board AND inside the 8x8 board array
- *  defaultColor    the default color of this Square
+ *  key             unique identifier for the Component
+ *  y               Y-coordinate of this Square
+ *  x               X-coordinate of this Square
+ *  defaultColor    default color of this Square
  *  isHighlighted   whether or not this Square is highlighted
  *  isSelected      whether or not this Square is selected
  *  pieceType       the type of piece on this square

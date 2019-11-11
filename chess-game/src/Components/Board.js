@@ -61,17 +61,19 @@ const Board = (props) => {
      * Converts the 2D-array of Piece objects into their JSX React-component
      * equivalent. This is then passed back up to app to be rendered
      *
-     *  key             unique identifier for the Component (so React stops complaining)
-     *  y               Y-coordinate on the board AND inside the 8x8 board array
-     *  x               Y-coordinate on the board AND inside the 8x8 board array
-     *  defaultColor    the default color of this Square
+     *  key             unique identifier for the Component
+     *  y               Y-coordinate of this Square
+     *  x               X-coordinate of this Square
+     *  defaultColor    default color of this Square
+     *  isHighlighted   whether or not this Square is highlighted
+     *  isSelected      whether or not this Square is selected
      *  pieceType       the type of piece on this square
      *  ownedBy         the player who owns the piece on this square
      *  onClick:        FUNCTION passed from App that activates when Square is clicked
      */
     function create8squares(currentY){
         let curRow = [];
-        let curSquare = null;                       // current piece
+        let curSquare = null;
         for ( let x = 0; x < 8; x++ ){
             curSquare = props.bState[currentY][x];      // makes code easier to read
             curRow.push(

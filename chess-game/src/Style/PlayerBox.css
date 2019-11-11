@@ -1,13 +1,13 @@
 .turn {
     background-color: rgba(255,255,255,1);
     height: 47.5%;
-    border: 6px solid #db8800;
+    border: 6px solid #dd8900;
     border-radius: 10px;
     padding: 10px;
 }
 
 .notTurn {
-    background-color: rgb(125, 125, 125);
+    background-color: rgb(85, 85, 85);
     color: rgb(48, 48, 48);
     height: 47.5%;
     border: 6px solid #2c2c2c;

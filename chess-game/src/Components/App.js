@@ -320,12 +320,63 @@ const App = (props) => {
 
         // highlights all the acceptable moves that the BISHOP piece can make
         function showBishopMoves() {
-            let possibleMoves = [];                     // all theoretical moves the BISHOP can make
-            let goodMoves = [];                         // moves that are allowed
-            let move = null;
+            let goodMoves = [];
 
-            // TODO: where can the Bishop move?
+            // add BOTTOM-RIGHT moves until a collision occurs
+            for ( let curY = y + 1, curX = x + 1; curY <= y + 7 && curX <= x + 7 && curY < 8 && curX < 8; curY++, curX++){
+                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
+                    goodMoves.push( new Move(curY,curX) );                  // if square is empty move is good
+                    continue;                                               // add and continue forward
+                }
+                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)     // discard if attacking your own piece
+                    break;
+                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
+                    goodMoves.push( new Move(curY,curX) );                  // if square contains enemy, move is good
+                    break;                                                  // but we can no longer move forward
+                }
+            }
 
+            // add BOTTOM-LEFT moves until a collision occurs
+            for ( let curY = y + 1, curX = x - 1; curY <= y + 7 && curX >= x - 7 && curY < 8 && curX > -1; curY++, curX--){
+                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
+                    goodMoves.push( new Move(curY,curX) );
+                    continue;
+                }
+                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)
+                    break;
+                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
+                    goodMoves.push( new Move(curY,curX) );
+                    break;
+                }
+            }
+
+            // add TOP-RIGHT moves until a collision occurs
+            for ( let curY = y - 1, curX = x + 1; curY >= y - 7 && curX <= x + 7 && curY > -1 && curX < 8; curY--, curX++){
+                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
+                    goodMoves.push( new Move(curY,curX) );
+                    continue;
+                }
+                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)
+                    break;
+                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
+                    goodMoves.push( new Move(curY,curX) );
+                    break;
+                }
+            }
+
+            // add TOP-LEFT moves until a collision occurs
+            for ( let curY = y - 1, curX = x - 1; curY >= y - 7 && curX >= x - 7 && curY > -1 && curX > -1; curY--, curX--){
+                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
+                    goodMoves.push( new Move(curY,curX) );
+                    continue;
+                }
+                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)
+                    break;
+                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
+                    goodMoves.push( new Move(curY,curX) );
+                    break;
+                }
+            }
             highlightGoodMoves( goodMoves );
         }
 

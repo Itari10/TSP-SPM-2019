@@ -18,6 +18,9 @@ h2 {
 body {
   margin: 0;
 }
+button:focus {
+  outline: none;
+}
 .App {
   background-color: rgb(55, 57, 57);
   width: 100%;

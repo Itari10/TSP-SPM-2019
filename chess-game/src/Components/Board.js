@@ -108,29 +108,29 @@ export function initializeBoard(){
     }
 
     // white Pieces
-    defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
-    defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
-    defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
-    defaultBoard[0][3] = new Piece(Pieces.KING, Players.WHITE, false, false);
-    defaultBoard[0][4] = new Piece(Pieces.QUEEN, Players.WHITE, false, false);
-    defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
-    defaultBoard[0][6] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
-    defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
+    defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
+    defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
+    defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
+    defaultBoard[0][3] = new Piece(Pieces.KING, Players.BLACK, false, false);
+    defaultBoard[0][4] = new Piece(Pieces.QUEEN, Players.BLACK, false, false);
+    defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
+    defaultBoard[0][6] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
+    defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
 
     // black Pieces
-    defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
-    defaultBoard[7][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
-    defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
-    defaultBoard[7][3] = new Piece(Pieces.KING, Players.BLACK, false, false);
-    defaultBoard[7][4] = new Piece(Pieces.QUEEN, Players.BLACK, false, false);
-    defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
-    defaultBoard[7][6] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
-    defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
+    defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
+    defaultBoard[7][1] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
+    defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
+    defaultBoard[7][3] = new Piece(Pieces.KING, Players.WHITE, false, false);
+    defaultBoard[7][4] = new Piece(Pieces.QUEEN, Players.WHITE, false, false);
+    defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
+    defaultBoard[7][6] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
+    defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
 
     // pawns
     for ( let x = 0; x < 8; x++ ){
-        defaultBoard[1][x] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
-        defaultBoard[6][x] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
+        defaultBoard[1][x] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
+        defaultBoard[6][x] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
     }
 
     // blank squares

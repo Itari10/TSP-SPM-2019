@@ -4,6 +4,7 @@ import PlayerBox from './PlayerBox';
 import Board, {initializeBoard} from './Board';
 import {Pieces} from './Board';
 import {Players} from './Board';
+import EndGameScreen from './EndGameScreen';
 
 // tuple for holding potential board moves.
 class Move{
@@ -34,11 +35,17 @@ const App = (props) => {
     const [updateBoard, setUpdateBoard] =       React.useState( true );             // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
+    const [gameOver, setGameOver] = React.useState(false);
 
     // swaps the player turn
     const swapTurn = () => {
         swapPlayer( currentPlayer === Players.WHITE ? Players.BLACK : Players.WHITE )
     };
+
+    //Activate game over functionality
+    const endGame = () => {
+        setGameOver(true);
+    }
 
     const squareClicked = (y, x) => {
 
@@ -654,14 +661,17 @@ const App = (props) => {
             </div>
             <div className="row">
                 <div className="col-sm-4">
-                    <PlayerBox playerTitle="CATS" isTurn={currentPlayer === Players.BLACK} playerNumber="2" />
+                    <PlayerBox playerTitle="CATS" isTurn={currentPlayer === Players.BLACK} triggerGameOver={endGame} />
                     <div className="spacer"/>
-                    <PlayerBox playerTitle="DOGS" isTurn={currentPlayer === Players.WHITE} playerNumber="1" />
+                    <PlayerBox playerTitle="DOGS" isTurn={currentPlayer === Players.WHITE} triggerGameOver={endGame} />
                 </div>
                 <div className="col-sm-8">
                     <Board bState = {boardState} pieceClicked = {squareClicked}/>
                 </div>
             </div>
+            {gameOver &&
+                <EndGameScreen />
+            }
         </div>
     );
 };

@@ -2,14 +2,11 @@ import React from 'react';
 
 const SurrenderButton = (props) => {
 
-    function clicked() {
-        window.location.reload();
-    }    
     return (
-        <button className="ffButton" onClick={()=>{clicked()}} disabled={props.disable}>
+        <button className="ffButton" onClick={()=>{props.triggerGameOver()}} disabled={props.disable}>
             Surrender
         </button>
-    )
+    );
 }
 
 export default SurrenderButton;

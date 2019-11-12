@@ -654,9 +654,9 @@ const App = (props) => {
             </div>
             <div className="row">
                 <div className="col-sm-4">
-                    <PlayerBox playerTitle="CATS" isTurn={currentPlayer === Players.BLACK}/>
+                    <PlayerBox playerTitle="CATS" isTurn={currentPlayer === Players.BLACK} playerNumber="2" />
                     <div className="spacer"/>
-                    <PlayerBox playerTitle="DOGS" isTurn={currentPlayer === Players.WHITE}/>
+                    <PlayerBox playerTitle="DOGS" isTurn={currentPlayer === Players.WHITE} playerNumber="1" />
                 </div>
                 <div className="col-sm-8">
                     <Board bState = {boardState} pieceClicked = {squareClicked}/>

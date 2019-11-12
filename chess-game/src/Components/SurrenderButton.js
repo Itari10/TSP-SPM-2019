@@ -6,7 +6,7 @@ const SurrenderButton = (props) => {
         window.location.reload();
     }    
     return (
-        <button className="ffButton" onClick={()=>{clicked()}}>
+        <button className="ffButton" onClick={()=>{clicked()}} disabled={props.disable}>
             Surrender
         </button>
     )

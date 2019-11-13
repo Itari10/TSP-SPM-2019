@@ -4,6 +4,8 @@
     border: 6px solid #dd8900;
     border-radius: 10px;
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .notTurn {
@@ -13,4 +15,22 @@
     border: 6px solid #2c2c2c;
     border-radius: 10px;
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ffButton {
+    height: 50px;
+    border-radius: 10px;
+    background-color: white;
+    border-color: red;
+    transition-duration: 0.5s;
+}
+
+.ffButton:hover {
+    height: 50px;
+    border-radius: 10px;
+    background-color: red;
+    border-color: red;
+    color: white;
 }

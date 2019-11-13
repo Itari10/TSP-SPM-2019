@@ -7,3 +7,19 @@
     border: 6px solid rgb(0, 0, 0);
     border-radius: 10px;
 }
+
+.resetButton {
+    height: 50px;
+    border-radius: 10px;
+    background-color: white;
+    border-color: blue;
+    transition-duration: 0.5s;
+}
+
+.resetButton:hover {
+    height: 50px;
+    border-radius: 10px;
+    background-color: blue;
+    border-color: blue;
+    color: white;
+}

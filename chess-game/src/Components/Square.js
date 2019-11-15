@@ -6,13 +6,13 @@ import rookWhite from "../Assets/rookWhite.png";
 import knightWhite from "../Assets/knightWhite.png";
 import bishopWhite from "../Assets/bishopWhite.png";
 import kingWhite from "../Assets/kingWhite.png";
-import queenWhite from "../Assets/queenWhite.png";
+import queenWhite from "../Assets/queenWhite.gif";
 import pawnWhite from "../Assets/pawnWhite.png";
 import rookBlack from "../Assets/rookBlack.png";
 import knightBlack from "../Assets/knightBlack.png";
 import bishopBlack from "../Assets/bishopBlack.png";
 import kingBlack from "../Assets/kingBlack.png";
-import queenBlack from "../Assets/queenBlack.png";
+import queenBlack from "../Assets/queenBlack.gif";
 import pawnBlack from "../Assets/pawnBlack.png";
 import error from "../Assets/error.png";
 

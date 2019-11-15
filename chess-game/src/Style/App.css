@@ -1,7 +1,15 @@
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+}
+#root {
+  height: 100%;
+}
 .Header {
   text-align: center;
   text-shadow: -2px -2px #a7384b;
-
   color: red;
   font-size: 30px;
 }
@@ -15,17 +23,14 @@ h2 {
   margin-block-start: 0;
   font-size: 25px;
 }
-body {
-  margin: 0;
-}
 button:focus {
   outline: none;
 }
 .App {
   background-color: rgb(55, 57, 57);
   width: 100%;
-  padding: 10px 20px 50px 20px;
   margin: 0;
+  min-height: 100%;
 }
 .spacer {
   height: 2%;
@@ -33,33 +38,6 @@ button:focus {
 .boardRow {
   display: flex;
 }
-
-
-/* Square color styling (Color#1)
-.board:nth-child(even) .boardRow:nth-child(even) button:nth-child(even) {
-  background-color: lightblue;
+.row {
+  margin: 0;
 }
-.board:nth-child(odd) .boardRow:nth-child(odd) button:nth-child(odd) {
-  background-color: lightblue;
-}
-.board:nth-child(odd) .boardRow:nth-child(even) button:nth-child(even) {
-  background-color: lightblue;
-}
-.board:nth-child(even) .boardRow:nth-child(odd) button:nth-child(odd) {
-    background-color: lightblue;
-}
-
-/* Square color styling (Color#2)
-.board:nth-child(odd) .boardRow:nth-child(even) button:nth-child(odd) {
-  background-color: white;
-}
-.board:nth-child(even) .boardRow:nth-child(odd) button:nth-child(even) {
-  background-color: white;
-}
-.board:nth-child(even) .boardRow:nth-child(even) button:nth-child(odd) {
-    background-color: white;
-}
-.board:nth-child(odd) .boardRow:nth-child(odd) button:nth-child(even) {
-    background-color: white;
-}
-*/

@@ -13,6 +13,6 @@ const EndGameScreen = (props) => {
             </button>
         </div>
     );
-}
+};
 
 export default EndGameScreen;

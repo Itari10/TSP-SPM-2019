@@ -48,12 +48,12 @@ const App = (props) => {
         if (currentPlayer === Players.WHITE ){
             setKingY( blackKingLocation[0] );       // updates current player's king coordinates
             setKingX( blackKingLocation[1] );
-            setCurrentPlayer(Players.BLACK)
+            setCurrentPlayer( Players.BLACK )
         }
         else{
             setKingY( whiteKingLocation[0] );
             setKingX( whiteKingLocation[1] );
-            setCurrentPlayer(Players.WHITE);
+            setCurrentPlayer( Players.WHITE );
         }
     };
 
@@ -301,13 +301,13 @@ const App = (props) => {
                         boardMap[curY][curX].pcType = currentType;
                         boardMap[curY][curX].pcOwner = currentOwner;
 
-                        if ( kingIsSafe ) {                                   // if so, the move is good
+                        if ( kingIsSafe ) {                                 // if so, the move is good
                             goodMoves.push(new Move(curY, curX));
                             if (currentType !== Pieces.EMPTY)               // if this was an attack, searching stops here
                                 break;                                      // (otherwise, keep searching for new moves)
                         }
                         else                // if your king wasn't safe
-                            break;          // we DON'T add the move, and stop searching
+                            break;          // DON'T add the move, and stop searching
                     }                       // for new moves in this direction
                 }
             }
@@ -322,6 +322,11 @@ const App = (props) => {
             let possibleMoves = [];                     // all theoretical moves the KNIGHT can make
             let goodMoves = [];                         // moves that are allowed
             let move = null;                            // current move being tested
+            let currentType = null;                     // current piece type of the given square
+            let currentOwner = null;                    // current owner of the given square
+
+            boardMap[y][x].pcType = Pieces.EMPTY;           // temporary "picks up" the piece for
+            boardMap[y][x].pcOwner = Players.NONE;          // king check-avoidance testing
 
             possibleMoves.push( new Move(y-2,x+1) );
             possibleMoves.push( new Move(y-2,x-1) );
@@ -332,21 +337,35 @@ const App = (props) => {
             possibleMoves.push( new Move(y-1,x-2) );
             possibleMoves.push( new Move(y-1,x+2) );
 
-            // for each of the possible moves, remove any that are not allowed
-            for ( let i = 0; i < possibleMoves.length; i++ ){
-                move = possibleMoves[i];
-                if ( move.x > 7 || move.x < 0 )         // discard if move is out of Y-range
-                    continue;
-                if ( move.y > 7 || move.y < 0 )         // discard if move is out of X-range
-                    continue;
-                if ( boardMap[move.y][move.x].pcOwner === currentPlayer )        // discard if attacking your own piece
-                    continue;
+            // If your King is currently NOT in check
+            if ((currentPlayer === Players.WHITE && ! whiteKingCheck) ||
+                (currentPlayer === Players.BLACK && ! blackKingCheck)) {
 
-                goodMoves.push(move);
+                // for each of the possible moves, remove any that are now allowed
+                for (let i = 0; i < possibleMoves.length; i++) {
+                    move = possibleMoves[i];
+                    if (move.x > 7 || move.x < 0)                   // discard if move is off the board or
+                        continue;                                   // collides with your own piece
+                    if (move.y > 7 || move.y < 0)
+                        continue;
+                    if (boardMap[move.y][move.x].pcOwner === currentPlayer)
+                        continue;
+
+                    currentType = boardMap[move.y][move.x].pcType;          // store square condition
+                    currentOwner = boardMap[move.y][move.x].pcOwner;
+                    boardMap[move.y][move.x].pcType = Pieces.KNIGHT;
+                    boardMap[move.y][move.x].pcOwner = currentPlayer;       // temporarily move to that square
+
+                    if (squareIsSafe(playerKingY, playerKingX))             // add the move if it doesn't
+                        goodMoves.push(move);                               // endanger your King
+
+                    boardMap[move.y][move.x].pcType = currentType;
+                    boardMap[move.y][move.x].pcOwner = currentOwner;        // replace square condition
+                }
             }
 
-            // finally, highlight all board squares that are in the list good moves
-            // then update the highlightedSquares state to match
+            boardMap[y][x].pcType = Pieces.KNIGHT;
+            boardMap[y][x].pcOwner = currentPlayer;
             highlightGoodMoves( goodMoves );
         }
 
@@ -358,6 +377,9 @@ const App = (props) => {
             let possibleMoves = [];
             let goodMoves = [];
             let move = null;
+
+            // boardMap[y][x].pcType = Pieces.EMPTY;               // temporary "picks up" the piece for
+            // boardMap[y][x].pcOwner = Players.NONE;              // king check-avoidance testing
 
             // BLACK pawns
             if ( currentPlayer === Players.BLACK ){
@@ -407,6 +429,9 @@ const App = (props) => {
 
                 goodMoves.push(move);
             }
+
+            // boardMap[y][x].pcType = Pieces.KNIGHT;              // places piece back down after all
+            // boardMap[y][x].pcOwner = currentPlayer;             // safe moves are found
             highlightGoodMoves( goodMoves );
         }
 
@@ -525,6 +550,7 @@ const App = (props) => {
         // at the given Y, X coordinates and searches for pieces that can attack this square.
         // If the square is safe, TRUE is returned. FALSE otherwise.
         function squareIsSafe(y, x){
+
             let squareBeingSearched = null;             // current square being tested for a potential enemy
 
             // searches DOWN looking for danger

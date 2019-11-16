@@ -390,6 +390,11 @@ const App = (props) => {
             let foundDanger = false;                // whether or not an enemy has been found
             let move = null;                        // current move being examined
             let loopCounter = 0;                    // DEBUGGING: counts loops required for King safety
+            let startTime = Date.now();
+
+            for (let i = 0; i < 100000000; i++) {
+                loopCounter++;
+            }
 
             for ( let yOffset = -1; yOffset < 2; yOffset++ ){             // adds 1 move in every direction
                 for ( let xOffset = -1; xOffset < 2; xOffset++){          // skips the Square the king is already on
@@ -660,7 +665,7 @@ const App = (props) => {
             boardMap[y][x].pcType = Pieces.KING;
             boardMap[y][x].pcOwner = currentPlayer;         // tests are complete, put the king back
             highlightGoodMoves( safeMoves );                // and highlight his safe moves
-            console.log("It took " + loopCounter + " loops to determine safe moves for King.");
+            console.log("It took " + loopCounter + " loops to determine safe moves for King. It took " + (Date.now() - startTime) + "ms to perform this. This is now:" + Date.now() + ", this was start: "+startTime);
         }
     };
 

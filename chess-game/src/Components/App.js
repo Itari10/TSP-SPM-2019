@@ -31,21 +31,36 @@ const App = (props) => {
     // REMEMBER: These states CANNOT be changed without using the corresponding SET methods.
     // Attempting to set them manually will NOT result in errors, but WILL cause unintended buggy behavior
     const [boardState, setBoardState] =         React.useState( initializeBoard() );
-    const [currentPlayer, swapPlayer] =         React.useState( Players.WHITE );
+    const [currentPlayer, setCurrentPlayer] =   React.useState( Players.WHITE );
     const [updateBoard, setUpdateBoard] =       React.useState( true );             // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
-    const [gameOver, setGameOver] = React.useState(false);
+    const [gameOver, setGameOver] =             React.useState( false );
+    const [whiteKingLocation, setWhiteKing] =   React.useState( [7, 3] );
+    const [blackKingLocation, setBlackKing] =   React.useState( [0, 3] );
+    const [playerKingY, setKingY] =             React.useState( 7 );                // current player's king's Y coordinate
+    const [playerKingX, setKingX] =             React.useState( 3 );                // current player's king's X coordinate
+    const [whiteKingCheck, setWhiteCheck] =     React.useState( false );
+    const [blackKingCheck, setBlackCheck] =     React.useState( false );
 
     // swaps the player turn
     const swapTurn = () => {
-        swapPlayer( currentPlayer === Players.WHITE ? Players.BLACK : Players.WHITE )
+        if (currentPlayer === Players.WHITE ){
+            setKingY( blackKingLocation[0] );       // updates current player's king coordinates
+            setKingX( blackKingLocation[1] );
+            setCurrentPlayer(Players.BLACK)
+        }
+        else{
+            setKingY( whiteKingLocation[0] );
+            setKingX( whiteKingLocation[1] );
+            setCurrentPlayer(Players.WHITE);
+        }
     };
 
-    //Activate game over functionality
+    // activates game-over functionality
     const endGame = () => {
         setGameOver(true);
-    }
+    };
 
     const squareClicked = (y, x) => {
 
@@ -103,8 +118,14 @@ const App = (props) => {
             selectedPiece.pcOwner = Players.NONE;               // clear the selected square
             selectedPiece.isSelected = false;
 
+            if ( boardMap[y][x].pcType === Pieces.KING ){       // updates king locations when moved
+                if (currentPlayer === Players.WHITE)
+                    setWhiteKing( [y,x] );
+                else
+                    setBlackKing( [y,x] );
+            }
+
             // transforms pawns into queens if they reach the other side of the board
-            // no need to check which player because pawns will only ever reach one side
             if ((y === 0 || y === 7) && boardMap[y][x].pcType === Pieces.PAWN ){
                 boardMap[y][x].pcType = Pieces.QUEEN;
             }
@@ -115,7 +136,7 @@ const App = (props) => {
         }
         setBoardState(boardMap);                // updates the board with all changes made
         setUpdateBoard(!updateBoard);           // and triggers a re-render
-        // END OF MAIN FUNCTION EXECUTION
+        // END OF MAIN CLICK FUNCTION
 
 
 
@@ -133,8 +154,8 @@ const App = (props) => {
             setHighlights( [] );                    // reset highlighted squares state to an empty array
         }
 
-        // iterates through a list of acceptable moves that a piece can make
-        // highlights them on the board, and updates the state to match
+        // Iterates through a list of moves that a piece can make and
+        // highlights them on the board. Updates the state to match
         function highlightGoodMoves( goodMoves ){
             for ( let i = 0; i < goodMoves.length; i++ ){
                 boardMap[ goodMoves[i].y ][ goodMoves[i].x ].isHighlighted = true;
@@ -152,6 +173,9 @@ const App = (props) => {
             let xDir = null;            // amount to increment x by when searching
             let yLimit = null;          // limit placed on y variable in loops
             let xLimit = null;          // limit placed on x variable in loops
+            let kingIsSafe = false;     // is the current player's King being put in check by the move being tested
+            let currentType = null;     // current piece type of the given square
+            let currentOwner = null;    // current owner of the given square
 
             switch (direction) {
                 case Directions.DOWN:   yDir = 1;   yLimit = 8;    break;
@@ -163,47 +187,87 @@ const App = (props) => {
 
             // UP and DOWN
             if ( direction === Directions.UP || direction === Directions.DOWN ){
-                for ( let curY = y + yDir; (curY !== y + (8 * yDir)) && (curY !== yLimit); curY += yDir){
-                    if (boardMap[ curY ][ x ].pcType === Pieces.EMPTY) {
-                        goodMoves.push( new Move(curY,x) );                     // if square is empty, the move is good
-                        continue;                                               // add and continue moving forward
-                    }
-                    if (boardMap[ curY ][ x ].pcOwner === currentPlayer)        // discard if you run into your own piece
-                        break;
-                    if (boardMap[ curY ][ x ].pcOwner !== currentPlayer ){
-                        goodMoves.push( new Move(curY,x) );                     // if square contains enemy, move is good
-                        break;                                                  // but we can no longer move forward
+
+                // Your King is currently NOT in check
+                if ((currentPlayer === Players.WHITE && ! whiteKingCheck) ||
+                    (currentPlayer === Players.BLACK && ! blackKingCheck)) {
+
+                    for (let curY = y + yDir; (curY !== y + (8 * yDir)) && (curY !== yLimit); curY += yDir) {
+                        currentType = boardMap[curY][x].pcType;
+                        currentOwner = boardMap[curY][x].pcOwner;
+
+                        if (boardMap[curY][x].pcOwner === currentPlayer)        // discard if you run into your own piece
+                            break;
+
+                        else {                                                          // otherwise...
+                            boardMap[curY][x].pcType = Pieces.PAWN;
+                            boardMap[curY][x].pcOwner = currentPlayer;                  // temporarily move to that square
+
+                            kingIsSafe = squareIsSafe(playerKingY, playerKingX);        // make sure your king is still safe
+
+                            boardMap[curY][x].pcType = currentType;
+                            boardMap[curY][x].pcOwner = currentOwner;
+
+                            if ( kingIsSafe ) {                                 // if so, the move is good
+                                goodMoves.push(new Move(curY, x));
+                                if (currentType !== Pieces.EMPTY)               // if this was an attack, searching stops here
+                                    break;                                      // (otherwise, keep searching for new moves)
+                            }
+                            else                // if your king wasn't safe
+                                break;          // we DON'T add the move, and stop searching
+                        }                       // for new moves in this direction
                     }
                 }
             }
 
             // LEFT and RIGHT
             else{
-                for ( let curX = x + xDir; (curX !== x + (8 * xDir)) && (curX !== xLimit); curX += xDir){
-                    if (boardMap[ y ][ curX ].pcType === Pieces.EMPTY) {
-                        goodMoves.push( new Move(y,curX) );
-                        continue;
-                    }
-                    if (boardMap[ y ][ curX ].pcOwner === currentPlayer)
-                        break;
-                    if (boardMap[ y ][ curX ].pcOwner !== currentPlayer ){
-                        goodMoves.push( new Move(y,curX) );
-                        break;
+                if ((currentPlayer === Players.WHITE && ! whiteKingCheck) ||
+                    (currentPlayer === Players.BLACK && ! blackKingCheck)) {
+
+                    for (let curX = x + xDir; (curX !== x + (8 * xDir)) && (curX !== xLimit); curX += xDir) {
+                        currentType = boardMap[y][curX].pcType;
+                        currentOwner = boardMap[y][curX].pcOwner;
+
+                        if (boardMap[y][curX].pcOwner === currentPlayer)
+                            break;
+
+                        else {
+                            boardMap[y][curX].pcType = Pieces.PAWN;
+                            boardMap[y][curX].pcOwner = currentPlayer;
+
+                            kingIsSafe = squareIsSafe(playerKingY, playerKingX);
+
+                            boardMap[y][curX].pcType = currentType;
+                            boardMap[y][curX].pcOwner = currentOwner;
+
+                            if ( kingIsSafe ) {
+                                goodMoves.push(new Move(y, curX));
+                                if (currentType !== Pieces.EMPTY)
+                                    break;
+                            }
+                            else
+                                break;
+                        }
                     }
                 }
             }
             return goodMoves;
         }
 
+
         // Searches in DIAGONAL directions for acceptable moves for a given piece
         // Uses variable-swapping depending on the direction parameter passed in
         // Updates the goodMoves array based on good moves that were found in the given direction
-        function findDiagonalMoves(goodMoves, direction){
+        function addDiagonalMoves(goodMoves, direction){
 
             let yDir = null;            // amount to increment y by when searching
             let xDir = null;            // amount to increment x by when searching
             let yLimit = null;          // limit placed on y variable in loops
             let xLimit = null;          // limit placed on x variable in loops
+            let kingIsSafe = false;     // is the current player's King being put in check by the move being tested
+            let currentType = null;     // current piece type of the given square
+            let currentOwner = null;    // current owner of the given square
 
             switch (direction) {
                 case Directions.DOWN_RIGHT: yDir = 1;   xDir = 1;   yLimit = 8;   xLimit = 8;   break;
@@ -213,29 +277,47 @@ const App = (props) => {
                 default: return;
             }
 
-            // add moves based on given direction
-            for ( let curY = y + yDir, curX = x + xDir;
-                  curY !== y + (8 * yDir) && curX !== x + (8 * xDir) &&
-                  curY !== yLimit && curX !== xLimit; curY += yDir, curX += xDir){
+            // If your King is currently NOT in check
+            if ((currentPlayer === Players.WHITE && ! whiteKingCheck) ||
+                (currentPlayer === Players.BLACK && ! blackKingCheck)) {
 
-                if (boardMap[ curY ][ curX ].pcType === Pieces.EMPTY) {
-                    goodMoves.push( new Move(curY,curX) );                  // if square is empty, the move is good
-                    continue;                                               // add and continue moving forward
-                }
-                if (boardMap[ curY ][ curX ].pcOwner === currentPlayer)     // discard if you run into your own piece
-                    break;
-                if (boardMap[ curY ][ curX ].pcOwner !== currentPlayer ){
-                    goodMoves.push( new Move(curY,curX) );                  // if square contains enemy, move is good
-                    break;                                                  // but we can no longer move forward
+                // add moves based on given direction
+                for ( let curY = y + yDir, curX = x + xDir;
+                      curY !== y + (8 * yDir) && curX !== x + (8 * xDir) &&
+                      curY !== yLimit && curX !== xLimit; curY += yDir, curX += xDir){
+
+                    currentType = boardMap[curY][curX].pcType;
+                    currentOwner = boardMap[curY][curX].pcOwner;
+
+                    if (boardMap[curY][curX].pcOwner === currentPlayer)        // discard if you run into your own piece
+                        break;
+
+                    else {                                                      // otherwise...
+                        boardMap[curY][curX].pcType = Pieces.PAWN;
+                        boardMap[curY][curX].pcOwner = currentPlayer;           // temporarily move to that square
+
+                        kingIsSafe = squareIsSafe(playerKingY, playerKingX);    // make sure your king is still safe
+
+                        boardMap[curY][curX].pcType = currentType;
+                        boardMap[curY][curX].pcOwner = currentOwner;
+
+                        if ( kingIsSafe ) {                                   // if so, the move is good
+                            goodMoves.push(new Move(curY, curX));
+                            if (currentType !== Pieces.EMPTY)               // if this was an attack, searching stops here
+                                break;                                      // (otherwise, keep searching for new moves)
+                        }
+                        else                // if your king wasn't safe
+                            break;          // we DON'T add the move, and stop searching
+                    }                       // for new moves in this direction
                 }
             }
             return goodMoves;
         }
 
 
-        // **********************************************************************************
-        // ***************************** KNIGHT FUNCTIONALITY *******************************
-        // **********************************************************************************
+        // *******************************************************************************
+        // ******************************* KNIGHT MOVEMENT *******************************
+        // *******************************************************************************
         function showKnightMoves() {
             let possibleMoves = [];                     // all theoretical moves the KNIGHT can make
             let goodMoves = [];                         // moves that are allowed
@@ -269,9 +351,9 @@ const App = (props) => {
         }
 
 
-        // **********************************************************************************
-        // ***************************** PAWN FUNCTIONALITY *********************************
-        // **********************************************************************************
+        // *****************************************************************************
+        // ******************************* PAWN MOVEMENT *******************************
+        // *****************************************************************************
         function showPawnMoves() {
             let possibleMoves = [];
             let goodMoves = [];
@@ -329,53 +411,71 @@ const App = (props) => {
         }
 
 
-        // **********************************************************************************
-        // ******************************* ROOK FUNCTIONALITY *******************************
-        // **********************************************************************************
+        // *****************************************************************************
+        // ******************************* ROOK MOVEMENT *******************************
+        // *****************************************************************************
         function showRookMoves() {
             let goodMoves = [];
+            boardMap[y][x].pcType = Pieces.EMPTY;               // temporary "picks up" the piece for
+            boardMap[y][x].pcOwner = Players.NONE;              // king check-avoidance testing
+
             goodMoves = findCardinalMoves(goodMoves, Directions.DOWN);
             goodMoves = findCardinalMoves(goodMoves, Directions.UP);
             goodMoves = findCardinalMoves(goodMoves, Directions.LEFT);
             goodMoves = findCardinalMoves(goodMoves, Directions.RIGHT);
+
+            boardMap[y][x].pcType = Pieces.ROOK;                // places piece back down after all
+            boardMap[y][x].pcOwner = currentPlayer;             // safe moves are found
             highlightGoodMoves( goodMoves );
         }
 
 
-        // **********************************************************************************
-        // ******************************* BISHOP FUNCTIONALITY *****************************
-        // **********************************************************************************
+        // *******************************************************************************
+        // ******************************* BISHOP MOVEMENT *******************************
+        // *******************************************************************************
         function showBishopMoves() {
             let goodMoves = [];
-            goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_RIGHT);
-            goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_LEFT);
-            goodMoves = findDiagonalMoves(goodMoves, Directions.UP_RIGHT);
-            goodMoves = findDiagonalMoves(goodMoves, Directions.UP_LEFT);
+            boardMap[y][x].pcType = Pieces.EMPTY;
+            boardMap[y][x].pcOwner = Players.NONE;
+
+            goodMoves = addDiagonalMoves(goodMoves, Directions.DOWN_RIGHT);
+            goodMoves = addDiagonalMoves(goodMoves, Directions.DOWN_LEFT);
+            goodMoves = addDiagonalMoves(goodMoves, Directions.UP_RIGHT);
+            goodMoves = addDiagonalMoves(goodMoves, Directions.UP_LEFT);
+
+            boardMap[y][x].pcType = Pieces.BISHOP;
+            boardMap[y][x].pcOwner = currentPlayer;
             highlightGoodMoves( goodMoves );
         }
 
 
-        // **********************************************************************************
-        // ******************************* QUEEN FUNCTIONALITY ******************************
-        // **********************************************************************************
+        // ******************************************************************************
+        // ******************************* QUEEN MOVEMENT *******************************
+        // ******************************************************************************
         function showQueenMoves() {
             let goodMoves = [];
+            boardMap[y][x].pcType = Pieces.EMPTY;
+            boardMap[y][x].pcOwner = Players.NONE;
+
             goodMoves = findCardinalMoves(goodMoves, Directions.DOWN);
             goodMoves = findCardinalMoves(goodMoves, Directions.UP);
             goodMoves = findCardinalMoves(goodMoves, Directions.LEFT);
             goodMoves = findCardinalMoves(goodMoves, Directions.RIGHT);
 
-            goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_RIGHT);
-            goodMoves = findDiagonalMoves(goodMoves, Directions.DOWN_LEFT);
-            goodMoves = findDiagonalMoves(goodMoves, Directions.UP_RIGHT);
-            goodMoves = findDiagonalMoves(goodMoves, Directions.UP_LEFT);
+            goodMoves = addDiagonalMoves(goodMoves, Directions.DOWN_RIGHT);
+            goodMoves = addDiagonalMoves(goodMoves, Directions.DOWN_LEFT);
+            goodMoves = addDiagonalMoves(goodMoves, Directions.UP_RIGHT);
+            goodMoves = addDiagonalMoves(goodMoves, Directions.UP_LEFT);
+
+            boardMap[y][x].pcType = Pieces.QUEEN;
+            boardMap[y][x].pcOwner = currentPlayer;
             highlightGoodMoves( goodMoves );
         }
 
 
-        // **********************************************************************************
-        // ******************************* KING FUNCTIONALITY *******************************
-        // **********************************************************************************
+        // *****************************************************************************
+        // ******************************* KING MOVEMENT *******************************
+        // *****************************************************************************
         function showKingMoves() {
             let possibleMoves = [];                 // all possible moves the king can make
             let safeMoves = [];                     // list of moves the king can make without being put into check
@@ -421,201 +521,168 @@ const App = (props) => {
         }
 
 
-        // This functions sends out "search" cursors in all directions
-        // away from the given square and searches for pieces that can attack this square.
+        // This functions sends out "search" cursors in all directions away from the square
+        // at the given Y, X coordinates and searches for pieces that can attack this square.
         // If the square is safe, TRUE is returned. FALSE otherwise.
         function squareIsSafe(y, x){
-            let potDangerSquare = null;             // current square being tested for a potential enemy
-            let foundDanger = false;                // whether or not an enemy has been found
+            let squareBeingSearched = null;             // current square being tested for a potential enemy
 
             // searches DOWN looking for danger
             for (let checkY = y + 1; checkY < 8; checkY++) {
-                potDangerSquare = boardMap[ checkY ][ x ];
+                squareBeingSearched = boardMap[ checkY ][ x ];
 
-                if ( potDangerSquare.pcOwner === currentPlayer )        // search ran into one of your
-                    break;                                              // own pieces so stop looking
+                if ( squareBeingSearched.pcOwner === currentPlayer )        // search ran into your own piece.
+                    break;                                                  // stop searching in this direction
 
                 if (checkY === y + 1
-                    && potDangerSquare.pcType === Pieces.KING ) {       // ran into a NEARBY enemy king
-                    foundDanger = true;                                 // we're in danger, stop looking
-                    break;
+                    && squareBeingSearched.pcType === Pieces.KING ) {       // ran into a NEARBY enemy king
+                    return false;                                           // we're in danger
                 }
-                if ((potDangerSquare.pcType === Pieces.QUEEN) ||
-                    (potDangerSquare.pcType === Pieces.ROOK)) {         // ran into an enemy queen or rook
-                    foundDanger = true;                                 // we're in danger, stop looking
-                    break;
+                if ((squareBeingSearched.pcType === Pieces.QUEEN) ||        // ran into an enemy queen or rook
+                    (squareBeingSearched.pcType === Pieces.ROOK)) {         // we're in danger
+                    return false;
                 }
-                if ( potDangerSquare.pcType !== Pieces.EMPTY )          // we're not in danger
-                    break;                                              // but ran into something, stop looking
+                if ( squareBeingSearched.pcType !== Pieces.EMPTY )          // we ran into something non-threatening
+                    break;                                                  // stop searching in this direction
             }
-            if (foundDanger)
-                return false;
 
             // searches UP looking for danger
             for (let checkY = y - 1; checkY > -1; checkY--) {
-                potDangerSquare = boardMap[ checkY ][ x ];
+                squareBeingSearched = boardMap[ checkY ][ x ];
 
-                if ( potDangerSquare.pcOwner === currentPlayer )
+                if ( squareBeingSearched.pcOwner === currentPlayer )
                     break;
 
-                if (checkY === y - 1 && potDangerSquare.pcType === Pieces.KING) {
-                    foundDanger = true;
-                    break;
+                if (checkY === y - 1 && squareBeingSearched.pcType === Pieces.KING) {
+                    return false;
                 }
-                if ((potDangerSquare.pcType === Pieces.QUEEN) ||
-                    (potDangerSquare.pcType === Pieces.ROOK)) {
-                    foundDanger = true;
-                    break;
+                if ((squareBeingSearched.pcType === Pieces.QUEEN) ||
+                    (squareBeingSearched.pcType === Pieces.ROOK)) {
+                    return false;
                 }
-                if ( potDangerSquare.pcType !== Pieces.EMPTY )
+                if ( squareBeingSearched.pcType !== Pieces.EMPTY )
                     break;
             }
-            if (foundDanger)
-                return false;
 
             // searches RIGHT looking for danger
             for (let checkX = x + 1; checkX < 8; checkX++) {
-                potDangerSquare = boardMap[ y ][ checkX ];
+                squareBeingSearched = boardMap[ y ][ checkX ];
 
-                if ( potDangerSquare.pcOwner === currentPlayer )
+                if ( squareBeingSearched.pcOwner === currentPlayer )
                     break;
 
-                if (checkX === x + 1 && potDangerSquare.pcType === Pieces.KING) {
-                    foundDanger = true;
-                    break;
+                if (checkX === x + 1 && squareBeingSearched.pcType === Pieces.KING) {
+                    return false;
                 }
-                if ((potDangerSquare.pcType === Pieces.QUEEN) ||
-                    (potDangerSquare.pcType === Pieces.ROOK)) {
-                    foundDanger = true;
-                    break;
+                if ((squareBeingSearched.pcType === Pieces.QUEEN) ||
+                    (squareBeingSearched.pcType === Pieces.ROOK)) {
+                    return false;
                 }
-                if ( potDangerSquare.pcType !== Pieces.EMPTY )
+                if ( squareBeingSearched.pcType !== Pieces.EMPTY )
                     break;
             }
-            if (foundDanger)
-                return false;
 
             // searches LEFT looking for danger
             for (let checkX = x - 1; checkX > -1; checkX--) {
-                potDangerSquare = boardMap[ y ][ checkX ];
+                squareBeingSearched = boardMap[ y ][ checkX ];
 
-                if ( potDangerSquare.pcOwner === currentPlayer )
+                if ( squareBeingSearched.pcOwner === currentPlayer )
                     break;
 
-                if (checkX === x - 1 && potDangerSquare.pcType === Pieces.KING) {
-                    foundDanger = true;
-                    break;
+                if (checkX === x - 1 && squareBeingSearched.pcType === Pieces.KING) {
+                    return false;
                 }
-                if ((potDangerSquare.pcType === Pieces.QUEEN) ||
-                    (potDangerSquare.pcType === Pieces.ROOK)) {
-                    foundDanger = true;
-                    break;
+                if ((squareBeingSearched.pcType === Pieces.QUEEN) ||
+                    (squareBeingSearched.pcType === Pieces.ROOK)) {
+                    return false;
                 }
-                if ( potDangerSquare.pcType !== Pieces.EMPTY )
+                if ( squareBeingSearched.pcType !== Pieces.EMPTY )
                     break;
             }
-            if (foundDanger)
-                return false;
 
             // searches UP-LEFT looking for danger
             for (let checkY = y-1, checkX = x-1; checkY > -1 && checkX > -1; checkY--, checkX--) {
-                potDangerSquare = boardMap[checkY][checkX];
+                squareBeingSearched = boardMap[checkY][checkX];
 
-                if ( potDangerSquare.pcOwner === currentPlayer )        // search ran into your own piece.
-                    break;                                              // stop looking
+                if ( squareBeingSearched.pcOwner === currentPlayer )        // search ran into your own piece.
+                    break;                                                  // stop searching in this direction
 
-                if ((checkY === y-1 && checkX === x-1) &&               // pawns only can attack in the direction
-                    (potDangerSquare.pcType === Pieces.KING  ||         // they move, so need to check ownership
-                        (potDangerSquare.pcType === Pieces.PAWN
-                            && currentPlayer === Players.WHITE))) {
-                    foundDanger = true;                                 // ran into a NEARBY enemy pawn or King.
-                    break;                                              // we're in danger, stop looking
+                if ((checkY === y-1 && checkX === x-1) &&                   // pawns only can attack in the direction
+                    (squareBeingSearched.pcType === Pieces.KING  ||         // they move, so need to check ownership
+                        (squareBeingSearched.pcType === Pieces.PAWN
+                            && currentPlayer === Players.WHITE))) {         // ran into a NEARBY enemy pawn or King.
+                    return false;                                           // we're in danger
                 }
-                if ((potDangerSquare.pcType === Pieces.BISHOP) ||
-                    (potDangerSquare.pcType === Pieces.QUEEN)) {
-                    foundDanger = true;                                 // ran into an enemy Bishop or Queen.
-                    break;                                              // we're in danger, stop looking
+                if ((squareBeingSearched.pcType === Pieces.BISHOP) ||
+                    (squareBeingSearched.pcType === Pieces.QUEEN)) {        // ran into an enemy Bishop or Queen.
+                    return false;                                           // we're in danger
                 }
-                if ( potDangerSquare.pcType !== Pieces.EMPTY )
-                    break;                                              // we're not in danger but we
-            }                                                           // ran into something, stop looking
-            if (foundDanger)
-                return false;
+                if ( squareBeingSearched.pcType !== Pieces.EMPTY )
+                    break;                                                  // we ran into something non-threatening
+            }                                                               // stop searching in this direction
 
             // searches UP-RIGHT looking for danger
             for (let checkY = y-1, checkX = x+1; checkY > -1 && checkX < 8; checkY--, checkX++) {
-                potDangerSquare = boardMap[checkY][checkX];
+                squareBeingSearched = boardMap[checkY][checkX];
 
-                if ( potDangerSquare.pcOwner === currentPlayer )
+                if ( squareBeingSearched.pcOwner === currentPlayer )
                     break;
 
                 if ((checkY === y-1 && checkX === x+1) &&
-                    (potDangerSquare.pcType === Pieces.KING  ||
-                        (potDangerSquare.pcType === Pieces.PAWN
+                    (squareBeingSearched.pcType === Pieces.KING  ||
+                        (squareBeingSearched.pcType === Pieces.PAWN
                             && currentPlayer === Players.WHITE))) {
-                    foundDanger = true;
-                    break;
+                    return false;
                 }
-                if ((potDangerSquare.pcType === Pieces.BISHOP) ||
-                    (potDangerSquare.pcType === Pieces.QUEEN)) {
-                    foundDanger = true;
-                    break;
+                if ((squareBeingSearched.pcType === Pieces.BISHOP) ||
+                    (squareBeingSearched.pcType === Pieces.QUEEN)) {
+                    return false;
                 }
-                if ( potDangerSquare.pcType !== Pieces.EMPTY )
+                if ( squareBeingSearched.pcType !== Pieces.EMPTY )
                     break;
             }
-            if (foundDanger)
-                return false;
 
             // searches DOWN-LEFT looking for danger
             for (let checkY = y+1, checkX = x-1; checkY < 8 && checkX > -1; checkY++, checkX--) {
-                potDangerSquare = boardMap[checkY][checkX];
+                squareBeingSearched = boardMap[checkY][checkX];
 
-                if ( potDangerSquare.pcOwner === currentPlayer )
+                if ( squareBeingSearched.pcOwner === currentPlayer )
                     break;
 
                 if ((checkY === y+1 && checkX === x-1) &&
-                    (potDangerSquare.pcType === Pieces.KING  ||
-                        (potDangerSquare.pcType === Pieces.PAWN
+                    (squareBeingSearched.pcType === Pieces.KING  ||
+                        (squareBeingSearched.pcType === Pieces.PAWN
                             && currentPlayer === Players.BLACK))) {
-                    foundDanger = true;
-                    break;
+                    return false;
                 }
-                if ((potDangerSquare.pcType === Pieces.BISHOP) ||
-                    (potDangerSquare.pcType === Pieces.QUEEN)) {
-                    foundDanger = true;
-                    break;
+                if ((squareBeingSearched.pcType === Pieces.BISHOP) ||
+                    (squareBeingSearched.pcType === Pieces.QUEEN)) {
+                    return false;
                 }
-                if ( potDangerSquare.pcType !== Pieces.EMPTY )
+                if ( squareBeingSearched.pcType !== Pieces.EMPTY )
                     break;
             }
-            if (foundDanger)
-                return false;
 
             // searches DOWN-RIGHT looking for danger
             for (let checkY = y+1, checkX = x+1; checkY < 8 && checkX < 8; checkY++, checkX++) {
-                potDangerSquare = boardMap[checkY][checkX];
+                squareBeingSearched = boardMap[checkY][checkX];
 
-                if ( potDangerSquare.pcOwner === currentPlayer )
+                if ( squareBeingSearched.pcOwner === currentPlayer )
                     break;
 
                 if ((checkY === y+1 && checkX === x+1) &&
-                    (potDangerSquare.pcType === Pieces.KING  ||
-                        (potDangerSquare.pcType === Pieces.PAWN
+                    (squareBeingSearched.pcType === Pieces.KING  ||
+                        (squareBeingSearched.pcType === Pieces.PAWN
                             && currentPlayer === Players.BLACK))) {
-                    foundDanger = true;
-                    break;
+                    return false;
                 }
-                if ((potDangerSquare.pcType === Pieces.BISHOP) ||
-                    (potDangerSquare.pcType === Pieces.QUEEN)) {
-                    foundDanger = true;
-                    break;
+                if ((squareBeingSearched.pcType === Pieces.BISHOP) ||
+                    (squareBeingSearched.pcType === Pieces.QUEEN)) {
+                    return false;
                 }
-                if ( potDangerSquare.pcType !== Pieces.EMPTY )
+                if ( squareBeingSearched.pcType !== Pieces.EMPTY )
                     break;
             }
-            if (foundDanger)
-                return false;
 
             // searches for potential KNIGHT attacks
             let knightAttack = [];
@@ -638,14 +705,11 @@ const App = (props) => {
                     continue;
                 if ((boardMap[checkY][checkX].pcType === Pieces.KNIGHT) &&
                     (boardMap[checkY][checkX].pcOwner !== currentPlayer)) {
-                    foundDanger = true;
-                    break;
+                    return false;
                 }
             }
-            if (foundDanger)
-                return false;
 
-            return true;        // all searches for danger have been exhausted. Returns true.
+            return true;        // all searches for danger have been exhausted. Square is safe.
         }
     };
 

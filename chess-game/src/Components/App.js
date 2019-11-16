@@ -389,6 +389,7 @@ const App = (props) => {
             let potDangerSquare = null;             // current square being tested for a potential enemy
             let foundDanger = false;                // whether or not an enemy has been found
             let move = null;                        // current move being examined
+            let loopCounter = 0;                    // DEBUGGING: counts loops required for King safety
 
             for ( let yOffset = -1; yOffset < 2; yOffset++ ){             // adds 1 move in every direction
                 for ( let xOffset = -1; xOffset < 2; xOffset++){          // skips the Square the king is already on
@@ -444,6 +445,7 @@ const App = (props) => {
                     }
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )          // we're not in danger
                         break;                                              // but ran into something, stop looking
+                    loopCounter++;
                 }
                 if (foundDanger)        // this move is not safe, discard and try next move
                     continue;
@@ -466,6 +468,7 @@ const App = (props) => {
                     }
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )
                         break;
+                    loopCounter++;
                 }
                 if (foundDanger)
                     continue;
@@ -488,6 +491,7 @@ const App = (props) => {
                     }
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )
                         break;
+                    loopCounter++;
                 }
                 if (foundDanger)
                     continue;
@@ -510,6 +514,7 @@ const App = (props) => {
                     }
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )
                         break;
+                    loopCounter++;
                 }
                 if (foundDanger)
                     continue;
@@ -535,6 +540,7 @@ const App = (props) => {
                     }
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )
                         break;                                              // we're not in danger but we
+                    loopCounter++;
                 }                                                           // ran into something, stop looking
                 if (foundDanger)
                     continue;
@@ -560,6 +566,7 @@ const App = (props) => {
                     }
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )
                         break;
+                    loopCounter++;
                 }
                 if (foundDanger)
                     continue;
@@ -585,6 +592,7 @@ const App = (props) => {
                     }
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )
                         break;
+                    loopCounter++;
                 }
                 if (foundDanger)
                     continue;
@@ -610,6 +618,7 @@ const App = (props) => {
                     }
                     if ( potDangerSquare.pcType !== Pieces.EMPTY )
                         break;
+                    loopCounter++;
                 }
                 if (foundDanger)
                     continue;
@@ -638,6 +647,7 @@ const App = (props) => {
                         foundDanger = true;
                         break;
                     }
+                    loopCounter++;
                 }
                 if (foundDanger)
                     continue;
@@ -645,10 +655,12 @@ const App = (props) => {
                 // FINALLY, if all checks are exhausted,
                 // add the move to the list of safe moves for the king
                 safeMoves.push(move);
+                loopCounter++;
             }
             boardMap[y][x].pcType = Pieces.KING;
             boardMap[y][x].pcOwner = currentPlayer;         // tests are complete, put the king back
             highlightGoodMoves( safeMoves );                // and highlight his safe moves
+            console.log("It took " + loopCounter + " loops to determine safe moves for King.");
         }
     };
 

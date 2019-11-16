@@ -332,16 +332,16 @@ const App = (props) => {
         // *******************************************************************************
         function showBishopMoves() {
             let goodMoves = [];
-            boardMap[y][x].pcType = Pieces.EMPTY;
-            boardMap[y][x].pcOwner = Players.NONE;
+            boardMap[y][x].pcType = Pieces.EMPTY;               // temporary "picks up" the piece for
+            boardMap[y][x].pcOwner = Players.NONE;              // king check-avoidance testing
 
-            goodMoves = addDiagonalMoves(goodMoves, Directions.DOWN_RIGHT);
-            goodMoves = addDiagonalMoves(goodMoves, Directions.DOWN_LEFT);
-            goodMoves = addDiagonalMoves(goodMoves, Directions.UP_RIGHT);
-            goodMoves = addDiagonalMoves(goodMoves, Directions.UP_LEFT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.DOWN_RIGHT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.DOWN_LEFT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.UP_RIGHT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.UP_LEFT);
 
-            boardMap[y][x].pcType = Pieces.BISHOP;
-            boardMap[y][x].pcOwner = currentPlayer;
+            boardMap[y][x].pcType = Pieces.BISHOP;              // places piece back down after all
+            boardMap[y][x].pcOwner = currentPlayer;             // safe moves are found
             highlightGoodMoves( goodMoves );
         }
 
@@ -351,16 +351,16 @@ const App = (props) => {
         // *****************************************************************************
         function showRookMoves() {
             let goodMoves = [];
-            boardMap[y][x].pcType = Pieces.EMPTY;               // temporary "picks up" the piece for
-            boardMap[y][x].pcOwner = Players.NONE;              // king check-avoidance testing
+            boardMap[y][x].pcType = Pieces.EMPTY;
+            boardMap[y][x].pcOwner = Players.NONE;
 
-            goodMoves = findCardinalMoves(goodMoves, Directions.DOWN);
-            goodMoves = findCardinalMoves(goodMoves, Directions.UP);
-            goodMoves = findCardinalMoves(goodMoves, Directions.LEFT);
-            goodMoves = findCardinalMoves(goodMoves, Directions.RIGHT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.DOWN);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.UP);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.LEFT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.RIGHT);
 
-            boardMap[y][x].pcType = Pieces.ROOK;                // places piece back down after all
-            boardMap[y][x].pcOwner = currentPlayer;             // safe moves are found
+            boardMap[y][x].pcType = Pieces.ROOK;
+            boardMap[y][x].pcOwner = currentPlayer;
             highlightGoodMoves( goodMoves );
         }
 
@@ -373,21 +373,20 @@ const App = (props) => {
             boardMap[y][x].pcType = Pieces.EMPTY;
             boardMap[y][x].pcOwner = Players.NONE;
 
-            goodMoves = findCardinalMoves(goodMoves, Directions.DOWN);
-            goodMoves = findCardinalMoves(goodMoves, Directions.UP);
-            goodMoves = findCardinalMoves(goodMoves, Directions.LEFT);
-            goodMoves = findCardinalMoves(goodMoves, Directions.RIGHT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.DOWN);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.UP);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.LEFT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.RIGHT);
 
-            goodMoves = addDiagonalMoves(goodMoves, Directions.DOWN_RIGHT);
-            goodMoves = addDiagonalMoves(goodMoves, Directions.DOWN_LEFT);
-            goodMoves = addDiagonalMoves(goodMoves, Directions.UP_RIGHT);
-            goodMoves = addDiagonalMoves(goodMoves, Directions.UP_LEFT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.DOWN_RIGHT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.DOWN_LEFT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.UP_RIGHT);
+            goodMoves = addDirectionalMoves(goodMoves, Directions.UP_LEFT);
 
             boardMap[y][x].pcType = Pieces.QUEEN;
             boardMap[y][x].pcOwner = currentPlayer;
             highlightGoodMoves( goodMoves );
         }
-
 
 
 
@@ -403,7 +402,7 @@ const App = (props) => {
                 litSquare = highlightedSquares[i];
                 boardMap[ litSquare.y ][ litSquare.x ].isHighlighted = false;
             }
-            setHighlights( [] );                    // reset highlighted squares state to an empty array
+            setHighlights( [] );
         }
 
 
@@ -416,113 +415,31 @@ const App = (props) => {
             setHighlights( goodMoves );
         }
 
-
-        // Searches in the four CARDINAL directions for acceptable moves for a given piece
-        // Uses variable-swapping depending on the direction parameter passed in
-        // Updates the goodMoves array based on good moves that were found in the given direction
-        function findCardinalMoves(goodMoves, direction){
-
-            let yDir = null;            // amount to increment y by when searching
-            let xDir = null;            // amount to increment x by when searching
-            let yLimit = null;          // limit placed on y variable in loops
-            let xLimit = null;          // limit placed on x variable in loops
-            let kingIsSafe = false;     // is the current player's King being put in check by the move being tested
-            let currentType = null;     // current piece type of the given square
-            let currentOwner = null;    // current owner of the given square
-
-            switch (direction) {
-                case Directions.DOWN:   yDir = 1;   yLimit = 8;    break;
-                case Directions.UP:     yDir = -1;  yLimit = -1;   break;       // sets up logic variables based on
-                case Directions.LEFT:   xDir = -1;  xLimit = -1;   break;       // direction being searched
-                case Directions.RIGHT:  xDir = 1;   xLimit = 8;    break;
-                default: return;
-            }
-
-            // UP and DOWN
-            if ( direction === Directions.UP || direction === Directions.DOWN ){
-
-                // Your King is currently NOT in check
-                if ((currentPlayer === Players.WHITE && ! whiteKingCheck) ||
-                    (currentPlayer === Players.BLACK && ! blackKingCheck)) {
-
-                    for (let curY = y + yDir; (curY !== y + (8 * yDir)) && (curY !== yLimit); curY += yDir) {
-                        currentType = boardMap[curY][x].pcType;
-                        currentOwner = boardMap[curY][x].pcOwner;
-
-                        if (boardMap[curY][x].pcOwner === currentPlayer)        // discard if you run into your own piece
-                            break;
-
-                        else {                                                          // otherwise...
-                            boardMap[curY][x].pcType = Pieces.PAWN;
-                            boardMap[curY][x].pcOwner = currentPlayer;                  // temporarily move to that square
-
-                            kingIsSafe = squareIsSafe(playerKingY, playerKingX);        // make sure your king is still safe
-
-                            boardMap[curY][x].pcType = currentType;
-                            boardMap[curY][x].pcOwner = currentOwner;
-
-                            if ( kingIsSafe ) {                                 // if so, the move is good
-                                goodMoves.push(new Move(curY, x));
-                                if (currentType !== Pieces.EMPTY)               // if this was an attack, searching stops here
-                                    break;                                      // (otherwise, keep searching for new moves)
-                            }
-                            else                // if your king wasn't safe
-                                break;          // we DON'T add the move, and stop searching
-                        }                       // for new moves in this direction
-                    }
-                }
-            }
-
-            // LEFT and RIGHT
-            else{
-                if ((currentPlayer === Players.WHITE && ! whiteKingCheck) ||
-                    (currentPlayer === Players.BLACK && ! blackKingCheck)) {
-
-                    for (let curX = x + xDir; (curX !== x + (8 * xDir)) && (curX !== xLimit); curX += xDir) {
-                        currentType = boardMap[y][curX].pcType;
-                        currentOwner = boardMap[y][curX].pcOwner;
-
-                        if (boardMap[y][curX].pcOwner === currentPlayer)
-                            break;
-
-                        else {
-                            boardMap[y][curX].pcType = Pieces.PAWN;
-                            boardMap[y][curX].pcOwner = currentPlayer;
-
-                            kingIsSafe = squareIsSafe(playerKingY, playerKingX);
-
-                            boardMap[y][curX].pcType = currentType;
-                            boardMap[y][curX].pcOwner = currentOwner;
-
-                            if ( kingIsSafe ) {
-                                goodMoves.push(new Move(y, curX));
-                                if (currentType !== Pieces.EMPTY)
-                                    break;
-                            }
-                            else
-                                break;
-                        }
-                    }
-                }
-            }
-            return goodMoves;
+        // determines if the currently player is in check
+        function playerIsInCheck(){
+            return ((currentPlayer === Players.WHITE && whiteKingCheck) ||
+                    (currentPlayer === Players.BLACK && blackKingCheck));
         }
 
 
-        // Searches in DIAGONAL directions for acceptable moves for a given piece
-        // Uses variable-swapping depending on the direction parameter passed in
-        // Updates the goodMoves array based on good moves that were found in the given direction
-        function addDiagonalMoves(goodMoves, direction){
+        // Searches in a given direction for acceptable moves for a given piece
+        // Direction is determined by parameters and loop constraints are set up accordingly
+        // Adds moves to the goodMoves array based on safe moves that were found in the given direction
+        function addDirectionalMoves(goodMoves, direction){
 
             let yDir = null;            // amount to increment y by when searching
             let xDir = null;            // amount to increment x by when searching
             let yLimit = null;          // limit placed on y variable in loops
             let xLimit = null;          // limit placed on x variable in loops
-            let kingIsSafe = false;     // is the current player's King being put in check by the move being tested
-            let currentType = null;     // current piece type of the given square
-            let currentOwner = null;    // current owner of the given square
+            let kingIsSafe = false;     // is the current player's King being put in check by the move being tested?
+            let squareType = null;      // current piece type of the square being considered
+            let squareOwner = null;     // current owner of the square being considered
 
             switch (direction) {
+                case Directions.DOWN:       yDir = 1;   yLimit = 8;    break;
+                case Directions.UP:         yDir = -1;  yLimit = -1;   break;       // sets up logic variables based on
+                case Directions.LEFT:       xDir = -1;  xLimit = -1;   break;       // direction being searched
+                case Directions.RIGHT:      xDir = 1;   xLimit = 8;    break;
                 case Directions.DOWN_RIGHT: yDir = 1;   xDir = 1;   yLimit = 8;   xLimit = 8;   break;
                 case Directions.DOWN_LEFT:  yDir = 1;   xDir = -1;  yLimit = 8;   xLimit = -1;  break;
                 case Directions.UP_RIGHT:   yDir = -1;  xDir = 1;   yLimit = -1;  xLimit = 8;   break;
@@ -530,43 +447,110 @@ const App = (props) => {
                 default: return;
             }
 
-            // If your King is currently NOT in check
-            if ((currentPlayer === Players.WHITE && ! whiteKingCheck) ||
-                (currentPlayer === Players.BLACK && ! blackKingCheck)) {
+            // UP and DOWN
+            if ( direction === Directions.UP || direction === Directions.DOWN ){
 
-                // add moves based on given direction
+                // add moves in a the given direction until forced to stop
+                for (let curY = y + yDir; (curY !== y + (8 * yDir)) && (curY !== yLimit); curY += yDir) {
+                    squareType = boardMap[curY][x].pcType;
+                    squareOwner = boardMap[curY][x].pcOwner;
+
+                    if (boardMap[curY][x].pcOwner === currentPlayer)        // discard if you run into your own piece
+                        break;
+
+                    else {                                                          // otherwise...
+                        boardMap[curY][x].pcType = Pieces.PAWN;
+                        boardMap[curY][x].pcOwner = currentPlayer;                  // temporarily move to that square
+
+                        kingIsSafe = squareIsSafe(playerKingY, playerKingX);        // make sure your king is still safe
+
+                        boardMap[curY][x].pcType = squareType;
+                        boardMap[curY][x].pcOwner = squareOwner;
+
+                        if ( kingIsSafe ) {                                 // King is SAFE, add the move
+                            goodMoves.push(new Move(curY, x));
+                            if (squareType !== Pieces.EMPTY)                // if this was an attack, we cannot move forward
+                                break;                                      // (otherwise, keep looking for moves to add)
+                        }
+
+                        else {                                  // King is NOT SAFE if you make this move
+                            if ( ! playerIsInCheck() )
+                                break;                          // if you are NOT in check, we've concluded you cannot move
+
+                            else                                // however if you ARE IN CHECK, keep looking for a move
+                                continue;                       // in this direction that could save your King
+                        }
+                    }           // NOTE: this last continue can result in "gaps" in potential moves a piece can make
+                }               // in a given direction. However this is intended because sometimes the only move
+            }                   // a piece can make to save your king is several moves away from its current location.
+
+            // LEFT and RIGHT
+            else if ( direction === Directions.LEFT || direction === Directions.RIGHT ){
+
+                for (let curX = x + xDir; (curX !== x + (8 * xDir)) && (curX !== xLimit); curX += xDir) {
+                    squareType = boardMap[y][curX].pcType;
+                    squareOwner = boardMap[y][curX].pcOwner;
+
+                    if (boardMap[y][curX].pcOwner === currentPlayer)
+                        break;
+
+                    else {
+                        boardMap[y][curX].pcType = Pieces.PAWN;
+                        boardMap[y][curX].pcOwner = currentPlayer;
+
+                        kingIsSafe = squareIsSafe(playerKingY, playerKingX);
+
+                        boardMap[y][curX].pcType = squareType;
+                        boardMap[y][curX].pcOwner = squareOwner;
+
+                        if ( kingIsSafe ) {
+                            goodMoves.push(new Move(y, curX));
+                            if (squareType !== Pieces.EMPTY)
+                                break;
+                        }
+                        else {
+                            if ( ! playerIsInCheck() )
+                                break;
+                        }
+                    }
+                }
+            }
+
+            // DIAGONALS
+            else{
                 for ( let curY = y + yDir, curX = x + xDir;
                       curY !== y + (8 * yDir) && curX !== x + (8 * xDir) &&
                       curY !== yLimit && curX !== xLimit; curY += yDir, curX += xDir){
 
-                    currentType = boardMap[curY][curX].pcType;
-                    currentOwner = boardMap[curY][curX].pcOwner;
+                    squareType = boardMap[curY][curX].pcType;
+                    squareOwner = boardMap[curY][curX].pcOwner;
 
-                    if (boardMap[curY][curX].pcOwner === currentPlayer)        // discard if you run into your own piece
+                    if (boardMap[curY][curX].pcOwner === currentPlayer)
                         break;
 
-                    else {                                                      // otherwise...
+                    else {
                         boardMap[curY][curX].pcType = Pieces.PAWN;
-                        boardMap[curY][curX].pcOwner = currentPlayer;           // temporarily move to that square
+                        boardMap[curY][curX].pcOwner = currentPlayer;
 
-                        kingIsSafe = squareIsSafe(playerKingY, playerKingX);    // make sure your king is still safe
+                        kingIsSafe = squareIsSafe(playerKingY, playerKingX);
 
-                        boardMap[curY][curX].pcType = currentType;
-                        boardMap[curY][curX].pcOwner = currentOwner;
+                        boardMap[curY][curX].pcType = squareType;
+                        boardMap[curY][curX].pcOwner = squareOwner;
 
-                        if ( kingIsSafe ) {                                 // if so, the move is good
-                            goodMoves.push(new Move(curY, curX));
-                            if (currentType !== Pieces.EMPTY)               // if this was an attack, searching stops here
-                                break;                                      // (otherwise, keep searching for new moves)
+                        if ( kingIsSafe ) {
+                            goodMoves.push( new Move(curY,curX) );
+                            if (squareType !== Pieces.EMPTY)
+                                break;
                         }
-                        else                // if your king wasn't safe
-                            break;          // DON'T add the move, and stop searching
-                    }                       // for new moves in this direction
+                        else {
+                            if ( ! playerIsInCheck() )
+                                break;
+                        }
+                    }
                 }
             }
             return goodMoves;
         }
-
 
         // This functions sends out "search" cursors in all directions away from the square
         // at the given Y, X coordinates and searches for pieces that can attack this square.

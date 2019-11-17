@@ -107,7 +107,7 @@ export function initializeBoard(){
         }
     }
 
-    // white Pieces
+    // black Pieces
     defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
     defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
     defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
@@ -117,7 +117,7 @@ export function initializeBoard(){
     defaultBoard[0][6] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
     defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
 
-    // black Pieces
+    // white Pieces
     defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
     defaultBoard[7][1] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
     defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);

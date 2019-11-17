@@ -8,7 +8,7 @@ const EndTurnBtn = (props) => {
 
     return (
         <button className="btn" onClick={()=>{props.onClick()}}>
-                <h2> End Turn </h2>
+            <h2> End Turn </h2>
         </button>
     );
 };

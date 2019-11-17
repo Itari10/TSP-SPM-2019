@@ -112,6 +112,8 @@ const App = (props) => {
         // This is a successful move so the turn is swapped to the next player upon completion
         else if ( selectedSquare[0] !== -1 && boardMap[y][x].isHighlighted === true ){
             let selectedPiece = boardMap[selectedSquare[0]][selectedSquare[1]];
+            if (boardMap[y][x].pcType !== Pieces.EMPTY)                //if square isn't empty then add captured piece image
+                addToDungeon(y, x);
             boardMap[y][x].pcType = selectedPiece.pcType;
             boardMap[y][x].pcOwner = selectedPiece.pcOwner;     // move piece from selected square to clicked square
             selectedPiece.pcType = Pieces.EMPTY;
@@ -752,6 +754,17 @@ const App = (props) => {
 
             return true;        // all searches for danger have been exhausted. Square is safe.
         }
+        function addToDungeon (y, x) {
+            let node = document.createElement("img");
+            node.setAttribute("src", Pieces.KNIGHT);
+            let dungeon = "";
+            if (currentPlayer == Players.BLACK)
+                dungeon = document.getElementById("2");
+            else
+                dungeon = document.getElementById("1");
+            dungeon.appendChild(node);
+
+        }
     };
 
 
@@ -763,9 +776,9 @@ const App = (props) => {
             </div>
             <div className="row">
                 <div className="col-sm-4">
-                    <PlayerBox playerTitle="CATS" isTurn={currentPlayer === Players.BLACK} triggerGameOver={endGame} />
+                    <PlayerBox playerTitle="CATS" isTurn={currentPlayer === Players.BLACK} playerNumber={"2"} triggerGameOver={endGame} />
                     <div className="spacer"/>
-                    <PlayerBox playerTitle="DOGS" isTurn={currentPlayer === Players.WHITE} triggerGameOver={endGame} />
+                    <PlayerBox playerTitle="DOGS" isTurn={currentPlayer === Players.WHITE} playerNumber={"1"} triggerGameOver={endGame} />
                 </div>
                 <div className="col-sm-8">
                     <Board bState = {boardState} pieceClicked = {squareClicked}/>

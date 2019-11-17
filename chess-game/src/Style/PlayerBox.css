@@ -8,21 +8,31 @@
     justify-content: space-between;
 }
 
-.turnCheck {
-    background-color: rgb(214, 48, 58);
+.notTurn {
+    background-color: rgb(85, 85, 85);
+    color: rgb(48, 48, 48);
     height: 47.5%;
-    border: 6px solid #ec9300;
+    border: 6px solid #2c2c2c;
     border-radius: 10px;
     padding: 10px;
     display: flex;
     justify-content: space-between;
 }
 
-.notTurn {
-    background-color: rgb(85, 85, 85);
-    color: rgb(48, 48, 48);
+.turnCheck {
+    background-color: rgb(200, 76, 0);
     height: 47.5%;
-    border: 6px solid #2c2c2c;
+    border: 6px solid #ffa100;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkmate {
+    background-color: rgb(255, 0, 29);
+    height: 47.5%;
+    border: 6px solid #ffa100;
     border-radius: 10px;
     padding: 10px;
     display: flex;

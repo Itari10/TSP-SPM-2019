@@ -6,9 +6,10 @@ import SurrenderButton from './SurrenderButton';
 const PlayerBox = (props) => {
 
     return (
-        <div className={(props.isTurn ? (props.inCheck ? "turnCheck" : "turn") : "notTurn")} id={props.playerNumber}>
+        <div className={(props.checkmate ? "checkmate" : (props.isTurn ? (props.inCheck ? "turnCheck" : "turn") : "notTurn"))}
+             id={props.playerNumber}>
 
-            <h2>{props.playerTitle + (props.inCheck ? ": CHECK" : "")}</h2>
+            <h2>{props.playerTitle + (props.checkmate ? ": CHECKMATE" : (props.inCheck ? ": CHECK" : ""))}</h2>
 
             <SurrenderButton
                 disable =           {!props.isTurn}

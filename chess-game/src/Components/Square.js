@@ -51,7 +51,7 @@ function determineBG(props){
     if ( props.isSelected ) {
         return '#aae7ff';
     }
-    else if ( props.isHighlighted  ){
+    else if ( props.isHighlighted ){
         if ( props.defaultColor === '#d9a989' )
             return '#5da675';
         else

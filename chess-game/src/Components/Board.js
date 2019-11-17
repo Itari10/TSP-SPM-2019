@@ -12,6 +12,14 @@ class Piece{
     }
 }
 
+// class used as a container to hold piece coordinates
+class Coordinate{
+    constructor(y, x) {
+        this.y = y;
+        this.x = x;
+    }
+}
+
 // player enum
 export const Players = {
     NONE: 0,
@@ -147,6 +155,28 @@ export function initializeBoard(){
         }
     }
     return defaultBoard;
+}
+
+// creates the initial list of white piece locations
+export function createBlackPieceList(){
+    let blackPieceList = [];
+    for ( let y = 0; y < 2; y++ ) {
+        for (let x = 0; x < 8; x++) {
+            blackPieceList.push( new Coordinate(y, x) );
+        }
+    }
+    return blackPieceList;
+}
+
+// creates the initial list of black piece locations
+export function createWhitePieceList(){
+    let whitePieceList = [];
+    for ( let y = 7; y > 5; y-- ) {
+        for (let x = 0; x < 8; x++) {
+            whitePieceList.push( new Coordinate(y, x) );
+        }
+    }
+    return whitePieceList;
 }
 
 export default Board;

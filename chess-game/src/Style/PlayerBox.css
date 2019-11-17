@@ -32,7 +32,7 @@
 .checkmate {
     background-color: rgb(255, 0, 29);
     height: 47.5%;
-    border: 6px solid #ffa100;
+    border: 6px solid #000000;
     border-radius: 10px;
     padding: 10px;
     display: flex;

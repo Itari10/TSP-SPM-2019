@@ -180,8 +180,7 @@ const App = (props) => {
         // ************************************ HELPER FUNCTIONS ************************************
         // ******************************************************************************************
 
-
-
+        
         // adds the given piece to the dungeon
         // function addToDungeon (y, x) {
         //     let node = document.createElement("img");

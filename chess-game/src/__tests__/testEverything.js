@@ -320,11 +320,28 @@ describe('GAME STATE TESTS', () => {
 
     // TODO: Simulate over 9000 actual games
 
-    // Use clickSquareAt( y, x ) to simulate clicking the given square
-    // then test the properties of the board squares against what we would expect them to be
+     /*************************************  INSTRUCTIONS  *********************************************
+     *                                                                                                 *
+     *     Use clickSquareAt( y, x ) to simulate clicking the given square                             *
+     *     then test the properties of the board squares against what we would expect them to be       *
+     *     after clicking a given series of squares. You can simulate an entire game this way,         *
+     *     testing all kinds of things along the way. The most tests we have the better.               *
+     *                                                                                                 *
+     *                                                                                                 *
+     *     use        app = mount(<App />);                                                            *
+     *                board = app.find('Board')                                                        *
+     *                boardDiv = board.find('div.board');     if you want to re-render a new game      *
+     *                                                                                                 *
+     **************************************************************************************************/
 
-    //   use       app = mount(<App />);
-    //             board = app.find('Board');     to re-render a new game
+
+
+
+
+
+
+
+
 
 
 

@@ -157,7 +157,7 @@ export function initializeBoard(){
     return defaultBoard;
 }
 
-// creates the initial list of white piece locations
+// creates the initial list of black piece locations
 export function createBlackPieceList(){
     let blackPieceList = [];
     for ( let y = 0; y < 2; y++ ) {
@@ -168,7 +168,7 @@ export function createBlackPieceList(){
     return blackPieceList;
 }
 
-// creates the initial list of black piece locations
+// creates the initial list of white piece locations
 export function createWhitePieceList(){
     let whitePieceList = [];
     for ( let y = 7; y > 5; y-- ) {

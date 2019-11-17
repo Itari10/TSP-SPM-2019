@@ -119,7 +119,7 @@ const App = (props) => {
         // This is a successful move so the turn is swapped to the next player upon completion
         else if ( selectedSquare[0] !== -1 && boardMap[y][x].isHighlighted === true ){
 
-            updatePieceCoordinates();           // updates each player's piece list
+            updatePieceCoordinates();                                                    // updates each player's piece list
 
             boardMap[y][x].pcType = boardMap[selectedSquare[0]][selectedSquare[1]].pcType;        // move piece from selected
             boardMap[y][x].pcOwner = boardMap[selectedSquare[0]][selectedSquare[1]].pcOwner;      // square to clicked square
@@ -129,19 +129,9 @@ const App = (props) => {
             boardMap[selectedSquare[0]][selectedSquare[1]].isSelected = false;
             setSelectedSquare( [-1,-1] );
 
-            whiteCheck = ! squareIsSafe( whiteKingCoords[0], whiteKingCoords[1] );
-            blackCheck = ! squareIsSafe( blackKingCoords[0], blackKingCoords[1] );
-
-            if ( whiteCheck )
-                determineWhiteCheckmate();
-
-            if ( blackCheck )
-                determineBlackCheckmate();
-
-
             if ( boardMap[y][x].pcType === Pieces.KING ){
                 if (currentPlayer === Players.WHITE) {              // updates player king locations
-                    whiteKingCoords[0] = y;
+                    whiteKingCoords[0] = y;                         // if a king was moved
                     whiteKingCoords[1] = x;
                 }
                 else {
@@ -155,8 +145,20 @@ const App = (props) => {
                 boardMap[y][x].pcType = Pieces.QUEEN;
             }
 
-            // if (boardMap[y][x].pcType !== Pieces.EMPTY)          // adds the piece to the dungeon
+            // adds the piece to the dungeon
+            // if (boardMap[y][x].pcType !== Pieces.EMPTY)
             //     addToDungeon(y, x);
+
+            // determines CHECK status
+            whiteCheck = ! squareIsSafe( whiteKingCoords[0], whiteKingCoords[1] );
+            blackCheck = ! squareIsSafe( blackKingCoords[0], blackKingCoords[1] );
+
+            // determines CHECKMATE status
+            if ( whiteCheck )
+                determineWhiteCheckmate();
+
+            if ( blackCheck )
+                determineBlackCheckmate();
 
             // UPDATE STATES
             updateWhitePieces( whitePieceList );
@@ -173,104 +175,24 @@ const App = (props) => {
         // END OF MAIN CLICK FUNCTION
 
 
+
         // ******************************************************************************************
         // ************************************ HELPER FUNCTIONS ************************************
         // ******************************************************************************************
 
 
-        // determines if there is at least ONE move the WHITE player can make to avoid checkmate.
-        // iterates through all white pieces and simulates moves until one is found that can stop checkmate
-        function determineWhiteCheckmate(){
-            let checkMate = true;
-            let piece = null;
-            for ( let i = 0; i < whitePieceList.length; i++ ){
-                piece = whitePieceList[i];
-                switch (boardMap[piece.y][piece.x].pcType) {
-                    case Pieces.ROOK:   checkMate = showRookMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.KNIGHT: checkMate = showKnightMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.BISHOP: checkMate = showBishopMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.QUEEN:  checkMate = showQueenMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.KING:   checkMate = showKingMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.PAWN:   checkMate = showPawnMoves(piece.y,piece.x,false) === 0;   break;
-                    default: console.log("ERROR: DEFAULT CASE REACHED IN determineWhiteCheckmate()");
-                }
-                if ( ! checkMate )
-                    break;
-            }
-            if ( checkMate ) {
-                console.log("WHITE IN CHECKMATE");
-                setWhiteCM(true);
-                //setGameOver(true);
-            }
-        }
 
-        // determines if there is at least ONE move the BLACK player can make to avoid checkmate.
-        // iterates through all black pieces and simulates moves until one is found that can stop checkmate
-        function determineBlackCheckmate(){
-            let checkMate = true;
-            let piece = null;
-            for ( let i = 0; i < blackPieceList.length; i++ ){
-                piece = blackPieceList[i];
-                switch (boardMap[piece.y][piece.x].pcType) {
-                    case Pieces.ROOK:   checkMate = showRookMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.KNIGHT: checkMate = showKnightMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.BISHOP: checkMate = showBishopMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.QUEEN:  checkMate = showQueenMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.KING:   checkMate = showKingMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.PAWN:   checkMate = showPawnMoves(piece.y,piece.x,false) === 0;   break;
-                    default: console.log("ERROR: DEFAULT CASE REACHED IN determineBlackCheckmate()");
-                }
-                if ( ! checkMate )
-                    break;
-            }
-            if ( checkMate ) {
-                console.log("BLACK IN CHECKMATE");
-                setBlackCM(true);
-                //setGameOver(true);
-            }
-        }
-
-
-        // updates the list of of coordinates for each player's pieces
-        // these lists are used to increase efficiency when calculating checkmate
-        function updatePieceCoordinates(){
-            if ( currentPlayer === Players.WHITE ) {
-                for (let i = 0; i < whitePieceList.length; i++) {
-                    if (whitePieceList[i].y === selectedSquare[0] &&
-                        whitePieceList[i].x === selectedSquare[1]) {       // updates coordinates for piece that moved
-                        whitePieceList[i].y = y;
-                        whitePieceList[i].x = x;
-                        break;
-                    }
-                }
-                if ( boardMap[y][x].pcType !== Pieces.EMPTY ){
-                    for (let i = 0; i < blackPieceList.length; i++) {                       // if a piece was captured
-                        if ( blackPieceList[i].y === y && blackPieceList[i].x === x ) {     // remove it from enemy's list
-                            blackPieceList.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-            else {
-                for (let i = 0; i < blackPieceList.length; i++) {
-                    if (blackPieceList[i].y === selectedSquare[0] &&
-                        blackPieceList[i].x === selectedSquare[1]) {
-                        blackPieceList[i].y = y;
-                        blackPieceList[i].x = x;
-                        break;
-                    }
-                }
-                if ( boardMap[y][x].pcType !== Pieces.EMPTY ){
-                    for (let i = 0; i < whitePieceList.length; i++) {
-                        if ( whitePieceList[i].y === y && whitePieceList[i].x === x ) {
-                            whitePieceList.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+        // adds the given piece to the dungeon
+        // function addToDungeon (y, x) {
+        //     let node = document.createElement("img");
+        //     node.setAttribute("src", Pieces.KNIGHT);
+        //     let dungeon = "";
+        //     if (currentPlayer === Players.BLACK)
+        //         dungeon = document.getElementById("2");
+        //     else
+        //         dungeon = document.getElementById("1");
+        //     dungeon.appendChild(node);
+        // }
 
 
         // de-highlights all squares in the highlight list
@@ -282,7 +204,6 @@ const App = (props) => {
             }
             setHighlights( [] );
         }
-
 
         // Iterates through a list of moves that a piece can make and
         // highlights them on the board. Updates the state to match
@@ -306,18 +227,6 @@ const App = (props) => {
             else
                 return squareIsSafe(blackKingLocation[0], blackKingLocation[1]);
         }
-
-        // adds the given piece to the dungeon
-        // function addToDungeon (y, x) {
-        //     let node = document.createElement("img");
-        //     node.setAttribute("src", Pieces.KNIGHT);
-        //     let dungeon = "";
-        //     if (currentPlayer === Players.BLACK)
-        //         dungeon = document.getElementById("2");
-        //     else
-        //         dungeon = document.getElementById("1");
-        //     dungeon.appendChild(node);
-        // }
 
 
         // Searches in a given direction for acceptable moves for a given piece
@@ -446,6 +355,7 @@ const App = (props) => {
             }
             return goodMoves;
         }
+
 
         // This functions sends out "search" cursors in all directions away from the square
         // at the given Y, X coordinates and searches for pieces that can attack this square.
@@ -640,10 +550,106 @@ const App = (props) => {
         }
 
 
+        // updates the list of of coordinates for each player's pieces
+        // these lists are used to increase efficiency when calculating checkmate
+        function updatePieceCoordinates(){
+            if ( currentPlayer === Players.WHITE ) {
+                for (let i = 0; i < whitePieceList.length; i++) {
+                    if (whitePieceList[i].y === selectedSquare[0] &&
+                        whitePieceList[i].x === selectedSquare[1]) {       // updates coordinates for piece that moved
+                        whitePieceList[i].y = y;
+                        whitePieceList[i].x = x;
+                        break;
+                    }
+                }
+                if ( boardMap[y][x].pcType !== Pieces.EMPTY ){
+                    for (let i = 0; i < blackPieceList.length; i++) {                       // if a piece was captured
+                        if ( blackPieceList[i].y === y && blackPieceList[i].x === x ) {     // remove it from enemy's list
+                            blackPieceList.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                for (let i = 0; i < blackPieceList.length; i++) {
+                    if (blackPieceList[i].y === selectedSquare[0] &&
+                        blackPieceList[i].x === selectedSquare[1]) {
+                        blackPieceList[i].y = y;
+                        blackPieceList[i].x = x;
+                        break;
+                    }
+                }
+                if ( boardMap[y][x].pcType !== Pieces.EMPTY ){
+                    for (let i = 0; i < whitePieceList.length; i++) {
+                        if ( whitePieceList[i].y === y && whitePieceList[i].x === x ) {
+                            whitePieceList.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // determines if there is at least ONE move the WHITE player can make to avoid checkmate.
+        // iterates through all white pieces and simulates moves until one is found that can stop checkmate
+        function determineWhiteCheckmate(){
+            let checkMate = true;
+            let piece = null;
+            for ( let i = 0; i < whitePieceList.length; i++ ){
+                piece = whitePieceList[i];
+                switch (boardMap[piece.y][piece.x].pcType) {
+                    case Pieces.ROOK:   checkMate = showRookMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.KNIGHT: checkMate = showKnightMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.BISHOP: checkMate = showBishopMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.QUEEN:  checkMate = showQueenMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.KING:   checkMate = showKingMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.PAWN:   checkMate = showPawnMoves(piece.y,piece.x,false) === 0;   break;
+                    default: console.log("ERROR: DEFAULT CASE REACHED IN determineWhiteCheckmate()");
+                }
+                if ( ! checkMate )
+                    break;
+            }
+            if ( checkMate ) {
+                console.log("WHITE IN CHECKMATE");
+                setWhiteCM(true);
+                //setGameOver(true);
+            }
+        }
+
+        // determines if there is at least ONE move the BLACK player can make to avoid checkmate.
+        // iterates through all black pieces and simulates moves until one is found that can stop checkmate
+        function determineBlackCheckmate(){
+            let checkMate = true;
+            let piece = null;
+            for ( let i = 0; i < blackPieceList.length; i++ ){
+                piece = blackPieceList[i];
+                switch (boardMap[piece.y][piece.x].pcType) {
+                    case Pieces.ROOK:   checkMate = showRookMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.KNIGHT: checkMate = showKnightMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.BISHOP: checkMate = showBishopMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.QUEEN:  checkMate = showQueenMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.KING:   checkMate = showKingMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.PAWN:   checkMate = showPawnMoves(piece.y,piece.x,false) === 0;   break;
+                    default: console.log("ERROR: DEFAULT CASE REACHED IN determineBlackCheckmate()");
+                }
+                if ( ! checkMate )
+                    break;
+            }
+            if ( checkMate ) {
+                console.log("BLACK IN CHECKMATE");
+                setBlackCM(true);
+                //setGameOver(true);
+            }
+        }
+
+
         // *****************************************************************************
         // ******************************* KING MOVEMENT *******************************
         // *****************************************************************************
         function showKingMoves( y, x, highlight ) {
+
             let possibleMoves = [];         // all possible moves the king can make
             let safeMoves = [];             // list of moves the king can make without being put into check
             let squareType = null;          // current piece type of the square being considered
@@ -660,7 +666,7 @@ const App = (props) => {
             }
 
             kingOwner = boardMap[y][x].pcOwner;
-            boardMap[y][x].pcType = Pieces.EMPTY;       // temporarily "picks up" the king to simulate moves
+            boardMap[y][x].pcType = Pieces.EMPTY;           // temporarily "picks up" the king to simulate moves
             boardMap[y][x].pcOwner = Players.NONE;
 
             // test each move, remove any that aren't allowed
@@ -776,9 +782,9 @@ const App = (props) => {
                 else {                                          // King is NOT SAFE if you make this move.
                     if ( ! playerIsInCheck( pawnOwner ) )       // if you're NOT in check, this move will put us
                         break;                                  // IN check, so we stop looking for new moves
-                }                                               // however if you ARE in check, keep testing moves
-                if ( squareType !== Pieces.EMPTY )              // that could save your King
-                    break;
+                }
+                if ( squareType !== Pieces.EMPTY )          // however if you ARE in check, keep testing moves
+                    break;                                  // that could save your King unless we've hit something
             }
 
             boardMap[y][x].pcType = Pieces.PAWN;
@@ -864,7 +870,7 @@ const App = (props) => {
         // *******************************************************************************
         function showBishopMoves( y, x, highlight ) {
             let goodMoves = [];
-            let bishopOwner = boardMap[y][x].pcOwner;
+            let bishopOwner = boardMap[y][x].pcOwner;           // owner of the bishop whose moves are being looked at
 
             boardMap[y][x].pcType = Pieces.EMPTY;               // temporary "picks up" the piece for
             boardMap[y][x].pcOwner = Players.NONE;              // king check-avoidance testing

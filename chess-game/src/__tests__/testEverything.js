@@ -156,7 +156,7 @@ describe('BOARD SETUP', () => {
         let currentButton = null;                   // wrapper for button inside the Square
 
         // MAJOR PIECES
-        currentRow = boardDiv.childAt(0);
+        currentRow = boardDiv.childAt(7);
         for ( let x = 0; x < 8; x++ ){
             currentButton = currentRow.childAt(x).childAt(0);
             switch (x){
@@ -164,7 +164,7 @@ describe('BOARD SETUP', () => {
                 case 1: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightWhite.png)');   break;
                 case 2: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopWhite.png)');   break;
                 case 3: expect(currentButton.prop('style').backgroundImage).to.equal('url(kingWhite.png)');     break;
-                case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(queenWhite.png)');    break;
+                case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(queenWhite.gif)');    break;
                 case 5: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopWhite.png)');   break;
                 case 6: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightWhite.png)');   break;
                 case 7: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookWhite.png)');     break;
@@ -172,7 +172,7 @@ describe('BOARD SETUP', () => {
         }
 
         // PAWNS
-        currentRow = boardDiv.childAt(1);
+        currentRow = boardDiv.childAt(6);
         for ( let x = 0; x < 8; x++ ){
             currentButton = currentRow.childAt(x).childAt(0);
             expect(currentButton.prop('style').backgroundImage).to.equal('url(pawnWhite.png)');
@@ -186,7 +186,7 @@ describe('BOARD SETUP', () => {
         let currentButton = null;                   // wrapper for button inside the Square
 
         // MAJOR PIECES
-        currentRow = boardDiv.childAt(7);
+        currentRow = boardDiv.childAt(0);
         for ( let x = 0; x < 8; x++ ){
             currentButton = currentRow.childAt(x).childAt(0);
             switch (x){
@@ -194,7 +194,7 @@ describe('BOARD SETUP', () => {
                 case 1: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightBlack.png)');   break;
                 case 2: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopBlack.png)');   break;
                 case 3: expect(currentButton.prop('style').backgroundImage).to.equal('url(kingBlack.png)');     break;
-                case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(queenBlack.png)');    break;
+                case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(queenBlack.gif)');    break;
                 case 5: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopBlack.png)');   break;
                 case 6: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightBlack.png)');   break;
                 case 7: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookBlack.png)');     break;
@@ -202,7 +202,7 @@ describe('BOARD SETUP', () => {
         }
 
         // PAWNS
-        currentRow = boardDiv.childAt(6);
+        currentRow = boardDiv.childAt(1);
         for ( let x = 0; x < 8; x++ ){
             currentButton = currentRow.childAt(x).childAt(0);
             expect(currentButton.prop('style').backgroundImage).to.equal('url(pawnBlack.png)');

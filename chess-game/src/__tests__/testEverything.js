@@ -393,9 +393,86 @@ describe('GAME STATE TESTS', () => {
         boardDiv = board.find('div.board');
 
         test('Game ran as expected', () => {
+            clickSquareAt(6,4);
+            clickSquareAt(4,4);
+            clickSquareAt(1,3);
             clickSquareAt(3,3);
+            clickSquareAt(4,4);
+            clickSquareAt(3,3);
+            expect(board.prop('bState')[7][8].blackPieces.length).to.equal( 15 );
+            clickSquareAt(0,3);
+            clickSquareAt(1,3);
+            clickSquareAt(7,4);
+            clickSquareAt(5,4);
+            clickSquareAt(1,3);
+            clickSquareAt(2,3);
 
+            // click queen, highlights a bunch of crap
+            clickSquareAt(5,4);
+            for ( let x = 0; x < 8; x++ ) {
+                if ( x === 4 ) continue;
+                expect(board.prop('bState')[5][x].isHighlighted).to.equal(true);
+            }
+            for ( let y = 1; y < 8; y++ ) {
+                if ( y === 5 ) continue;
+                expect(board.prop('bState')[y][4].isHighlighted).to.equal(true);
+            }
+            expect(board.prop('bState')[1][0].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[2][1].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[3][2].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[4][3].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[4][5].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[3][6].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[2][7].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[5][4].isSelected).to.equal(true);
 
+            clickSquareAt(5,4);
+            clickSquareAt(6,5);
+            clickSquareAt(5,5);
+            clickSquareAt(2,3);
+            clickSquareAt(3,3);
+            expect(board.prop('bState')[3][3].pcOwner).to.equal( Players.BLACK );
+            expect(board.prop('bState')[3][3].pcType).to.equal( Pieces.KING );
+            expect(board.prop('bState')[7][8].whitePieces.length).to.equal( 15 );
+            clickSquareAt(5,4);
+            clickSquareAt(5,3);
+            expect(board.prop('bState')[7][8].blackCheck).to.equal( true );
+            expect(board.prop('bState')[7][8].whiteCheck).to.equal( false );
+            clickSquareAt(3,3);
+            clickSquareAt(3,2);
+
+            // click queen, highlights a bunch of crap
+            clickSquareAt(5,3);
+            expect(board.prop('bState')[5][3].isSelected).to.equal(true);
+            for ( let y = 0; y < 5; y++ ) {
+                expect(board.prop('bState')[y][3].isHighlighted).to.equal(true);
+            }
+            expect(board.prop('bState')[5][0].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[5][1].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[5][2].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[5][4].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[6][4].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[2][0].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[3][1].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[4][2].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[4][4].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[3][5].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[2][6].isHighlighted).to.equal(true);
+            expect(board.prop('bState')[1][7].isHighlighted).to.equal(true);
+            clickSquareAt(5,3);
+            clickSquareAt(5,5);
+            clickSquareAt(4,5);
+            clickSquareAt(3,2);
+            clickSquareAt(4,1);
+            clickSquareAt(4,5);
+            clickSquareAt(3,5);
+            clickSquareAt(0,4);
+            clickSquareAt(0,3);
+            clickSquareAt(5,3);
+            clickSquareAt(3,1);
+
+            // should be checkmate
+            expect(board.prop('bState')[7][8].blackCheckMate).to.equal(true);
         });
     });
 

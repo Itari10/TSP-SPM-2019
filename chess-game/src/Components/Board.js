@@ -20,6 +20,21 @@ class Coordinate{
     }
 }
 
+export class BoardData {
+    constructor() {
+        this.whiteCheck = false;
+        this.blackCheck = false;
+        this.whiteCheckMate = false;
+        this.blackCheckMate = false;
+        this.whitePieces = [];
+        this.blackPieces = [];
+        this.bKingY = 0;
+        this.bKingX = 3;
+        this.wKingY = 7;
+        this.wKingX = 3;
+    }
+}
+
 // player enum
 export const Players = {
     NONE: 0,
@@ -109,9 +124,17 @@ const Board = (props) => {
 export function initializeBoard(){
     let defaultBoard = new Array(8);
     for ( let y = 0; y < 8; y++ ){
-        defaultBoard[y] = new Array(8);     // creates an [8][8] of nulls
-        for ( let x = 0; x < 8; x++ ){
-            defaultBoard[y][x] = null;
+        if ( y === 7 ){
+            defaultBoard[y] = new Array(9);
+            for ( let x = 0; x < 9; x++ ){
+                defaultBoard[y][x] = null;
+            }
+        }
+        else{
+            defaultBoard[y] = new Array(8);     // creates an [8][8] of nulls
+            for ( let x = 0; x < 8; x++ ){
+                defaultBoard[y][x] = null;
+            }
         }
     }
 
@@ -154,11 +177,12 @@ export function initializeBoard(){
             defaultBoard[y][x].defaultColor = ((x + y) % 2) === 0 ? '#ffddca' : '#d9a989';
         }
     }
+    defaultBoard[7][8] = initializeBoardData();                       // initializes board data storage
     return defaultBoard;
 }
 
 // creates the initial list of black piece locations
-export function createBlackPieceList(){
+function createBlackPieceList(){
     let blackPieceList = [];
     for ( let y = 0; y < 2; y++ ) {
         for (let x = 0; x < 8; x++) {
@@ -169,7 +193,7 @@ export function createBlackPieceList(){
 }
 
 // creates the initial list of white piece locations
-export function createWhitePieceList(){
+function createWhitePieceList(){
     let whitePieceList = [];
     for ( let y = 7; y > 5; y-- ) {
         for (let x = 0; x < 8; x++) {
@@ -177,6 +201,13 @@ export function createWhitePieceList(){
         }
     }
     return whitePieceList;
+}
+
+function initializeBoardData(){
+    let bData = new BoardData();                        // initializes board data storage
+    bData.whitePieces = createWhitePieceList();
+    bData.blackPieces = createBlackPieceList();         // creates initial piece lists
+    return bData;
 }
 
 export default Board;

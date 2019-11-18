@@ -5,6 +5,7 @@ import Board, {initializeBoard} from './Board';
 import {Pieces} from './Board';
 import {Players} from './Board';
 import EndGameScreen from './EndGameScreen';
+import {determineImage} from './Square.js';
 
 // tuple for holding potential board moves.
 class Move{
@@ -171,7 +172,12 @@ const App = (props) => {
         //adds the given piece to the dungeon
         function addToDungeon (y, x) {
             let node = document.createElement("img");
-            node.setAttribute("src", Pieces.KNIGHT);
+            let parameters = {
+                ownedBy: boardMap[y][x].pcOwner,
+                pieceType: boardMap[y][x].pcType,
+            };
+            node.setAttribute("src", determineImage(parameters));
+            node.setAttribute("class", "dungeonImage")
             let dungeon = "";
             if (currentPlayer === Players.BLACK)
                 dungeon = document.getElementById("2");

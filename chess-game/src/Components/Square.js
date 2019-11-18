@@ -64,7 +64,7 @@ function determineBG(props){
 }
 
 // sets the piece image on the Square based on its properties
-function determineImage( props ){
+export function determineImage( props ){
     switch ( props.ownedBy ){
         case Players.WHITE: {
             switch( props.pieceType ){

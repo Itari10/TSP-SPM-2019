@@ -781,9 +781,9 @@ const App = (props) => {
                 else {                                          // King is NOT SAFE if you make this move.
                     if ( ! playerIsInCheck( pawnOwner ) )       // if you're NOT in check, this move will put us
                         break;                                  // IN check, so we stop looking for new moves
-                }
-                if ( squareType !== Pieces.EMPTY )          // however if you ARE in check, keep testing moves
-                    break;                                  // that could save your King unless we've hit something
+                    else
+                        continue;                               // however if you ARE in check, keep testing moves
+                }                                               // that could save your King unless we've hit something
             }
 
             boardMap[y][x].pcType = Pieces.PAWN;
@@ -972,7 +972,9 @@ const App = (props) => {
                 <div className="col-sm-8">
                     <Board
                         bState =            {boardState}
-                        pieceClicked =      {squareClicked}/>
+                        pieceClicked =      {squareClicked}
+                        debug =             {true}
+                    />
                 </div>
             </div>
             {gameOver &&

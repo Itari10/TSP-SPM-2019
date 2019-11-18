@@ -107,6 +107,10 @@ const App = (props) => {
 
             updatePieceLists();                                                    // updates each player's piece list
 
+            // adds the piece to the dungeon
+            if (boardMap[y][x].pcType !== Pieces.EMPTY)
+                addToDungeon(y, x);
+
             boardMap[y][x].pcType = boardMap[selectedSquare[0]][selectedSquare[1]].pcType;        // move piece from selected
             boardMap[y][x].pcOwner = boardMap[selectedSquare[0]][selectedSquare[1]].pcOwner;      // square to clicked square
 
@@ -130,11 +134,6 @@ const App = (props) => {
             if ((y === 0 || y === 7) && boardMap[y][x].pcType === Pieces.PAWN ){
                 boardMap[y][x].pcType = Pieces.QUEEN;
             }
-
-            // adds the piece to the dungeon
-            // if (boardMap[y][x].pcType !== Pieces.EMPTY)
-            //     addToDungeon(y, x);
-
 
             // determines CHECK and CHECKMATE status
             boardData.whiteCheck = ! squareIsSafe( boardData.wKingY, boardData.wKingX );
@@ -169,17 +168,17 @@ const App = (props) => {
         // ******************************************************************************************
 
 
-        // adds the given piece to the dungeon
-        // function addToDungeon (y, x) {
-        //     let node = document.createElement("img");
-        //     node.setAttribute("src", Pieces.KNIGHT);
-        //     let dungeon = "";
-        //     if (currentPlayer === Players.BLACK)
-        //         dungeon = document.getElementById("2");
-        //     else
-        //         dungeon = document.getElementById("1");
-        //     dungeon.appendChild(node);
-        // }
+        //adds the given piece to the dungeon
+        function addToDungeon (y, x) {
+            let node = document.createElement("img");
+            node.setAttribute("src", Pieces.KNIGHT);
+            let dungeon = "";
+            if (currentPlayer === Players.BLACK)
+                dungeon = document.getElementById("2");
+            else
+                dungeon = document.getElementById("1");
+            dungeon.appendChild(node);
+        }
 
 
         // de-highlights all squares in the highlight list
@@ -945,6 +944,7 @@ const App = (props) => {
                         triggerGameOver =   {endGame}
                         inCheck =           {boardState[7][8].blackCheck}
                         checkmate =         {boardState[7][8].blackCheckMate}
+                        playerNumber =      {"2"}
                     />
                     <div className="spacer"/>
                     <PlayerBox
@@ -953,6 +953,7 @@ const App = (props) => {
                         triggerGameOver =   {endGame}
                         inCheck =           {boardState[7][8].whiteCheck}
                         checkmate =         {boardState[7][8].whiteCheckMate}
+                        playerNumber =      {"1"}
                     />
                 </div>
                 <div className="col-sm-8">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, shallow, mount } from 'enzyme';    // enzyme assertion methods
+import { shallow, mount } from 'enzyme';    // enzyme assertion methods
 import { expect } from 'chai';              // chai assertion methods
 import App from '../Components/App';
 import Board from '../Components/App';
@@ -393,69 +393,69 @@ describe('GAME STATE TESTS', () => {
         boardDiv = board.find('div.board');
 
         test('Game ran as expected', () => {
+            clickSquareAt(3,3);
 
-            // TODO: Add a series of clicks and periodically test the board state
 
         });
     });
 
 
-    describe('Game simulation 2', () => {
+    // describe('Game simulation 2', () => {
+    //
+    //     app = mount(<App />);
+    //     board = app.find('Board');                  // renders a new game
+    //     boardDiv = board.find('div.board');
+    //
+    //     test('Game ran as expected', () => {
+    //
+    //         // TODO: Add a series of clicks and periodically test the board state
+    //
+    //     });
+    // });
+    //
+    //
+    // describe('Game simulation 3', () => {
+    //
+    //     app = mount(<App />);
+    //     board = app.find('Board');                  // renders a new game
+    //     boardDiv = board.find('div.board');
+    //
+    //     test('Game ran as expected', () => {
+    //
+    //         // TODO: Add a series of clicks and periodically test the board state
+    //
+    //     });
+    // });
+    //
+    //
+    // describe('Game simulation 4', () => {
+    //
+    //     app = mount(<App />);
+    //     board = app.find('Board');                  // renders a new game
+    //     boardDiv = board.find('div.board');
+    //
+    //     test('Game ran as expected', () => {
+    //
+    //         // TODO: Add a series of clicks and periodically test the board state
+    //
+    //     });
+    // });
+    //
+    //
+    // describe('Game simulation 5', () => {
+    //
+    //     app = mount(<App />);
+    //     board = app.find('Board');                  // renders a new game
+    //     boardDiv = board.find('div.board');
+    //
+    //     test('Game ran as expected', () => {
+    //
+    //         // TODO: Add a series of clicks and periodically test the board state
+    //
+    //     });
+    // });
 
-        app = mount(<App />);
-        board = app.find('Board');                  // renders a new game
-        boardDiv = board.find('div.board');
 
-        test('Game ran as expected', () => {
-
-            // TODO: Add a series of clicks and periodically test the board state
-
-        });
-    });
-
-
-    describe('Game simulation 3', () => {
-
-        app = mount(<App />);
-        board = app.find('Board');                  // renders a new game
-        boardDiv = board.find('div.board');
-
-        test('Game ran as expected', () => {
-
-            // TODO: Add a series of clicks and periodically test the board state
-
-        });
-    });
-
-
-    describe('Game simulation 4', () => {
-
-        app = mount(<App />);
-        board = app.find('Board');                  // renders a new game
-        boardDiv = board.find('div.board');
-
-        test('Game ran as expected', () => {
-
-            // TODO: Add a series of clicks and periodically test the board state
-
-        });
-    });
-
-
-    describe('Game simulation 5', () => {
-
-        app = mount(<App />);
-        board = app.find('Board');                  // renders a new game
-        boardDiv = board.find('div.board');
-
-        test('Game ran as expected', () => {
-
-            // TODO: Add a series of clicks and periodically test the board state
-
-        });
-    });
-
-    
     // HELPER FUNCTION
     // clicks the square at the given coordinates
     function clickSquareAt(y, x){

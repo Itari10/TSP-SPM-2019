@@ -42,7 +42,9 @@ const Square = (props) => {
                 backgroundColor: determineBG(props)
             }}
             onClick={() => props.onClick(props.y, props.x)}
-        />
+        >
+            {props.y + ',' + props.x}
+        </button>
     );
 };
 

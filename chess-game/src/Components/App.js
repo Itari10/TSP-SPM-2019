@@ -973,7 +973,6 @@ const App = (props) => {
                     <Board
                         bState =            {boardState}
                         pieceClicked =      {squareClicked}
-                        debug =             {true}
                     />
                 </div>
             </div>

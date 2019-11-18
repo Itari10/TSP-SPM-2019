@@ -5,7 +5,9 @@
     padding: 0;
     margin: 0;
     font-weight: bold;
-    font-size: 14pt;
+    font-size: 26pt;
+    color: black;
+    text-shadow: -2px 2px white;
     border: 0;
     /* background-image: url(../Assets/test.png); */
     background-repeat: no-repeat;

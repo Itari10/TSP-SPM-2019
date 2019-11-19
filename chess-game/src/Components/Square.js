@@ -2,18 +2,18 @@ import React from 'react';
 import '../Style/Square.css';
 import {Pieces} from './Board';
 import {Players} from './Board';
-import rookWhite from "../Assets/rookWhite.png";
-import knightWhite from "../Assets/knightWhite.png";
-import bishopWhite from "../Assets/bishopWhite.png";
-import kingWhite from "../Assets/kingWhite.png";
-import queenWhite from "../Assets/queenWhite.gif";
-import pawnWhite from "../Assets/pawnWhite.png";
-import rookBlack from "../Assets/rookBlack.png";
-import knightBlack from "../Assets/knightBlack.png";
-import bishopBlack from "../Assets/bishopBlack.png";
-import kingBlack from "../Assets/kingBlack.png";
-import queenBlack from "../Assets/queenBlack.gif";
-import pawnBlack from "../Assets/pawnBlack.png";
+import whiteRook from "../Assets/whiteRook.png";
+import whiteKnight from "../Assets/whiteKnight.png";
+import whiteBishop from "../Assets/whiteBishop.png";
+import whiteKing from "../Assets/whiteKing.png";
+import whiteQueen from "../Assets/whiteQueen.png";
+import whitePawn from "../Assets/whitePawn.png";
+import blackRook from "../Assets/blackRook.png";
+import blackKnight from "../Assets/blackKnight.png";
+import blackBishop from "../Assets/blackBishop.png";
+import blackKing from "../Assets/blackKing.png";
+import blackQueen from "../Assets/blackQueen.png";
+import blackPawn from "../Assets/blackPawn.png";
 import error from "../Assets/error.png";
 
 
@@ -43,10 +43,13 @@ const Square = (props) => {
             }}
             onClick={() => props.onClick(props.y, props.x)}
         >
-            {props.y + ',' + props.x}
+
         </button>
     );
 };
+
+// ADD THIS LINE INSIDE THE BUTTON FOR COORDINATES
+//             {props.y + ',' + props.x}
 
 // sets the background color of the Square based on its properties
 function determineBG(props){
@@ -68,24 +71,24 @@ export function determineImage( props ){
     switch ( props.ownedBy ){
         case Players.WHITE: {
             switch( props.pieceType ){
-                case Pieces.ROOK:   return rookWhite;
-                case Pieces.PAWN:   return pawnWhite;
-                case Pieces.KNIGHT: return knightWhite;     // white Pieces
-                case Pieces.BISHOP: return bishopWhite;
-                case Pieces.QUEEN:  return queenWhite;
-                case Pieces.KING:   return kingWhite;
+                case Pieces.ROOK:   return whiteRook;
+                case Pieces.PAWN:   return whitePawn;
+                case Pieces.KNIGHT: return whiteKnight;     // white Pieces
+                case Pieces.BISHOP: return whiteBishop;
+                case Pieces.QUEEN:  return whiteQueen;
+                case Pieces.KING:   return whiteKing;
                 case Pieces.EMPTY:  return null;
                 default:            return error;
             }
         }
         case Players.BLACK: {
             switch( props.pieceType ){
-                case Pieces.ROOK:   return rookBlack;
-                case Pieces.PAWN:   return pawnBlack;
-                case Pieces.KNIGHT: return knightBlack;     // black Pieces
-                case Pieces.BISHOP: return bishopBlack;
-                case Pieces.QUEEN:  return queenBlack;
-                case Pieces.KING:   return kingBlack;
+                case Pieces.ROOK:   return blackRook;
+                case Pieces.PAWN:   return blackPawn;
+                case Pieces.KNIGHT: return blackKnight;     // black Pieces
+                case Pieces.BISHOP: return blackBishop;
+                case Pieces.QUEEN:  return blackQueen;
+                case Pieces.KING:   return blackKing;
                 case Pieces.EMPTY:  return null;
                 default:            return error;
             }

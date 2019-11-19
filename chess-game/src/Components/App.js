@@ -945,7 +945,7 @@ const App = (props) => {
             <div className="row">
                 <div className="col-sm-4">
                     <PlayerBox
-                        playerTitle =       "CATS"
+                        playerTitle =       "BLACK"
                         isTurn =            {currentPlayer === Players.BLACK}
                         triggerGameOver =   {endGame}
                         inCheck =           {boardState[7][8].blackCheck}
@@ -954,7 +954,7 @@ const App = (props) => {
                     />
                     <div className="spacer"/>
                     <PlayerBox
-                        playerTitle =       "DOGS"
+                        playerTitle =       "WHITE"
                         isTurn =            {currentPlayer === Players.WHITE}
                         triggerGameOver =   {endGame}
                         inCheck =           {boardState[7][8].whiteCheck}

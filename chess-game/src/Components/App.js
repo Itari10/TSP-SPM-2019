@@ -6,6 +6,7 @@ import {Pieces} from './Board';
 import {Players} from './Board';
 import EndGameScreen from './EndGameScreen';
 import {determineImage} from './Square.js';
+import PromotionScreen from './PromotionScreen';
 
 // tuple for holding potential board moves.
 class Move{
@@ -38,6 +39,7 @@ const App = (props) => {
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
     const [gameOver, setGameOver] =             React.useState( false );
+    const [promote, setPromote] =               React.useState( false );
 
     // swaps the player turn
     const swapTurn = () => {
@@ -134,6 +136,7 @@ const App = (props) => {
             // transforms pawns into queens if they reach the other side of the board
             if ((y === 0 || y === 7) && boardMap[y][x].pcType === Pieces.PAWN ){
                 boardMap[y][x].pcType = Pieces.QUEEN;
+                setPromote(true);
             }
 
             // determines CHECK and CHECKMATE status
@@ -971,7 +974,10 @@ const App = (props) => {
                 </div>
             </div>
             {gameOver &&
-            <EndGameScreen winner={(currentPlayer === 1) ? "White" : "Black"} />
+            <EndGameScreen winner={(currentPlayer === 2) ? "White" : "Black"} />
+            }
+            {promote &&
+            <PromotionScreen />
             }
         </div>
     );

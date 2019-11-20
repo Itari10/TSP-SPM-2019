@@ -1,9 +1,10 @@
 .endGameScreen {
     position: absolute;
-    top: 25%;
-    left: 25%;
+    top: 30%;
+    left: 5%;
     background-color: rgba(255,255,255,1);
-    height: 47.5%;
+    height: 37.5%;
+    width: 400px;
     border: 6px solid rgb(0, 0, 0);
     border-radius: 10px;
     text-align: center;
@@ -13,20 +14,22 @@
 .endGameScreen .resetButton {
     width: 75%;
     font-size: 24px;
-    height: 100px;
+    height: 50px;
+    margin-top: 20px;
 }
 
 .endGameScreen .resetButton:hover {
     width: 75%;
     font-size: 24px;
-    height: 100px;
+    height: 50px;
+    margin-top: 20px;
 }
 
 .resetButton {
     height: 50px;
     border-radius: 10px;
     background-color: white;
-    border-color: blue;
+    border-color: rgb(179, 67, 2);
     transition-duration: 0.5s;
     width: 75px;
     margin-right: 20px;
@@ -35,7 +38,7 @@
 .resetButton:hover {
     height: 50px;
     border-radius: 10px;
-    background-color: blue;
-    border-color: blue;
+    background-color: rgb(179, 67, 2);
+    border-color: rgb(179, 67, 2);
     color: white;
 }

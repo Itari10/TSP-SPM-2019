@@ -971,7 +971,7 @@ const App = (props) => {
                 </div>
             </div>
             {gameOver &&
-            <EndGameScreen />
+            <EndGameScreen winner={(currentPlayer === 1) ? "White" : "Black"} />
             }
         </div>
     );

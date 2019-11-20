@@ -4,7 +4,7 @@ import '../Style/EndGame.css'
 const EndGameScreen = (props) => {
     return (
         <div className="endGameScreen">
-            <h1>Guess the game is over now...</h1>
+            <h1>{props.winner} Wins!</h1>
             <button
                 className=  "resetButton"
                 onClick=    {()=>{window.location.reload()}}

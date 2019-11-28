@@ -8,12 +8,14 @@ import whiteBishop from "../Assets/whiteBishop.png";
 import whiteKing from "../Assets/whiteKing.png";
 import whiteQueen from "../Assets/whiteQueen.png";
 import whitePawn from "../Assets/whitePawn.png";
+import whitePawnFaded from "../Assets/whitePawnFaded.png";
 import blackRook from "../Assets/blackRook.png";
 import blackKnight from "../Assets/blackKnight.png";
 import blackBishop from "../Assets/blackBishop.png";
 import blackKing from "../Assets/blackKing.png";
 import blackQueen from "../Assets/blackQueen.png";
 import blackPawn from "../Assets/blackPawn.png";
+import blackPawnFaded from "../Assets/blackPawnFaded.png";
 import error from "../Assets/error.png";
 
 
@@ -23,8 +25,9 @@ import error from "../Assets/error.png";
  *  y               Y-coordinate of this Square
  *  x               X-coordinate of this Square
  *  defaultColor    default color of this Square
- *  isHighlighted   whether or not this Square is highlighted
- *  isSelected      whether or not this Square is selected
+ *  isHighlighted   is this Square highlighted
+ *  isSelected      is this Square selected
+ *  isCapturable    is this Square capturable via en-passant
  *  pieceType       the type of piece on this square
  *  ownedBy         the player who owns the piece on this square
  *  onClick:        FUNCTION passed from App that activates when Square is clicked
@@ -56,14 +59,16 @@ function determineBG(props){
     if ( props.isSelected ) {
         return '#aae7ff';
     }
-    else if ( props.isHighlighted ){
+    if ( props.isHighlighted ){
         if ( props.defaultColor === '#d9a989' )
             return '#5da675';
         else
-            return '#68b780';      // slightly darker color for dark squares
+            return '#68b780';       // highlighting is slightly darker for dark squares
     }
-    else
-        return props.defaultColor;
+    // if ( props.isCapturable ){       // highlights pieces capturable by en-passant
+    //     return '#c184a2';            // in red during move selection
+    // }
+    return props.defaultColor;
 }
 
 // sets the piece image on the Square based on its properties
@@ -72,10 +77,10 @@ export function determineImage( props ){
         case Players.WHITE: {
             switch( props.pieceType ){
                 case Pieces.ROOK:   return whiteRook;
-                case Pieces.PAWN:   return whitePawn;
-                case Pieces.KNIGHT: return whiteKnight;     // white Pieces
-                case Pieces.BISHOP: return whiteBishop;
-                case Pieces.QUEEN:  return whiteQueen;
+                case Pieces.PAWN:   return props.isCapturable ? whitePawnFaded : whitePawn;
+                case Pieces.KNIGHT: return whiteKnight;
+                case Pieces.BISHOP: return whiteBishop;         // fading is for pawns that are
+                case Pieces.QUEEN:  return whiteQueen;          // capturable by en-passant
                 case Pieces.KING:   return whiteKing;
                 case Pieces.EMPTY:  return null;
                 default:            return error;
@@ -84,8 +89,8 @@ export function determineImage( props ){
         case Players.BLACK: {
             switch( props.pieceType ){
                 case Pieces.ROOK:   return blackRook;
-                case Pieces.PAWN:   return blackPawn;
-                case Pieces.KNIGHT: return blackKnight;     // black Pieces
+                case Pieces.PAWN:   return props.isCapturable ? blackPawnFaded : blackPawn;
+                case Pieces.KNIGHT: return blackKnight;
                 case Pieces.BISHOP: return blackBishop;
                 case Pieces.QUEEN:  return blackQueen;
                 case Pieces.KING:   return blackKing;
@@ -94,7 +99,7 @@ export function determineImage( props ){
             }
         }
         case Players.NONE:
-        default:                    return null;            // empty spaces
+        default:                    return null;
     }
 }
 

@@ -3,12 +3,15 @@ import Square from './Square';
 
 // class used as a container to hold piece info
 class Piece{
-    constructor(pieceType, ownedBy, isHighlighted, isSelected, defaultColor){
+    constructor(pieceType, ownedBy, isHighlighted, isSelected){
         this.pcType = pieceType;
         this.pcOwner = ownedBy;
         this.isHighlighted = isHighlighted;
         this.isSelected = isSelected;
-        this.defaultColor = defaultColor;       // THIS VALUE SHOULD NEVER CHANGE
+        this.defaultColor = null;
+        this.canEpLeft = false;             //
+        this.canEpRight = false;            // en-passant variables
+        this.isCapturable = false           //
     }
 }
 
@@ -20,6 +23,8 @@ class Coordinate{
     }
 }
 
+// structure containing board-state variables
+// hidden in the boardState[7][8] cell
 export class BoardData {
     constructor() {
         this.whiteCheck = false;
@@ -107,6 +112,7 @@ const Board = (props) => {
                     defaultColor =  {curSquare.defaultColor}
                     isHighlighted = {curSquare.isHighlighted}
                     isSelected =    {curSquare.isSelected}
+                    isCapturable =  {curSquare.isCapturable}
                     pieceType =     {curSquare.pcType}
                     ownedBy =       {curSquare.pcOwner}
                     onClick =       {props.pieceClicked}
@@ -177,7 +183,7 @@ export function initializeBoard(){
             defaultBoard[y][x].defaultColor = ((x + y) % 2) === 0 ? '#ffddca' : '#d9a989';
         }
     }
-    defaultBoard[7][8] = initializeBoardData();                       // initializes board data storage
+    defaultBoard[7][8] = initializeBoardData();         // ADDS HIDDEN BOARD-DATA STORAGE
     return defaultBoard;
 }
 

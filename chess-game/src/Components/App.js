@@ -13,6 +13,9 @@ class Move{
     constructor(y, x) {
         this.y = y;
         this.x = x;
+        this.hasCapturable = false;         // this move will result in an en-passant piece capture
+        this.capY = null;                   // capturable piece Y
+        this.capX = null;                   // capturable piece X
     }
 }
 
@@ -30,7 +33,6 @@ const Directions = {
 
 const App = (props) => {
 
-
     // REMEMBER: These states CANNOT be changed without using the corresponding SET methods.
     // Attempting to set them manually will NOT result in errors, but WILL cause unintended buggy behavior
     const [boardState, setBoardState] =         React.useState( initializeBoard() );
@@ -38,6 +40,7 @@ const App = (props) => {
     const [updateBoard, setUpdateBoard] =       React.useState( true );             // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
+    const [capturableSquares, setCapturables] = React.useState( [] );
     const [gameOver, setGameOver] =             React.useState( false );
     const [promote, setPromote] =               React.useState( false );
 
@@ -58,8 +61,8 @@ const App = (props) => {
     const squareClicked = (y, x) => {
 
         // PRIMARY STATE VARIABLES
-        let boardMap = boardState;                      // array that contains the current board state
-        let boardData = boardMap[7][8];                 // holds key information for check / checkmate calculations
+        let boardMap = boardState;              // array that contains the current board state
+        let boardData = boardMap[7][8];         // holds key information for check / checkmate calculations
 
 
         // If you've click the square that's already selected...
@@ -108,22 +111,84 @@ const App = (props) => {
         // This is a successful move so the turn is swapped to the next player upon completion
         else if ( selectedSquare[0] !== -1 && boardMap[y][x].isHighlighted === true ){
 
-            updatePieceLists();                                                    // updates each player's piece list
+            updatePieceLists();                         // updates each player's list of pieces
 
-            // adds the piece to the dungeon
+            if ( currentPlayer === Players.WHITE )      // clears ability to en-passant
+                clearBlackEP();
+
+            if ( currentPlayer === Players.BLACK )      // from any pawns that had it from last turn
+                clearWhiteEP();
+
+            // if a piece was captured, add it to the dungeon
             if (boardMap[y][x].pcType !== Pieces.EMPTY)
                 addToDungeon(y, x);
 
-            boardMap[y][x].pcType = boardMap[selectedSquare[0]][selectedSquare[1]].pcType;        // move piece from selected
-            boardMap[y][x].pcOwner = boardMap[selectedSquare[0]][selectedSquare[1]].pcOwner;      // square to clicked square
+            // move piece from selected square to clicked square
+            boardMap[y][x].pcType =  boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcType;
+            boardMap[y][x].pcOwner = boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcOwner;
 
-            boardMap[selectedSquare[0]][selectedSquare[1]].pcType = Pieces.EMPTY;
-            boardMap[selectedSquare[0]][selectedSquare[1]].pcOwner = Players.NONE;          // clear the selected square
-            boardMap[selectedSquare[0]][selectedSquare[1]].isSelected = false;
-            setSelectedSquare( [-1,-1] );
+            // clear the selected square
+            boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcType = Pieces.EMPTY;
+            boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcOwner = Players.NONE;
+            boardMap[ selectedSquare[0] ][ selectedSquare[1] ].isSelected = false;
 
+
+            // EN-PASSANT LOGIC
+            // if the piece you just moved was a pawn...
+            if ( boardMap[y][x].pcType === Pieces.PAWN ){
+
+                // BLACK pawns
+                if ( currentPlayer === Players.BLACK ) {
+
+                    // player just double moved
+                    if ( y === selectedSquare[0] + 2 ) {
+                        if ( x > 0 &&
+                            boardMap[y][x-1].pcType === Pieces.PAWN &&
+                            boardMap[y][x-1].pcOwner === Players.WHITE){        // grants adjacent enemy pawns
+                            boardMap[y][x-1].canEpRight = true;                 // up-right en-passant
+                        }
+
+                        if ( x < 7 &&
+                            boardMap[y][x+1].pcType === Pieces.PAWN &&          // grants adjacent enemy pawns
+                            boardMap[y][x+1].pcOwner === Players.WHITE){        // up-left en-passant
+                            boardMap[y][x+1].canEpLeft = true;
+                        }
+                    }
+
+                    // OR if the player just attacked using en-passant..
+                    // removes the piece captured by the move
+                    else if ( boardMap[y-1][x].isCapturable === true ) {
+                        addToDungeon(y-1,x);
+                        boardMap[y-1][x].pcType = Pieces.EMPTY;
+                        boardMap[y-1][x].pcOwner = Players.NONE;
+                    }
+                }
+
+                // WHITE pawns
+                else {
+                    if ( y === selectedSquare[0] - 2 ) {
+                        if ( x > 0 &&
+                            boardMap[y][x-1].pcType === Pieces.PAWN &&
+                            boardMap[y][x-1].pcOwner === Players.BLACK){
+                            boardMap[y][x-1].canEpRight = true;
+                        }
+                        if ( x < 7 &&
+                            boardMap[y][x+1].pcType === Pieces.PAWN &&
+                            boardMap[y][x+1].pcOwner === Players.BLACK){
+                            boardMap[y][x+1].canEpLeft = true;
+                        }
+                    }
+                    else if ( boardMap[y+1][x].isCapturable === true ) {
+                        addToDungeon(y+1,x);
+                        boardMap[y+1][x].pcType = Pieces.EMPTY;
+                        boardMap[y+1][x].pcOwner = Players.NONE;
+                    }
+                }
+            }
+
+            // if a KING was just moved, updates its location
             if ( boardMap[y][x].pcType === Pieces.KING ){
-                if (currentPlayer === Players.WHITE) {              // updates player king locations
+                if (currentPlayer === Players.WHITE) {
                     boardData.wKingY = y;
                     boardData.wKingX = x;
                 }
@@ -156,6 +221,7 @@ const App = (props) => {
                 //setGameOver(true);
 
             boardMap[7][8] = boardData;                 // copies boardData into extra boardState slot
+            setSelectedSquare( [-1,-1] );
             setUpdateBoard( ! updateBoard );            // updates the board so highlighting is correctly rendered
             deHighlightAllSquares();
             swapTurn();
@@ -163,7 +229,6 @@ const App = (props) => {
         setBoardState( boardMap );                      // updates the board state
         setUpdateBoard( ! updateBoard );                 // triggers a re-render
         // END OF MAIN CLICK FUNCTION
-
 
 
 
@@ -180,7 +245,7 @@ const App = (props) => {
                 pieceType: boardMap[y][x].pcType,
             };
             node.setAttribute("src", determineImage(parameters));
-            node.setAttribute("class", "dungeonImage")
+            node.setAttribute("class", "dungeonImage");
             let dungeon = "";
             if (currentPlayer === Players.BLACK)
                 dungeon = document.getElementById("2");
@@ -191,13 +256,20 @@ const App = (props) => {
 
 
         // de-highlights all squares in the highlight list
+        //    as well as all squares in the capturables list
         function deHighlightAllSquares(){
             let litSquare = null;
+            let capSquare = null;
             for ( let i = 0; i < highlightedSquares.length; i++ ){
                 litSquare = highlightedSquares[i];
                 boardMap[ litSquare.y ][ litSquare.x ].isHighlighted = false;
             }
+            for ( let i = 0; i < capturableSquares.length; i++ ){
+                capSquare = capturableSquares[i];
+                boardMap[ capSquare.y ][ capSquare.x ].isCapturable = false;
+            }
             setHighlights( [] );
+            setCapturables( [] );
         }
 
         // Iterates through a list of moves that a piece can make and
@@ -207,6 +279,13 @@ const App = (props) => {
                 boardMap[ goodMoves[i].y ][ goodMoves[i].x ].isHighlighted = true;
             }
             setHighlights( goodMoves );
+        }
+
+        function highlightCapturables( capturables ){
+            for ( let i = 0; i < capturables.length; i++ ){
+                boardMap[ capturables[i].y ][ capturables[i].x ].isCapturable = true;
+            }
+            setCapturables( capturables );
         }
 
         // determines if the currently player is in check
@@ -221,6 +300,118 @@ const App = (props) => {
                 return squareIsSafe( boardData.wKingY, boardData.wKingX );
             else
                 return squareIsSafe( boardData.bKingY, boardData.bKingX );
+        }
+
+        // clears all black pawns of ability to En-Passant
+        function clearBlackEP(){
+            for ( let i = 0; i < boardData.blackPieces.length; i++ ){
+                if ( boardMap[ boardData.blackPieces[i].y][ boardData.blackPieces[i].x ].pcType === Pieces.PAWN ) {
+                    boardMap[ boardData.blackPieces[i].y ][ boardData.blackPieces[i].x ].canEpRight = false;
+                    boardMap[ boardData.blackPieces[i].y ][ boardData.blackPieces[i].x ].canEpLeft = false;
+                }
+            }
+        }
+
+        // clears all white pawns of ability to En-Passant
+        function clearWhiteEP(){
+            for ( let i = 0; i < boardData.whitePieces.length; i++ ){
+                if ( boardMap[ boardData.whitePieces[i].y][ boardData.whitePieces[i].x ].pcType === Pieces.PAWN ) {
+                    boardMap[ boardData.whitePieces[i].y ][ boardData.whitePieces[i].x ].canEpRight = false;
+                    boardMap[ boardData.whitePieces[i].y ][ boardData.whitePieces[i].x ].canEpLeft = false;
+                }
+            }
+        }
+
+
+        // updates the list of of coordinates for each player's pieces.
+        // these lists are used to increase efficiency when calculating checkmate / en-passant
+        function updatePieceLists(){
+
+            // updates coordinates for piece that moved
+            if ( currentPlayer === Players.WHITE ) {
+                for (let i = 0; i < boardData.whitePieces.length; i++) {
+                    if (boardData.whitePieces[i].y === selectedSquare[0] &&
+                        boardData.whitePieces[i].x === selectedSquare[1]) {
+                        boardData.whitePieces[i].y = y;
+                        boardData.whitePieces[i].x = x;
+                        break;
+                    }
+                }
+
+                // if a piece was captured
+                // remove it from enemy's list
+                if ( boardMap[y][x].pcType !== Pieces.EMPTY ){
+                    for (let i = 0; i < boardData.blackPieces.length; i++) {
+                        if ( boardData.blackPieces[i].y === y && boardData.blackPieces[i].x === x ) {
+                            boardData.blackPieces.splice(i, 1);
+                            break;
+                        }                   // splice() removes the piece at index i from the list
+                    }
+                }
+            }
+            else {
+                for (let i = 0; i < boardData.blackPieces.length; i++) {
+                    if (boardData.blackPieces[i].y === selectedSquare[0] &&
+                        boardData.blackPieces[i].x === selectedSquare[1]) {
+                        boardData.blackPieces[i].y = y;
+                        boardData.blackPieces[i].x = x;
+                        break;
+                    }
+                }
+                if ( boardData.pcType !== Pieces.EMPTY ){
+                    for (let i = 0; i < boardData.whitePieces.length; i++) {
+                        if ( boardData.whitePieces[i].y === y && boardData.whitePieces[i].x === x ) {
+                            boardData.whitePieces.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // determines if there is at least ONE move the WHITE player can make to avoid checkmate.
+        // iterates through all white pieces and simulates moves until one is found that can stop checkmate
+        function determineWhiteCheckmate(){
+            let checkMate = true;
+            let piece = null;
+            for (let i = 0; i < boardData.whitePieces.length; i++ ){
+                piece = boardData.whitePieces[i];
+                switch (boardMap[piece.y][piece.x].pcType) {
+                    case Pieces.ROOK:   checkMate = showRookMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.KNIGHT: checkMate = showKnightMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.BISHOP: checkMate = showBishopMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.QUEEN:  checkMate = showQueenMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.KING:   checkMate = showKingMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.PAWN:   checkMate = showPawnMoves(piece.y,piece.x,false) === 0;   break;
+                    default: console.log("ERROR: DEFAULT CASE REACHED IN determineWhiteCheckmate()");
+                }
+                if ( ! checkMate )
+                    break;
+            }
+            return checkMate;
+        }
+
+        // determines if there is at least ONE move the BLACK player can make to avoid checkmate.
+        // iterates through all black pieces and simulates moves until one is found that can stop checkmate
+        function determineBlackCheckmate(){
+            let checkMate = true;
+            let piece = null;
+            for (let i = 0; i < boardData.blackPieces.length; i++ ){
+                piece = boardData.blackPieces[i];
+                switch (boardMap[piece.y][piece.x].pcType) {
+                    case Pieces.ROOK:   checkMate = showRookMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.KNIGHT: checkMate = showKnightMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.BISHOP: checkMate = showBishopMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.QUEEN:  checkMate = showQueenMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.KING:   checkMate = showKingMoves(piece.y,piece.x,false) === 0;   break;
+                    case Pieces.PAWN:   checkMate = showPawnMoves(piece.y,piece.x,false) === 0;   break;
+                    default: console.log("ERROR: DEFAULT CASE REACHED IN determineBlackCheckmate()");
+                }
+                if ( ! checkMate )
+                    break;
+            }
+            return checkMate;
         }
 
 
@@ -545,98 +736,6 @@ const App = (props) => {
         }
 
 
-        // updates the list of of coordinates for each player's pieces
-        // these lists are used to increase efficiency when calculating checkmate
-        function updatePieceLists(){
-
-            // updates coordinates for piece that moved
-            if ( currentPlayer === Players.WHITE ) {
-                for (let i = 0; i < boardData.whitePieces.length; i++) {
-                    if (boardData.whitePieces[i].y === selectedSquare[0] &&
-                        boardData.whitePieces[i].x === selectedSquare[1]) {
-                        boardData.whitePieces[i].y = y;
-                        boardData.whitePieces[i].x = x;
-                        break;
-                    }
-                }
-
-                // if a piece was captured
-                // remove it from enemy's list
-                if ( boardMap[y][x].pcType !== Pieces.EMPTY ){
-                    for (let i = 0; i < boardData.blackPieces.length; i++) {
-                        if ( boardData.blackPieces[i].y === y && boardData.blackPieces[i].x === x ) {
-                            boardData.blackPieces.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-            else {
-                for (let i = 0; i < boardData.blackPieces.length; i++) {
-                    if (boardData.blackPieces[i].y === selectedSquare[0] &&
-                        boardData.blackPieces[i].x === selectedSquare[1]) {
-                        boardData.blackPieces[i].y = y;
-                        boardData.blackPieces[i].x = x;
-                        break;
-                    }
-                }
-                if ( boardData.pcType !== Pieces.EMPTY ){
-                    for (let i = 0; i < boardData.whitePieces.length; i++) {
-                        if ( boardData.whitePieces[i].y === y && boardData.whitePieces[i].x === x ) {
-                            boardData.whitePieces.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-
-        // determines if there is at least ONE move the WHITE player can make to avoid checkmate.
-        // iterates through all white pieces and simulates moves until one is found that can stop checkmate
-        function determineWhiteCheckmate(){
-            let checkMate = true;
-            let piece = null;
-            for (let i = 0; i < boardData.whitePieces.length; i++ ){
-                piece = boardData.whitePieces[i];
-                switch (boardMap[piece.y][piece.x].pcType) {
-                    case Pieces.ROOK:   checkMate = showRookMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.KNIGHT: checkMate = showKnightMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.BISHOP: checkMate = showBishopMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.QUEEN:  checkMate = showQueenMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.KING:   checkMate = showKingMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.PAWN:   checkMate = showPawnMoves(piece.y,piece.x,false) === 0;   break;
-                    default: console.log("ERROR: DEFAULT CASE REACHED IN determineWhiteCheckmate()");
-                }
-                if ( ! checkMate )
-                    break;
-            }
-            return checkMate;
-        }
-
-        // determines if there is at least ONE move the BLACK player can make to avoid checkmate.
-        // iterates through all black pieces and simulates moves until one is found that can stop checkmate
-        function determineBlackCheckmate(){
-            let checkMate = true;
-            let piece = null;
-            for (let i = 0; i < boardData.blackPieces.length; i++ ){
-                piece = boardData.blackPieces[i];
-                switch (boardMap[piece.y][piece.x].pcType) {
-                    case Pieces.ROOK:   checkMate = showRookMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.KNIGHT: checkMate = showKnightMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.BISHOP: checkMate = showBishopMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.QUEEN:  checkMate = showQueenMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.KING:   checkMate = showKingMoves(piece.y,piece.x,false) === 0;   break;
-                    case Pieces.PAWN:   checkMate = showPawnMoves(piece.y,piece.x,false) === 0;   break;
-                    default: console.log("ERROR: DEFAULT CASE REACHED IN determineBlackCheckmate()");
-                }
-                if ( ! checkMate )
-                    break;
-            }
-            return checkMate;
-        }
-
-
         // *****************************************************************************
         // ******************************* KING MOVEMENT *******************************
         // *****************************************************************************
@@ -701,6 +800,7 @@ const App = (props) => {
 
             let possibleMoves = [];         // all theoretical moves the knight can make
             let goodMoves = [];             // moves that are allowed
+            let capturables = [];           // squares that will be captured by en-passant
             let move = null;                // current move being tested
             let squareType = null;          // piece type of the square being considered
             let squareOwner = null;         // owner of the square being considered
@@ -709,10 +809,10 @@ const App = (props) => {
 
             pawnOwner = boardMap[y][x].pcOwner;
 
-            // BLACK pawns
+            // BLACK pawn moves
             if (pawnOwner === Players.BLACK) {
-                possibleMoves.push( new Move(y+1,x+1) );             // diagonal attacks
-                possibleMoves.push( new Move(y+1,x-1) );
+                possibleMoves.push( new Move(y+1,x+1) );            // diagonal moves. these include regular
+                possibleMoves.push( new Move(y+1,x-1) );            // pawn-attacks as well as en-passant attacks
 
                 for (let curY = y + 1; curY <= y + 2 && curY < 8; curY++) {     // adds two forward moves
                     if (boardMap[curY][x].pcType !== Pieces.EMPTY)              // until a collision occurs
@@ -721,7 +821,7 @@ const App = (props) => {
                 }
             }
 
-            // WHITE pawns
+            // WHITE pawn moves
             else {
                 possibleMoves.push( new Move(y-1,x+1) );
                 possibleMoves.push( new Move(y-1,x-1) );
@@ -748,29 +848,74 @@ const App = (props) => {
                     continue;
                 if (move.y === y - 2 && y !== 6)
                     continue;
-                if (boardMap[move.y][move.x].pcOwner === pawnOwner)             // discard if attacking your own piece
+                if (boardMap[move.y][move.x].pcOwner === pawnOwner)     // discard if attacking your own piece
                     continue;
-                if ((pawnOwner === Players.WHITE) &&
-                    (move.x !== x) &&                                           // discard WHITE diagonals
-                    (boardMap[move.y][move.x].pcOwner !== Players.BLACK))       // if no enemy piece
-                    continue;
-                if ((pawnOwner === Players.BLACK) &&
-                    (move.x !== x) &&                                           // discard BLACK diagonals
-                    (boardMap[move.y][move.x].pcOwner !== Players.WHITE))       // if no enemy piece
-                    continue;
+
+                // if you're white and CANNOT en-passant...
+                // AND there is NOT a black piece to your diagonal, then discard this move
+                if ((pawnOwner === Players.WHITE && boardMap[move.y][move.x].pcOwner !== Players.BLACK) &&
+                    ((boardMap[y][x].canEpRight === false && move.x === x+1) ||
+                     (boardMap[y][x].canEpLeft === false && move.x === x-1))){
+                        continue;
+                }
+
+
+                // if you're black and CANNOT en-passant...
+                // AND there is NOT an enemy piece to your diagonal, then discard this move
+                if ((pawnOwner === Players.BLACK && boardMap[move.y][move.x].pcOwner !== Players.WHITE) &&
+                     ((boardMap[y][x].canEpRight === false && move.x === x+1) ||
+                      (boardMap[y][x].canEpLeft === false && move.x === x-1))){
+                        continue;
+                }
+
+                if (boardMap[y][x].canEpRight === true && move.x === x+1) {
+                    move.hasCapturable = true;
+                    move.capY = y;
+                    move.capX = x+1;
+                }
+                else if (boardMap[y][x].canEpLeft === true && move.x === x-1) {
+                    move.hasCapturable = true;
+                    move.capY = y;
+                    move.capX = x-1;
+                }
 
                 squareType = boardMap[move.y][move.x].pcType;
                 squareOwner = boardMap[move.y][move.x].pcOwner;
-                boardMap[move.y][move.x].pcType = Pieces.PAWN;          // temporarily make the move
+                boardMap[move.y][move.x].pcType = Pieces.PAWN;              // temporarily make the move
                 boardMap[move.y][move.x].pcOwner = pawnOwner;
 
+                if ( move.hasCapturable ){                                      // and if the move involves en-passant
+                    if ( pawnOwner === Players.WHITE ){                         // make sure the captured piece
+                        boardMap[move.y+1][move.x].pcType = Pieces.EMPTY;       // is simulated to be removed as well
+                        boardMap[move.y+1][move.x].pcOwner = Players.NONE;
+                    }
+                    else{
+                        boardMap[move.y-1][move.x].pcType = Pieces.EMPTY;
+                        boardMap[move.y-1][move.x].pcOwner = Players.NONE;
+                    }
+                }
+
                 kingIsSafe = playerKingIsSafe( pawnOwner );             // makes sure king is safe if you move here
+
+                if ( move.hasCapturable ){
+                    if ( pawnOwner === Players.WHITE ){
+                        boardMap[move.y+1][move.x].pcType = Pieces.PAWN;        // replace any captured pieces
+                        boardMap[move.y+1][move.x].pcOwner = Players.BLACK;
+                    }
+                    else{
+                        boardMap[move.y-1][move.x].pcType = Pieces.PAWN;
+                        boardMap[move.y-1][move.x].pcOwner = Players.WHITE;
+                    }
+                }
 
                 boardMap[move.y][move.x].pcType = squareType;
                 boardMap[move.y][move.x].pcOwner = squareOwner;
 
-                if (kingIsSafe) {                                       // king is SAFE, add the move
+                // king is safe, add the move
+                if (kingIsSafe) {
                     goodMoves.push(new Move(move.y, move.x));
+                    if ( move.hasCapturable )                                   // add any en-passant capturables
+                        capturables.push(new Move( move.capY, move.capX ))      // associated with this move
                 }
                 else {                                          // King is NOT SAFE if you make this move.
                     if ( ! playerIsInCheck( pawnOwner ) )       // if you're NOT in check, this move will put us
@@ -783,8 +928,10 @@ const App = (props) => {
             boardMap[y][x].pcType = Pieces.PAWN;
             boardMap[y][x].pcOwner = pawnOwner;
 
-            if (highlight)
-                highlightGoodMoves(goodMoves);
+            if (highlight) {
+                highlightGoodMoves(goodMoves);          // highlights places the pawn can MOVE
+                highlightCapturables(capturables);      // highlights pieces that will be captured by en-passant
+            }
 
             return goodMoves.length;
         }

@@ -2,6 +2,7 @@ import React from 'react';
 import '../Style/Square.css';
 import {Pieces} from './Board';
 import {Players} from './Board';
+import error from "../Assets/error.png";
 import whiteRook from "../Assets/whiteRook.png";
 import whiteKnight from "../Assets/whiteKnight.png";
 import whiteBishop from "../Assets/whiteBishop.png";
@@ -16,7 +17,22 @@ import blackKing from "../Assets/blackKing.png";
 import blackQueen from "../Assets/blackQueen.png";
 import blackPawn from "../Assets/blackPawn.png";
 import blackPawnFaded from "../Assets/blackPawnFaded.png";
-import error from "../Assets/error.png";
+
+// UNCOMMENT FOR DOG THEME
+// import whiteRook from "../Assets/DogTheme/rookWhite.png";
+// import whiteKnight from "../Assets/DogTheme/knightWhite.png";
+// import whiteBishop from "../Assets/DogTheme/bishopBlack.png";
+// import whiteKing from "../Assets/DogTheme/kingWhite.png";
+// import whiteQueen from "../Assets/DogTheme/queenWhite.gif";
+// import whitePawn from "../Assets/DogTheme/pawnWhite.png";
+// import whitePawnFaded from "../Assets/whitePawnFaded.png";
+// import blackRook from "../Assets/DogTheme/rookBlack.png";
+// import blackKnight from "../Assets/DogTheme/knightBlack.png";
+// import blackBishop from "../Assets/DogTheme/bishopBlack.png";
+// import blackKing from "../Assets/DogTheme/kingBlack.png";
+// import blackQueen from "../Assets/DogTheme/queenBlack.gif";
+// import blackPawn from "../Assets/DogTheme/pawnBlack.png";
+// import blackPawnFaded from "../Assets/blackPawnFaded.png";
 
 
 /** Properties you can access through props

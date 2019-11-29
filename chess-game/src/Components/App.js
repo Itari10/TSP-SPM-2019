@@ -14,8 +14,9 @@ class Move{
         this.y = y;
         this.x = x;
         this.hasCapturable = false;         // this move will result in an en-passant piece capture
-        this.capY = null;                   // capturable piece Y
         this.capX = null;                   // capturable piece X
+        this.isCastleMove = false;
+        this.castleSide = null;
     }
 }
 
@@ -40,7 +41,8 @@ const App = (props) => {
     const [updateBoard, setUpdateBoard] =       React.useState( true );             // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
-    const [capturableSquares, setCapturables] = React.useState( [] );
+    const [capturableSquares, setCapturables] = React.useState( [] );               // squares that can be captured by en-passant
+    const [castleRooks, setCastleRooks] =       React.useState( [] );               // rooks that can castle
     const [gameOver, setGameOver] =             React.useState( false );
     const [promote, setPromote] =               React.useState( false );
 
@@ -126,15 +128,28 @@ const App = (props) => {
             // move piece from selected square to clicked square
             boardMap[y][x].pcType =  boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcType;
             boardMap[y][x].pcOwner = boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcOwner;
+            boardMap[y][x].hasMoved = boardMap[ selectedSquare[0] ][ selectedSquare[1] ].hasMoved;
 
             // clear the selected square
             boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcType = Pieces.EMPTY;
             boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcOwner = Players.NONE;
             boardMap[ selectedSquare[0] ][ selectedSquare[1] ].isSelected = false;
+            boardMap[ selectedSquare[0] ][ selectedSquare[1] ].hasMoved = false;
+
+            // if a KING was just moved, updates its location
+            if ( boardMap[y][x].pcType === Pieces.KING ) {
+                if (currentPlayer === Players.WHITE) {
+                    boardData.wKingY = y;
+                    boardData.wKingX = x;
+                }
+                else {
+                    boardData.bKingY = y;
+                    boardData.bKingX = x;
+                }
+            }
 
 
             // EN-PASSANT LOGIC
-            // if the piece you just moved was a pawn...
             if ( boardMap[y][x].pcType === Pieces.PAWN ){
 
                 // BLACK pawns
@@ -186,17 +201,34 @@ const App = (props) => {
                 }
             }
 
-            // if a KING was just moved, updates its location
+
+            // CASTLING LOGIC
             if ( boardMap[y][x].pcType === Pieces.KING ){
-                if (currentPlayer === Players.WHITE) {
-                    boardData.wKingY = y;
-                    boardData.wKingX = x;
+
+                // right-castling
+                if ( x === selectedSquare[1] + 2 ){
+                    boardMap[ selectedSquare[0] ][ 7 ].pcType = Pieces.EMPTY;
+                    boardMap[ selectedSquare[0] ][ 7 ].pcOwner = Pieces.NONE;
+                    boardMap[ selectedSquare[0] ][ 5 ].pcType = Pieces.ROOK;
+                    boardMap[ selectedSquare[0] ][ 5 ].pcOwner = currentPlayer;
+                    boardMap[ selectedSquare[0] ][ 5 ].hasMoved = true;
                 }
-                else {
-                    boardData.bKingY = y;
-                    boardData.bKingX = x;
+
+                // left-castling
+                else if ( x === selectedSquare[1] - 2 ){
+                    boardMap[ selectedSquare[0] ][ 0 ].pcType = Pieces.EMPTY;
+                    boardMap[ selectedSquare[0] ][ 0 ].pcOwner = Pieces.NONE;
+                    boardMap[ selectedSquare[0] ][ 3 ].pcType = Pieces.ROOK;
+                    boardMap[ selectedSquare[0] ][ 3 ].pcOwner = currentPlayer;
+                    boardMap[ selectedSquare[0] ][ 3 ].hasMoved = true;
                 }
             }
+
+
+            // tracks if the king or rook has moved for castling
+            if ( boardMap[y][x].pcType === Pieces.KING || Pieces.ROOK )
+                boardMap[y][x].hasMoved = true;
+
 
             // transforms pawns into queens if they reach the other side of the board
             if ((y === 0 || y === 7) && boardMap[y][x].pcType === Pieces.PAWN ){
@@ -255,19 +287,17 @@ const App = (props) => {
         }
 
 
-        // de-highlights all squares in the highlight list
-        //    as well as all squares in the capturables list
+        // CLEARS HIGHLIGHTING for all squares in the highlight list
+        //    as well as all squares in the capturable pawns list
+        //    as well as all rooks in the castleable rooks list
         function deHighlightAllSquares(){
-            let litSquare = null;
-            let capSquare = null;
-            for ( let i = 0; i < highlightedSquares.length; i++ ){
-                litSquare = highlightedSquares[i];
-                boardMap[ litSquare.y ][ litSquare.x ].isHighlighted = false;
-            }
-            for ( let i = 0; i < capturableSquares.length; i++ ){
-                capSquare = capturableSquares[i];
-                boardMap[ capSquare.y ][ capSquare.x ].isCapturable = false;
-            }
+            for ( let i = 0; i < highlightedSquares.length; i++ )
+                boardMap[ highlightedSquares[i].y ][ highlightedSquares[i].x ].isHighlighted = false;
+            for ( let i = 0; i < capturableSquares.length; i++ )
+                boardMap[ capturableSquares[i].y ][ capturableSquares[i].x ].isCapturable = false;
+            for ( let i = 0; i < castleRooks.length; i++ )
+                boardMap[ castleRooks[i].y ][ castleRooks[i].x ].canCastle = false;
+            setCastleRooks( [] );
             setHighlights( [] );
             setCapturables( [] );
         }
@@ -281,11 +311,20 @@ const App = (props) => {
             setHighlights( goodMoves );
         }
 
-        function highlightCapturables( capturables ){
-            for ( let i = 0; i < capturables.length; i++ ){
-                boardMap[ capturables[i].y ][ capturables[i].x ].isCapturable = true;
+        // fades the pawns that will be captured by a given en-passant move
+        function fadeCapturables( pawnList ){
+            for ( let i = 0; i < pawnList.length; i++ ){
+                boardMap[ pawnList[i].y ][ pawnList[i].x ].isCapturable = true;
             }
-            setCapturables( capturables );
+            setCapturables( pawnList );
+        }
+
+        // highlights the rooks that will be moved by a given castling move
+        function highlightCastleRooks( rookList ){
+            for ( let i = 0; i < rookList.length; i++ ){
+                boardMap[ rookList[i].y ][ rookList[i].x ].canCastle = true;
+            }
+            setCastleRooks( rookList );
         }
 
         // determines if the currently player is in check
@@ -743,10 +782,12 @@ const App = (props) => {
 
             let possibleMoves = [];         // all possible moves the king can make
             let safeMoves = [];             // list of moves the king can make without being put into check
+            let castleRooks = [];           // list of rooks that can be castled by this king move
             let squareType = null;          // current piece type of the square being considered
             let squareOwner = null;         // current owner of the square being considered
             let move = null;                // current move being examined
-            let kingOwner = null;
+            let castleMove = null;          // temp variable used in testing castling moves
+            let kingOwner = null;           // owner of the pawn whose moves are being looked at
 
             for ( let yOffset = -1; yOffset < 2; yOffset++ ){             // adds 1 move in every direction
                 for ( let xOffset = -1; xOffset < 2; xOffset++){          // skips the Square the king is already on
@@ -754,6 +795,31 @@ const App = (props) => {
                         continue;
                     possibleMoves.push(new Move(y+yOffset,x+xOffset))
                 }
+            }
+
+            // right castling
+            if ( boardMap[y][x].hasMoved === false &&               // adds right castle if pre-conditions
+                 boardMap[y][x+3].hasMoved === false &&             // are correct
+                 boardMap[y][x+3].pcType === Pieces.ROOK &&
+                 boardMap[y][x+2].pcType === Pieces.EMPTY &&
+                 boardMap[y][x+1].pcType === Pieces.EMPTY ) {
+                castleMove = new Move(y,x+2);
+                castleMove.isCastleMove = true;
+                castleMove.castleSide = 'R';
+                possibleMoves.push( castleMove );
+            }
+
+            // left castling
+            if ( boardMap[y][x].hasMoved === false &&               // adds left castle if pre-conditions
+                boardMap[y][x-4].hasMoved === false &&              // are correct
+                boardMap[y][x-4].pcType === Pieces.ROOK &&
+                boardMap[y][x-3].pcType === Pieces.EMPTY &&
+                boardMap[y][x-2].pcType === Pieces.EMPTY &&
+                boardMap[y][x-1].pcType === Pieces.EMPTY ) {
+                castleMove = new Move(y,x-2);
+                castleMove.isCastleMove = true;
+                castleMove.castleSide = 'L';
+                possibleMoves.push( castleMove );
             }
 
             kingOwner = boardMap[y][x].pcOwner;
@@ -764,30 +830,86 @@ const App = (props) => {
             for ( let i = 0; i < possibleMoves.length; i++ ) {
                 move = possibleMoves[i];
 
-                if (move.y > 7 || move.y < 0)               // immediately discard if move is off board
-                    continue;                               // or collides with your own piece
+                if (move.y > 7 || move.y < 0)                   // immediately discard if move is off board
+                    continue;                                   // or collides with your own piece
                 if (move.x > 7 || move.x < 0)
                     continue;
                 if (boardMap[move.y][move.x].pcOwner === kingOwner)
                     continue;
 
-                squareType = boardMap[move.y][move.x].pcType;
-                squareOwner = boardMap[move.y][move.x].pcOwner;
-                boardMap[move.y][move.x].pcType = Pieces.KING;      // temporarily make the move
-                boardMap[move.y][move.x].pcOwner = kingOwner;
+                // CASTLING MOVE-HIGHLIGHTING
+                // This block makes sure any moves flagged as a "castling move" follow all rules
+                // and do not endanger the king before being added to the safe moves list
+                if ( move.isCastleMove ){
+                    let xDir = null;
+                    let xLimit = null;
+                    let kingIsSafe = null;
 
-                if ( squareIsSafe(move.y, move.x) )                 // checks if the king is still safe if he moves here
-                    safeMoves.push(move);                           // if so, add it to his list of safe moves
+                    if ((kingOwner === Players.WHITE && boardMap[7][8].whiteCheck ) ||      // cant castle if you're in check
+                        (kingOwner === Players.BLACK && boardMap[7][8].blackCheck ))
+                        continue;
 
-                boardMap[move.y][move.x].pcType = squareType;
-                boardMap[move.y][move.x].pcOwner = squareOwner;
+                    if ( move.castleSide === 'R' ){                 // sets variables based on castle direction
+                        xDir = 1;
+                        xLimit = 7;
+                    }
+                    else if ( move.castleSide === 'L' ){
+                        xDir = -1;
+                        xLimit = 1;
+                    }
+                    for ( let curX = 4 + xDir; curX !== xLimit; curX += xDir ){
+                        boardMap[y][curX].pcType = Pieces.KING;
+                        boardMap[y][curX].pcOwner = kingOwner;
+
+                        kingIsSafe = squareIsSafe( y, curX );                   // make sure king will NOT be in check
+                                                                                // at any point along castling path
+                        boardMap[y][curX].pcType = Pieces.EMPTY;
+                        boardMap[y][curX].pcOwner = Players.NONE;
+                        if ( ! kingIsSafe )
+                            break;
+                    }
+                    if ( ! kingIsSafe )                             // if he is, discard this move
+                        continue;
+
+                    // castling move is good
+                    // add move / rook highlighting
+                    if ( move.castleSide === 'R' ){
+                        if ( kingOwner === Players.WHITE )
+                            castleRooks.push( new Move(7,7) );
+                        else
+                            castleRooks.push( new Move(0,7) );
+                    }
+                    else{
+                        if ( kingOwner === Players.WHITE )
+                            castleRooks.push( new Move(7,0) );
+                        else
+                            castleRooks.push( new Move(0,0) );
+                    }
+                    safeMoves.push( move );
+                }
+
+                // all other non-castling moves
+                else{
+                    squareType = boardMap[move.y][move.x].pcType;
+                    squareOwner = boardMap[move.y][move.x].pcOwner;
+                    boardMap[move.y][move.x].pcType = Pieces.KING;      // temporarily make the move
+                    boardMap[move.y][move.x].pcOwner = kingOwner;
+
+                    if ( squareIsSafe( move.y, move.x ))                // checks if the king is still safe if he moves here
+                        safeMoves.push(move);                           // if so, add it to his list of safe moves
+
+                    boardMap[move.y][move.x].pcType = squareType;
+                    boardMap[move.y][move.x].pcOwner = squareOwner;
+                }
             }
 
             boardMap[y][x].pcType = Pieces.KING;
-            boardMap[y][x].pcOwner = kingOwner;         // tests are complete, put the king back
+            boardMap[y][x].pcOwner = kingOwner;         // tests are complete, put the king back down
 
-            if ( highlight )
-                highlightGoodMoves( safeMoves );        // and highlight his safe moves
+            if ( highlight ) {
+                highlightGoodMoves(safeMoves);          // and highlight his safe moves
+                highlightCastleRooks(castleRooks);      // and highlight any rooks that he will castle
+            }
 
             return safeMoves.length;
         }
@@ -859,7 +981,6 @@ const App = (props) => {
                         continue;
                 }
 
-
                 // if you're black and CANNOT en-passant...
                 // AND there is NOT an enemy piece to your diagonal, then discard this move
                 if ((pawnOwner === Players.BLACK && boardMap[move.y][move.x].pcOwner !== Players.WHITE) &&
@@ -868,43 +989,42 @@ const App = (props) => {
                         continue;
                 }
 
+                // adds capturable flag to en-passant moves, if any
                 if (boardMap[y][x].canEpRight === true && move.x === x+1) {
                     move.hasCapturable = true;
-                    move.capY = y;
                     move.capX = x+1;
                 }
                 else if (boardMap[y][x].canEpLeft === true && move.x === x-1) {
                     move.hasCapturable = true;
-                    move.capY = y;
                     move.capX = x-1;
                 }
 
                 squareType = boardMap[move.y][move.x].pcType;
                 squareOwner = boardMap[move.y][move.x].pcOwner;
-                boardMap[move.y][move.x].pcType = Pieces.PAWN;              // temporarily make the move
+                boardMap[move.y][move.x].pcType = Pieces.PAWN;          // temporarily make the move
                 boardMap[move.y][move.x].pcOwner = pawnOwner;
 
-                if ( move.hasCapturable ){                                      // and if the move involves en-passant
-                    if ( pawnOwner === Players.WHITE ){                         // make sure the captured piece
-                        boardMap[move.y+1][move.x].pcType = Pieces.EMPTY;       // is simulated to be removed as well
-                        boardMap[move.y+1][move.x].pcOwner = Players.NONE;
+                if ( move.hasCapturable ){                                  // and if the move involves en-passant
+                    if ( pawnOwner === Players.WHITE ){                     // make sure the captured piece
+                        boardMap[y][move.capX].pcType = Pieces.EMPTY;       // is simulated to be removed as well
+                        boardMap[y][move.capX].pcOwner = Players.NONE;
                     }
                     else{
-                        boardMap[move.y-1][move.x].pcType = Pieces.EMPTY;
-                        boardMap[move.y-1][move.x].pcOwner = Players.NONE;
+                        boardMap[y][move.capX].pcType = Pieces.EMPTY;
+                        boardMap[y][move.capX].pcOwner = Players.NONE;
                     }
                 }
 
-                kingIsSafe = playerKingIsSafe( pawnOwner );             // makes sure king is safe if you move here
+                kingIsSafe = playerKingIsSafe( pawnOwner );                 // makes sure king is safe if you move here
 
                 if ( move.hasCapturable ){
                     if ( pawnOwner === Players.WHITE ){
-                        boardMap[move.y+1][move.x].pcType = Pieces.PAWN;        // replace any captured pieces
-                        boardMap[move.y+1][move.x].pcOwner = Players.BLACK;
+                        boardMap[y][move.capX].pcType = Pieces.PAWN;        // replace any captured pieces
+                        boardMap[y][move.capX].pcOwner = Players.BLACK;
                     }
                     else{
-                        boardMap[move.y-1][move.x].pcType = Pieces.PAWN;
-                        boardMap[move.y-1][move.x].pcOwner = Players.WHITE;
+                        boardMap[y][move.capX].pcType = Pieces.PAWN;
+                        boardMap[y][move.capX].pcOwner = Players.WHITE;
                     }
                 }
 
@@ -913,9 +1033,9 @@ const App = (props) => {
 
                 // king is safe, add the move
                 if (kingIsSafe) {
-                    goodMoves.push(new Move(move.y, move.x));
-                    if ( move.hasCapturable )                                   // add any en-passant capturables
-                        capturables.push(new Move( move.capY, move.capX ))      // associated with this move
+                    goodMoves.push(new Move( move.y, move.x ));
+                    if ( move.hasCapturable )                           // add any en-passant capturables
+                        capturables.push(new Move( y, move.capX ))      // associated with this move
                 }
                 else {                                          // King is NOT SAFE if you make this move.
                     if ( ! playerIsInCheck( pawnOwner ) )       // if you're NOT in check, this move will put us
@@ -930,7 +1050,7 @@ const App = (props) => {
 
             if (highlight) {
                 highlightGoodMoves(goodMoves);          // highlights places the pawn can MOVE
-                highlightCapturables(capturables);      // highlights pieces that will be captured by en-passant
+                fadeCapturables(capturables);           // highlights pieces that will be captured by en-passant
             }
 
             return goodMoves.length;

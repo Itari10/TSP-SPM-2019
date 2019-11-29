@@ -44,6 +44,7 @@ import blackPawnFaded from "../Assets/blackPawnFaded.png";
  *  isHighlighted   is this Square highlighted
  *  isSelected      is this Square selected
  *  isCapturable    is this Square capturable via en-passant
+ *  canCastle       is this Square a rook that can castle this move
  *  pieceType       the type of piece on this square
  *  ownedBy         the player who owns the piece on this square
  *  onClick:        FUNCTION passed from App that activates when Square is clicked
@@ -80,6 +81,9 @@ function determineBG(props){
             return '#5da675';
         else
             return '#68b780';       // highlighting is slightly darker for dark squares
+    }
+    if ( props.canCastle ){         // highlights rooks in yellow that will be moved
+        return '#fff18e';           // by the current castling move
     }
     // if ( props.isCapturable ){       // highlights pieces capturable by en-passant
     //     return '#c184a2';            // in red during move selection

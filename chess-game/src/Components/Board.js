@@ -9,9 +9,11 @@ class Piece{
         this.isHighlighted = isHighlighted;
         this.isSelected = isSelected;
         this.defaultColor = null;
-        this.canEpLeft = false;             //
-        this.canEpRight = false;            // en-passant variables
-        this.isCapturable = false           //
+        this.canEpLeft = false;             // EN-PASSANT: can this pawn attack to the left by en-passant
+        this.canEpRight = false;            // EN-PASSANT: can this pawn attack to the right by en-passant
+        this.isCapturable = false;          // EN-PASSANT: is this pawn able to be captured by en-passant
+        this.hasMoved = false;              // CASTLING: has this piece moved during the game
+        this.canCastle = false;             // CASTLING: should this rook be highlighted due to castling
     }
 }
 
@@ -34,9 +36,9 @@ export class BoardData {
         this.whitePieces = [];
         this.blackPieces = [];
         this.bKingY = 0;
-        this.bKingX = 3;
+        this.bKingX = 4;
         this.wKingY = 7;
-        this.wKingX = 3;
+        this.wKingX = 4;
     }
 }
 
@@ -85,20 +87,9 @@ const Board = (props) => {
         );
     }
 
-    /** DATA-TO-COMPONENT CONVERSION
-     * Converts the 2D-array of Piece objects into their JSX React-component
-     * equivalent. This is then passed back up to app to be rendered
-     *
-     *  key             unique identifier for the Component
-     *  y               Y-coordinate of this Square
-     *  x               X-coordinate of this Square
-     *  defaultColor    default color of this Square
-     *  isHighlighted   whether or not this Square is highlighted
-     *  isSelected      whether or not this Square is selected
-     *  pieceType       the type of piece on this square
-     *  ownedBy         the player who owns the piece on this square
-     *  onClick:        FUNCTION passed from App that activates when Square is clicked
-     */
+    // DATA-TO-COMPONENT CONVERSION
+    // Converts the 2D-array of Piece objects into their JSX React-component
+    // equivalent. This is then passed back up to app to be rendered
     function create8squares(currentY){
         let curRow = [];
         let curSquare = null;
@@ -113,6 +104,7 @@ const Board = (props) => {
                     isHighlighted = {curSquare.isHighlighted}
                     isSelected =    {curSquare.isSelected}
                     isCapturable =  {curSquare.isCapturable}
+                    canCastle =     {curSquare.canCastle}
                     pieceType =     {curSquare.pcType}
                     ownedBy =       {curSquare.pcOwner}
                     onClick =       {props.pieceClicked}
@@ -148,8 +140,8 @@ export function initializeBoard(){
     defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
     defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
     defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
-    defaultBoard[0][3] = new Piece(Pieces.KING, Players.BLACK, false, false);
-    defaultBoard[0][4] = new Piece(Pieces.QUEEN, Players.BLACK, false, false);
+    defaultBoard[0][3] = new Piece(Pieces.QUEEN, Players.BLACK, false, false);
+    defaultBoard[0][4] = new Piece(Pieces.KING, Players.BLACK, false, false);
     defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
     defaultBoard[0][6] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
     defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
@@ -158,8 +150,8 @@ export function initializeBoard(){
     defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
     defaultBoard[7][1] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
     defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
-    defaultBoard[7][3] = new Piece(Pieces.KING, Players.WHITE, false, false);
-    defaultBoard[7][4] = new Piece(Pieces.QUEEN, Players.WHITE, false, false);
+    defaultBoard[7][3] = new Piece(Pieces.QUEEN, Players.WHITE, false, false);
+    defaultBoard[7][4] = new Piece(Pieces.KING, Players.WHITE, false, false);
     defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
     defaultBoard[7][6] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
     defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false);

@@ -1,9 +1,11 @@
 import React from 'react';
 import '../Style/App.css';
 import PlayerBox from './PlayerBox';
+import ThemeDropDown from "./ThemeDropDown";
 import Board, {initializeBoard} from './Board';
 import {Pieces} from './Board';
 import {Players} from './Board';
+import {Themes} from './Square';
 import EndGameScreen from './EndGameScreen';
 import {determineImage} from './Square.js';
 import PromotionScreen from './PromotionScreen';
@@ -45,6 +47,12 @@ const App = (props) => {
     const [castleRooks, setCastleRooks] =       React.useState( [] );               // rooks that can castle
     const [gameOver, setGameOver] =             React.useState( false );
     const [promote, setPromote] =               React.useState( false );
+    const [getTheme, setTheme] =                React.useState( Themes.TRADITIONAL );         // Keeps track of current theme
+
+    // swaps theme
+    function swapTheme(x){
+        setTheme(x);
+    }
 
     // swaps the player turn
     const swapTurn = () => {
@@ -1212,6 +1220,9 @@ const App = (props) => {
             <div className="Header">
                 <h1>CHESS</h1>
             </div>
+            <div className="col-sm-4">
+                <ThemeDropDown theme={getTheme} setFunc={swapTheme}/>
+            </div>
             <div className="row">
                 <div className="col-sm-4">
                     <PlayerBox
@@ -1237,6 +1248,7 @@ const App = (props) => {
                         bState =            {boardState}
                         pieceClicked =      {squareClicked}
                         bData =             {boardState[7][8]}
+                        theme =             {getTheme}
                     />
                 </div>
             </div>

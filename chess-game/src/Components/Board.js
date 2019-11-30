@@ -108,6 +108,7 @@ const Board = (props) => {
                     pieceType =     {curSquare.pcType}
                     ownedBy =       {curSquare.pcOwner}
                     onClick =       {props.pieceClicked}
+                    isTheme =         {props.theme}
                 />
             );
         }

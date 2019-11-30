@@ -2,7 +2,7 @@ import React from 'react';
 import '../Style/Square.css';
 import {Pieces} from './Board';
 import {Players} from './Board';
-import error from "../Assets/error.png";
+//default pieces
 import whiteRook from "../Assets/whiteRook.png";
 import whiteKnight from "../Assets/whiteKnight.png";
 import whiteBishop from "../Assets/whiteBishop.png";
@@ -16,6 +16,21 @@ import blackBishop from "../Assets/blackBishop.png";
 import blackKing from "../Assets/blackKing.png";
 import blackQueen from "../Assets/blackQueen.png";
 import blackPawn from "../Assets/blackPawn.png";
+//dog vs cat theme pieces
+import whiteKnight1 from "../Assets/DogTheme/knightWhite.png";
+import whiteQueen1 from "../Assets/DogTheme/queenWhite.gif";
+import whiteKing1 from "../Assets/DogTheme/kingWhite.png";
+import whiteRook1 from "../Assets/DogTheme/rookWhite.png";
+import whitePawn1 from "../Assets/DogTheme/pawnWhite.png";
+import whiteBishop1 from "../Assets/DogTheme/bishopWhite.png";
+import blackKnight1 from "../Assets/DogTheme/knightBlack.png";
+import blackRook1 from "../Assets/DogTheme/rookBlack.png";
+import blackQueen1 from "../Assets/DogTheme/queenBlack.gif";
+import blackKing1 from "../Assets/DogTheme/kingBlack.png";
+import blackBishop1 from "../Assets/DogTheme/bishopBlack.png";
+import blackPawn1 from "../Assets/DogTheme/pawnBlack.png";
+//error image
+import error from "../Assets/error.png";
 import blackPawnFaded from "../Assets/blackPawnFaded.png";
 
 // UNCOMMENT FOR DOG THEME
@@ -91,35 +106,109 @@ function determineBG(props){
     return props.defaultColor;
 }
 
+// theme enums
+export const Themes = {
+    TRADITIONAL: 0,
+    DOGSandCATS: 1
+};
+
 // sets the piece image on the Square based on its properties
 export function determineImage( props ){
-    switch ( props.ownedBy ){
-        case Players.WHITE: {
-            switch( props.pieceType ){
-                case Pieces.ROOK:   return whiteRook;
-                case Pieces.PAWN:   return props.isCapturable ? whitePawnFaded : whitePawn;
-                case Pieces.KNIGHT: return whiteKnight;
-                case Pieces.BISHOP: return whiteBishop;         // fading is for pawns that are
-                case Pieces.QUEEN:  return whiteQueen;          // capturable by en-passant
-                case Pieces.KING:   return whiteKing;
-                case Pieces.EMPTY:  return null;
-                default:            return error;
+    switch ( props.isTheme ) {
+        case 0: { //traditional pieces
+            switch (props.ownedBy) {
+                case Players.WHITE: {
+                    switch (props.pieceType) {
+                        case Pieces.ROOK:
+                            return whiteRook;
+                        case Pieces.PAWN:
+                            return whitePawn;
+                        case Pieces.KNIGHT:
+                            return whiteKnight;     // white Pieces
+                        case Pieces.BISHOP:
+                            return whiteBishop;
+                        case Pieces.QUEEN:
+                            return whiteQueen;
+                        case Pieces.KING:
+                            return whiteKing;
+                        case Pieces.EMPTY:
+                            return null;
+                        default:
+                            return error;
+                    }
+                }
+                case Players.BLACK: {
+                    switch (props.pieceType) {
+                        case Pieces.ROOK:
+                            return blackRook;
+                        case Pieces.PAWN:
+                            return blackPawn;
+                        case Pieces.KNIGHT:
+                            return blackKnight;     // black Pieces
+                        case Pieces.BISHOP:
+                            return blackBishop;
+                        case Pieces.QUEEN:
+                            return blackQueen;
+                        case Pieces.KING:
+                            return blackKing;
+                        case Pieces.EMPTY:
+                            return null;
+                        default:
+                            return error;
+                    }
+                }
+                case Players.NONE :
+                default:
+                    return null;            // empty spaces
             }
         }
-        case Players.BLACK: {
-            switch( props.pieceType ){
-                case Pieces.ROOK:   return blackRook;
-                case Pieces.PAWN:   return props.isCapturable ? blackPawnFaded : blackPawn;
-                case Pieces.KNIGHT: return blackKnight;
-                case Pieces.BISHOP: return blackBishop;
-                case Pieces.QUEEN:  return blackQueen;
-                case Pieces.KING:   return blackKing;
-                case Pieces.EMPTY:  return null;
-                default:            return error;
+        case 1: { //dogs Vs cats theme
+            switch (props.ownedBy) {
+                case Players.WHITE: {
+                    switch (props.pieceType) {
+                        case Pieces.ROOK:
+                            return whiteRook1;
+                        case Pieces.PAWN:
+                            return whitePawn1;
+                        case Pieces.KNIGHT:
+                            return whiteKnight1;     // white Pieces
+                        case Pieces.BISHOP:
+                            return whiteBishop1;
+                        case Pieces.QUEEN:
+                            return whiteQueen1;
+                        case Pieces.KING:
+                            return whiteKing1;
+                        case Pieces.EMPTY:
+                            return null;
+                        default:
+                            return error;
+                    }
+                }
+                case Players.BLACK: {
+                    switch (props.pieceType) {
+                        case Pieces.ROOK:
+                            return blackRook1;
+                        case Pieces.PAWN:
+                            return blackPawn1;
+                        case Pieces.KNIGHT:
+                            return blackKnight1;     // black Pieces
+                        case Pieces.BISHOP:
+                            return blackBishop1;
+                        case Pieces.QUEEN:
+                            return blackQueen1;
+                        case Pieces.KING:
+                            return blackKing1;
+                        case Pieces.EMPTY:
+                            return null;
+                        default:
+                            return error;
+                    }
+                }
+                case Players.NONE :
+                default:
+                    return null;            // empty spaces
             }
         }
-        case Players.NONE:
-        default:                    return null;
     }
 }
 

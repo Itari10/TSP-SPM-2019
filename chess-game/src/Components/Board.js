@@ -33,6 +33,8 @@ export class BoardData {
         this.blackCheck = false;
         this.whiteCheckMate = false;
         this.blackCheckMate = false;
+        this.whiteStaleMate = false;
+        this.blackStaleMate = false;
         this.whitePieces = [];
         this.blackPieces = [];
         this.bKingY = 0;
@@ -108,7 +110,7 @@ const Board = (props) => {
                     pieceType =     {curSquare.pcType}
                     ownedBy =       {curSquare.pcOwner}
                     onClick =       {props.pieceClicked}
-                    isTheme =         {props.theme}
+                    isTheme =       {props.theme}
                 />
             );
         }
@@ -157,6 +159,40 @@ export function initializeBoard(){
     defaultBoard[7][6] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
     defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
 
+    // // FOR TESTING STALEMATE
+    // defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
+    // defaultBoard[0][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
+    // defaultBoard[0][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[0][4] = new Piece(Pieces.KING, Players.BLACK, false, false);
+    // defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
+    // defaultBoard[0][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
+    // defaultBoard[1][0] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[1][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[1][2] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[1][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[1][4] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[1][5] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[1][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[1][7] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[6][0] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[6][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[6][2] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[6][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[6][4] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[6][5] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[6][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[6][7] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
+    // defaultBoard[7][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
+    // defaultBoard[7][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[7][4] = new Piece(Pieces.KING, Players.WHITE, false, false);
+    // defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
+    // defaultBoard[7][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+    // defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
+
     // pawns
     for ( let x = 0; x < 8; x++ ){
         defaultBoard[1][x] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
@@ -188,6 +224,14 @@ function createBlackPieceList(){
             blackPieceList.push( new Coordinate(y, x) );
         }
     }
+
+    // // FOR TESTING STALEMATE
+    // blackPieceList.push( new Coordinate(0,0) );     // rook
+    // blackPieceList.push( new Coordinate(0,2) );     // bishop
+    // blackPieceList.push( new Coordinate(0,4) );     // king
+    // blackPieceList.push( new Coordinate(0,5) );     // bishop
+    // blackPieceList.push( new Coordinate(0,7) );     // rook
+
     return blackPieceList;
 }
 
@@ -199,6 +243,14 @@ function createWhitePieceList(){
             whitePieceList.push( new Coordinate(y, x) );
         }
     }
+
+    // // FOR TESTING STALEMATE
+    // whitePieceList.push( new Coordinate(7,0) );     // rook
+    // whitePieceList.push( new Coordinate(7,2) );     // bishop
+    // whitePieceList.push( new Coordinate(7,4) );     // king
+    // whitePieceList.push( new Coordinate(7,5) );     // bishop
+    // whitePieceList.push( new Coordinate(7,7) );     // rook
+
     return whitePieceList;
 }
 

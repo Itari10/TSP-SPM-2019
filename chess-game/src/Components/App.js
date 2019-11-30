@@ -315,8 +315,9 @@ const App = (props) => {
         function addToDungeon (y, x) {
             let node = document.createElement("img");
             let parameters = {
+                isTheme: getTheme,
                 ownedBy: boardMap[y][x].pcOwner,
-                pieceType: boardMap[y][x].pcType,
+                pieceType: boardMap[y][x].pcType
             };
             node.setAttribute("src", determineImage(parameters));
             node.setAttribute("class", "dungeonImage");

@@ -1,5 +1,6 @@
 import React from 'react';
 import '../Style/PlayerBox.css';
+import Timer from './Timer';
 import SurrenderButton from './SurrenderButton';
 
 
@@ -13,7 +14,7 @@ const PlayerBox = (props) => {
                     <h2>{determineHeading()}</h2>
                 </div>
                 <div className={"col-sm-6 text-right"}>
-                    <h2>Its a Timer bro</h2>
+                    <Timer />
                 </div>
             </div>
             <hr />

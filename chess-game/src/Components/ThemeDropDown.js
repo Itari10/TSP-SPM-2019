@@ -8,12 +8,20 @@ import {Themes} from "./Square"
     https://react.semantic-ui.com/modules/dropdown/
  */
 
+/*
+    Adding Themes:
+    1. Add images to Assets folder
+    2. import all of the images in the Square.js file
+    3. add switch case for those files in determineImage() in Square.js
+    4. add enum for it in Square.js
+    5. add theme in themeOptions below
+ */
+
 const ThemeDropDown = (props) => {
 
     //handles the selection
     function handleChange(event, data) {
-        let theme = {[data.name]: data.value}; //finds theme value from the selected
-        props.setFunc(theme);
+        props.setFunc(themeOptions[data.value].value)
     }
 
     //List of themes

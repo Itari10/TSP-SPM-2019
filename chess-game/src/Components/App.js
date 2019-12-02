@@ -80,7 +80,8 @@ const App = (props) => {
         if (boardData.whiteCheckMate ||
             boardData.blackCheckMate ||
             boardData.whiteStaleMate ||
-            boardData.blackStaleMate){
+            boardData.blackStaleMate ||
+            promote){
             return;
         }
 
@@ -1444,7 +1445,7 @@ const App = (props) => {
             <EndGameScreen winner={(currentPlayer === 2) ? "White" : "Black"} />
             }
             {promote &&
-            <PromotionScreen />
+            <PromotionScreen isTheme={getTheme} pcOwner={(currentPlayer === 2) ? Players.WHITE : Players.BLACK} />
             }
         </div>
     );

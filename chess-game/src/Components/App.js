@@ -1421,6 +1421,7 @@ const App = (props) => {
                         checkMate =         {boardState[7][8].blackCheckMate}
                         staleMate =         {boardState[7][8].blackStaleMate}
                         playerNumber =      {"2"}
+                        isEndGame =         {gameOver}
                     />
                     <div className="spacer"/>
                     <PlayerBox
@@ -1431,6 +1432,7 @@ const App = (props) => {
                         checkMate =         {boardState[7][8].whiteCheckMate}
                         staleMate =         {boardState[7][8].whiteStaleMate}
                         playerNumber =      {"1"}
+                        isEndGame =         {gameOver}
                     />
                 </div>
                 <div className="col-sm-8">

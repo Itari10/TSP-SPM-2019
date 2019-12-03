@@ -14,7 +14,11 @@ const PlayerBox = (props) => {
                     <h2>{determineHeading()}</h2>
                 </div>
                 <div className={"col-sm-6 text-right"}>
-                    <Timer />
+                    <Timer
+                        isTurn = {props.isTurn}
+                        isEndGame = {props.isEndGame}
+                        triggerGameOver = {props.triggerGameOver}
+                    />
                 </div>
             </div>
             <hr />

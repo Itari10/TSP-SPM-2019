@@ -1,29 +1,39 @@
 import React, { Component } from 'react'
 
+
+
 export default class Timer extends Component {
-    state = {
-        minutes: 0,
-        seconds: 5,
-    };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            minutes: 0,
+            seconds: 5,
+            isTurn: props.isTurn,
+            triggerGameOver: props.triggerGameOver,
+            isEndGame: props.isEndGame,
+        };
+    }
+
+
 
     componentDidMount() {
         this.myInterval = setInterval(() => {
-            const { seconds, minutes } = this.state;
+            const { seconds, minutes, isTurn, triggerGameOver, isEndGame } = this.state;
 
             if (seconds > 0) {
                 this.setState(({ seconds }) => ({
                     seconds: seconds - 1
                 }))
+                console.log(this.state);
             }
+            //if (endGame) HANDLE LOGIC
             if (seconds === 0) {
                 if (minutes === 0) {
-                    clearInterval(this.myInterval)
-                    //props.triggerGameOver;
+                    this.endTheGame()
+                    console.log(this.state);
                 } else {
-                    this.setState(({ minutes }) => ({
-                        minutes: minutes - 1,
-                        seconds: 59
-                    }))
+                    this.keepGoing()
                 }
             }
         }, 1000)
@@ -31,6 +41,23 @@ export default class Timer extends Component {
 
     componentWillUnmount() {
         clearInterval(this.myInterval)
+    }
+
+
+
+    endTheGame() {
+        const { isTurn, triggerGameOver } = this.state;
+        clearInterval(this.myInterval);
+        if (isTurn) {
+            triggerGameOver();
+        }
+    }
+
+    keepGoing() {
+        this.setState(({ minutes }) => ({
+            minutes: minutes - 1,
+            seconds: 59
+        }))
     }
 
     render() {

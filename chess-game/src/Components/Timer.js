@@ -7,8 +7,8 @@ export default class Timer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            minutes: 0,
-            seconds: 5,
+            minutes: 20,
+            seconds: 0,
             isTurn: props.isTurn,
             triggerGameOver: props.triggerGameOver,
             isEndGame: props.isEndGame,
@@ -19,19 +19,17 @@ export default class Timer extends Component {
 
     componentDidMount() {
         this.myInterval = setInterval(() => {
-            const { seconds, minutes, isTurn, triggerGameOver, isEndGame } = this.state;
-
+            const { seconds, minutes, isEndGame } = this.state;
+            if (isEndGame)
+                this.endTheGame();
             if (seconds > 0) {
                 this.setState(({ seconds }) => ({
                     seconds: seconds - 1
-                }))
-                console.log(this.state);
+                }));
             }
-            //if (endGame) HANDLE LOGIC
             if (seconds === 0) {
                 if (minutes === 0) {
-                    this.endTheGame()
-                    console.log(this.state);
+                    this.endTheGame();
                 } else {
                     this.keepGoing()
                 }
@@ -39,8 +37,15 @@ export default class Timer extends Component {
         }, 1000)
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.isEndGame !== prevProps.isEndGame)
+            this.setState(({}) => ({
+                isEndGame: true
+            }));
+    }
+
     componentWillUnmount() {
-        clearInterval(this.myInterval)
+        clearInterval(this.myInterval);
     }
 
 

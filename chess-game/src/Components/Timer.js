@@ -20,14 +20,14 @@ export default class Timer extends Component {
     //Begins the timer by using an interval
     componentDidMount() {
         this.myInterval = setInterval(() => {
-            const { seconds, minutes, isEndGame } = this.state;
+            const { seconds, minutes, isEndGame, isTurn } = this.state;
 
             //Check if the game is over by other circumstances, if so, stop timer
             if (isEndGame)
                 this.endTheGame();
 
             //If there are still seconds left keep going down
-            if (seconds > 0) {
+            if (seconds > 0 && isTurn) {
                 this.setState(({ seconds }) => ({
                     seconds: seconds - 1
                 }));
@@ -36,7 +36,7 @@ export default class Timer extends Component {
             if (seconds === 0) {
                 if (minutes === 0) {
                     this.endTheGame();
-                } else {
+                } else if (isTurn) {
                     this.keepGoing()
                 }
             }
@@ -50,6 +50,10 @@ export default class Timer extends Component {
             this.setState(({}) => ({
                 isEndGame: true
             }));
+        if (this.props.isTurn !== prevProps.isTurn)
+            this.setState(({isTurn}) => ({
+                isTurn: !isTurn
+            }))
     }
 
     componentWillUnmount() {

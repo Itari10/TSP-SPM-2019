@@ -48,6 +48,7 @@ const App = (props) => {
     const [gameOver, setGameOver] =             React.useState( false );
     const [promote, setPromote] =               React.useState( false );
     const [getTheme, setTheme] =                React.useState( Themes.TRADITIONAL );         // Keeps track of current theme
+    const [promotionPiece, setPromoPiece] =     React.useState([0,0]);
 
     // swaps theme
     function swapTheme(x){
@@ -68,6 +69,11 @@ const App = (props) => {
     };
 
 
+    const doPromotion = (chosenPiece) => {
+        console.log(boardState);
+        squareClicked(-2, chosenPiece);
+    }
+
     const squareClicked = (y, x) => {
 
         // PRIMARY STATE VARIABLES
@@ -75,6 +81,15 @@ const App = (props) => {
         let boardData = boardMap[7][8];         // holds key information for check / checkmate calculations
         let whiteCanMove = true;                // used in check/stale mate calculation
         let blackCanMove = true;                // used in check/stale mate calculations
+
+        //For promotion
+        if (y === -2) {
+            boardMap[promotionPiece[0]][promotionPiece[1]].pcType = x;
+            setBoardState(boardMap);
+            setUpdateBoard(!updateBoard);
+            setPromote(false);
+            return;
+        }
 
         // makes squares unclickable once the game is over
         if (boardData.whiteCheckMate ||
@@ -84,6 +99,7 @@ const App = (props) => {
             promote){
             return;
         }
+
 
         // If you've click the square that's already selected...
         // deselect the square and unhighlight any highlighted squares
@@ -257,6 +273,8 @@ const App = (props) => {
             // transforms pawns into queens if they reach the other side of the board
             if ((y === 0 || y === 7) && boardMap[y][x].pcType === Pieces.PAWN ){
                 boardMap[y][x].pcType = Pieces.QUEEN;
+                let temp = [y,x];
+                setPromoPiece(temp);
                 setPromote(true);
             }
 
@@ -1447,7 +1465,7 @@ const App = (props) => {
             <EndGameScreen winner={(currentPlayer === 2) ? "White" : "Black"} />
             }
             {promote &&
-            <PromotionScreen isTheme={getTheme} pcOwner={(currentPlayer === 2) ? Players.WHITE : Players.BLACK} />
+            <PromotionScreen isTheme={getTheme} pcOwner={(currentPlayer === 2) ? Players.WHITE : Players.BLACK} update={doPromotion} />
             }
         </div>
     );

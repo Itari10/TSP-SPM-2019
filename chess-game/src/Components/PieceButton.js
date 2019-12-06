@@ -9,6 +9,7 @@ const PieceButton = (props) => {
                 backgroundImage: 'url('+ determineImage(props) + ')'
             }}
             className="promotionImage"
+            onClick={() => props.update(props.pieceType)}
         >
         </button>
     );

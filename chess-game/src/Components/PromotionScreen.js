@@ -8,10 +8,10 @@ const PromotionScreen = (props) => {
     return (
         <div className="promotion">
             <h1>Promote your guy here</h1>
-            <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.ROOK} />
-            <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.QUEEN} />
-            <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.BISHOP} />
-            <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.KNIGHT} />
+            <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.ROOK} update={props.update} />
+            <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.QUEEN} update={props.update} />
+            <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.BISHOP} update={props.update} />
+            <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.KNIGHT} update={props.update} />
         </div>
     );
 }

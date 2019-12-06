@@ -308,10 +308,10 @@ const App = (props) => {
             }
 
             // GAME OVER
-            // if ( boardData.whiteCheckMate )
-            //     setGameOver(true);
-            // if ( boardData.whiteCheckMate )
-            //     setGameOver(true);
+            if ( boardData.whiteCheckMate )
+                setGameOver(true);
+            if ( boardData.whiteCheckMate )
+                setGameOver(true);
 
             boardMap[7][8] = boardData;                 // copies boardData into extra boardState slot
             setSelectedSquare( [-1,-1] );

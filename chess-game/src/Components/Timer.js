@@ -13,6 +13,7 @@ export default class Timer extends Component {
             isTurn: props.isTurn,
             triggerGameOver: props.triggerGameOver,
             isEndGame: props.isEndGame,
+            isStalemate: props.isStalemate,
         };
     }
 
@@ -20,12 +21,13 @@ export default class Timer extends Component {
     //Begins the timer by using an interval
     componentDidMount() {
         this.myInterval = setInterval(() => {
-            const { seconds, minutes, isEndGame, isTurn } = this.state;
+            const { seconds, minutes, isEndGame, isTurn, isStalemate } = this.state;
 
             //Check if the game is over by other circumstances, if so, stop timer
             if (isEndGame)
                 this.endTheGame();
-
+            if (isStalemate)
+                this.endTheGame();
             //If there are still seconds left keep going down
             if (seconds > 0 && isTurn) {
                 this.setState(({ seconds }) => ({
@@ -53,7 +55,11 @@ export default class Timer extends Component {
         if (this.props.isTurn !== prevProps.isTurn)
             this.setState(({isTurn}) => ({
                 isTurn: !isTurn
-            }))
+            }));
+        if (this.props.isStalemate !== prevProps.isStalemate)
+            this.setState(({}) => ({
+                isStalemate: true
+            }));
     }
 
     componentWillUnmount() {
@@ -61,11 +67,12 @@ export default class Timer extends Component {
     }
 
 
-    //This will end the game and stop the time
+    //This will end the game and stop the timer, isEndGame being true will end the game elsewhere
     endTheGame() {
-        const { isTurn, triggerGameOver, isEndGame } = this.state;
+        const { isTurn, triggerGameOver, isEndGame, isStalemate } = this.state;
         clearInterval(this.myInterval);
-        if (isTurn && !isEndGame) {
+        //Handles the condition of timer running out of time
+        if (isTurn && !isEndGame && !isStalemate) {
             triggerGameOver();
         }
     }

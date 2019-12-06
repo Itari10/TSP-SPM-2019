@@ -18,6 +18,7 @@ const PlayerBox = (props) => {
                         isTurn = {props.isTurn}
                         isEndGame = {props.isEndGame}
                         triggerGameOver = {props.triggerGameOver}
+                        isStalemate = {props.staleMate}
                     />
                 </div>
             </div>

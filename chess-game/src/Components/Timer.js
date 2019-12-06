@@ -4,11 +4,12 @@ import React, { Component } from 'react'
 
 export default class Timer extends Component {
 
+    //Gather all of the props and put them into Timer State
     constructor(props) {
         super(props);
         this.state = {
-            minutes: 0,
-            seconds: 5,
+            minutes: 20,
+            seconds: 0,
             isTurn: props.isTurn,
             triggerGameOver: props.triggerGameOver,
             isEndGame: props.isEndGame,
@@ -16,43 +17,60 @@ export default class Timer extends Component {
     }
 
 
-
+    //Begins the timer by using an interval
     componentDidMount() {
         this.myInterval = setInterval(() => {
-            const { seconds, minutes, isTurn, triggerGameOver, isEndGame } = this.state;
+            const { seconds, minutes, isEndGame, isTurn } = this.state;
 
-            if (seconds > 0) {
+            //Check if the game is over by other circumstances, if so, stop timer
+            if (isEndGame)
+                this.endTheGame();
+
+            //If there are still seconds left keep going down
+            if (seconds > 0 && isTurn) {
                 this.setState(({ seconds }) => ({
                     seconds: seconds - 1
-                }))
-                console.log(this.state);
+                }));
             }
-            //if (endGame) HANDLE LOGIC
+            //if there are no seconds either end the game (if 0 minutes also) or subtract a minute
             if (seconds === 0) {
                 if (minutes === 0) {
-                    this.endTheGame()
-                    console.log(this.state);
-                } else {
+                    this.endTheGame();
+                } else if (isTurn) {
                     this.keepGoing()
                 }
             }
         }, 1000)
     }
 
+    //This function will watch for the endGame state to update, if it does we will ensure our local state of endGame
+    //updates and we will then be able to end the game on the next second interval
+    componentDidUpdate(prevProps) {
+        if (this.props.isEndGame !== prevProps.isEndGame)
+            this.setState(({}) => ({
+                isEndGame: true
+            }));
+        if (this.props.isTurn !== prevProps.isTurn)
+            this.setState(({isTurn}) => ({
+                isTurn: !isTurn
+            }))
+    }
+
     componentWillUnmount() {
-        clearInterval(this.myInterval)
+        clearInterval(this.myInterval);
     }
 
 
-
+    //This will end the game and stop the time
     endTheGame() {
-        const { isTurn, triggerGameOver } = this.state;
+        const { isTurn, triggerGameOver, isEndGame } = this.state;
         clearInterval(this.myInterval);
-        if (isTurn) {
+        if (isTurn && !isEndGame) {
             triggerGameOver();
         }
     }
 
+    //subtracting a minute
     keepGoing() {
         this.setState(({ minutes }) => ({
             minutes: minutes - 1,

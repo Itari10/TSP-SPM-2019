@@ -25,14 +25,14 @@ import whiteRook1 from "../Assets/DogTheme/whiteRook1.png";
 import whiteKnight1 from "../Assets/DogTheme/whiteKnight1.png";
 import whiteBishop1 from "../Assets/DogTheme/whiteBishop1.png";
 import whiteKing1 from "../Assets/DogTheme/whiteKing1.png";
-import whiteQueen1 from "../Assets/DogTheme/whiteQueen1.png";
+import whiteQueen1 from "../Assets/DogTheme/whiteQueen1.gif";
 import whitePawn1 from "../Assets/DogTheme/whitePawn1.png";
 import whitePawnFaded1 from "../Assets/DogTheme/whitePawnFaded1.png";
 import blackRook1 from "../Assets/DogTheme/blackRook1.png";
 import blackKnight1 from "../Assets/DogTheme/blackKnight1.png";
 import blackBishop1 from "../Assets/DogTheme/blackBishop1.png";
 import blackKing1 from "../Assets/DogTheme/blackKing1.png";
-import blackQueen1 from "../Assets/DogTheme/blackQueen1.png";
+import blackQueen1 from "../Assets/DogTheme/blackQueen1.gif";
 import blackPawn1 from "../Assets/DogTheme/blackPawn1.png";
 import blackPawnFaded1 from "../Assets/DogTheme/blackPawnFaded1.png";
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import {Dropdown} from 'semantic-ui-react'
-import {Themes} from "./Square"
+import {determineImage, Themes} from "./Square"
 
 /*
     DOCUMENTATION FOR DROPDOWN SELECTOR
@@ -21,7 +21,18 @@ const ThemeDropDown = (props) => {
 
     //handles the selection
     function handleChange(event, data) {
-        props.setFunc(themeOptions[data.value].value)
+        props.setFunc(themeOptions[data.value].value);
+        let node = document.getElementsByClassName("dungeonImage");
+        console.log(node[0]);
+        for ( let i = 0; i < node.length; i++ ) {
+            let parameters = {
+                isTheme: themeOptions[data.value].value,
+                pieceType: props.dTypes[i],
+                ownedBy: props.dOwners[i]
+            };
+            node[i].setAttribute("src", determineImage(parameters));
+        }
+        // props.dungeonFunc();
     }
 
     //List of themes

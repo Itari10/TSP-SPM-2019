@@ -49,6 +49,8 @@ const App = (props) => {
     const [promote, setPromote] =               React.useState( false );
     const [getTheme, setTheme] =                React.useState( Themes.TRADITIONAL );         // Keeps track of current theme
     const [promotionPiece, setPromoPiece] =     React.useState([0,0]);
+    const [dungeonOwners, setDungeonOwners] =   React.useState([]);                 // Keeps track of the owners for dungeon
+    const [dungeonTypes, setDungeonTypes] =     React.useState([]);                 // Keeps track of dungeon piece types
 
     // swaps theme
     function swapTheme(x){
@@ -338,6 +340,12 @@ const App = (props) => {
                 ownedBy: boardMap[y][x].pcOwner,
                 pieceType: boardMap[y][x].pcType
             };
+            let own = dungeonOwners;
+            let type = dungeonTypes;
+            own.push(boardMap[y][x].pcOwner);
+            type.push(boardMap[y][x].pcType);
+            setDungeonOwners(own);
+            setDungeonTypes(type);
             node.setAttribute("src", determineImage(parameters));
             node.setAttribute("class", "dungeonImage");
             let dungeon = "";
@@ -1427,7 +1435,12 @@ const App = (props) => {
                 <h1>CHESS</h1>
             </div>
             <div className="col-sm-4">
-                <ThemeDropDown theme={getTheme} setFunc={swapTheme}/>
+                <ThemeDropDown
+                    theme={getTheme}
+                    setFunc={swapTheme}
+                    dOwners={dungeonOwners}
+                    dTypes = {dungeonTypes}
+                />
             </div>
             <div className="row">
                 <div className="col-sm-4">

@@ -40,16 +40,16 @@ const App = (props) => {
     // Attempting to set them manually will NOT result in errors, but WILL cause unintended buggy behavior
     const [boardState, setBoardState] =         React.useState( initializeBoard() );
     const [currentPlayer, setCurrentPlayer] =   React.useState( Players.WHITE );
-    const [updateBoard, setUpdateBoard] =       React.useState( true );             // call setUpdateBoard() to re-render
-    const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );          // [-1,-1] means "NOTHING SELECTED"
-    const [highlightedSquares, setHighlights] = React.useState( [] );               // keeps track of currently highlighted squares
-    const [capturableSquares, setCapturables] = React.useState( [] );               // squares that can be captured by en-passant
-    const [castleRooks, setCastleRooks] =       React.useState( [] );               // rooks that can castle
+    const [updateBoard, setUpdateBoard] =       React.useState( true );                 // call setUpdateBoard() to re-render
+    const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );              // [-1,-1] means "NOTHING SELECTED"
+    const [highlightedSquares, setHighlights] = React.useState( [] );                   // keeps track of currently highlighted squares
+    const [capturableSquares, setCapturables] = React.useState( [] );                   // squares that can be captured by en-passant
+    const [castleRooks, setCastleRooks] =       React.useState( [] );                   // rooks that can castle
     const [promoteInProgress, setPromote] =     React.useState( false );
-    const [getTheme, setTheme] =                React.useState( Themes.TRADITIONAL );         // Keeps track of current theme
+    const [getTheme, setTheme] =                React.useState( Themes.TRADITIONAL );   // Keeps track of current theme
     const [promotionPiece, setPromoPiece] =     React.useState( [0,0] );
-    const [dungeonOwners, setDungeonOwners] =   React.useState( [] );                 // Keeps track of the owners for dungeon
-    const [dungeonTypes, setDungeonTypes] =     React.useState( [] );                 // Keeps track of dungeon piece types
+    const [dungeonOwners, setDungeonOwners] =   React.useState( [] );                   // Keeps track of the owners for dungeon
+    const [dungeonTypes, setDungeonTypes] =     React.useState( [] );                   // Keeps track of dungeon piece types
 
     // swaps theme
     function swapTheme(x){
@@ -64,9 +64,12 @@ const App = (props) => {
             setCurrentPlayer( Players.WHITE );
     };
 
-    // activates game-over functionality
+    // activates game-over
     const endGame = () => {
-        boardState[7][8].isGameOver = true;
+        let boardMap = boardState;
+        boardMap[7][8].isGameOver = true;
+        setBoardState( boardMap );
+        setUpdateBoard( ! updateBoard );
     };
 
     // calls squareClicked() with a special flag that
@@ -83,7 +86,7 @@ const App = (props) => {
         let boardData = boardMap[7][8];         // holds key information for check / checkmate calculations
         let whiteCanMove = true;                // used in check/stale mate calculation
         let blackCanMove = true;                // used in check/stale mate calculations
-        let justPromoted = false;
+        let justPromoted = false;               // special case after a unit promotion, skips to end of function
 
         // if y == -2 flag is present, this is a unit promotion
         // promotes the pawn to the pcType stored in x, continues execution
@@ -1479,10 +1482,6 @@ const App = (props) => {
                 </div>
             </div>
             {   boardState[7][8].isGameOver &&
-              // ! boardState[7][8].blackCheckMate &&
-              // ! boardState[7][8].blackStaleMate &&
-              // ! boardState[7][8].whiteCheckMate &&
-              // ! boardState[7][8].whiteStaleMate &&
             <EndGameScreen winner={(currentPlayer === 2) ? "White" : "Black"} />
             }
             {promoteInProgress &&

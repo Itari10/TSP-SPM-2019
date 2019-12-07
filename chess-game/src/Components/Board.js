@@ -29,6 +29,7 @@ class Coordinate{
 // hidden in the boardState[7][8] cell
 export class BoardData {
     constructor() {
+        this.isGameOver = false;
         this.whiteCheck = false;
         this.blackCheck = false;
         this.whiteCheckMate = false;

@@ -15,10 +15,10 @@ const PlayerBox = (props) => {
                 </div>
                 <div className={"col-sm-6 text-right"}>
                     <Timer
-                        isTurn = {props.isTurn}
-                        isEndGame = {props.isEndGame}
-                        triggerGameOver = {props.triggerGameOver}
-                        isStalemate = {props.staleMate}
+                        isTurn =            {props.isTurn}
+                        isEndGame =         {props.isEndGame}
+                        triggerGameOver =   {props.triggerGameOver}
+                        isStalemate =       {props.staleMate}
                     />
                 </div>
             </div>

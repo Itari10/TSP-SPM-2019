@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 
 
-
 export default class Timer extends Component {
 
-    //Gather all of the props and put them into Timer State
+    // Gather all of the props and put them into Timer State
     constructor(props) {
         super(props);
         this.state = {
@@ -18,23 +17,23 @@ export default class Timer extends Component {
     }
 
 
-    //Begins the timer by using an interval
+    // Begins the timer by using an interval
     componentDidMount() {
         this.myInterval = setInterval(() => {
             const { seconds, minutes, isEndGame, isTurn, isStalemate } = this.state;
 
-            //Check if the game is over by other circumstances, if so, stop timer
-            if (isEndGame)
+            // check if the game is over by other circumstances, if so, stop timer
+            if (isEndGame || isStalemate){
                 this.endTheGame();
-            if (isStalemate)
-                this.endTheGame();
-            //If there are still seconds left keep going down
+            }
+
+            // if there are still seconds left keep going down
             if (seconds > 0 && isTurn) {
                 this.setState(({ seconds }) => ({
                     seconds: seconds - 1
                 }));
             }
-            //if there are no seconds either end the game (if 0 minutes also) or subtract a minute
+            // if there are no seconds either end the game (if 0 minutes also) or subtract a minute
             if (seconds === 0) {
                 if (minutes === 0) {
                     this.endTheGame();
@@ -45,8 +44,8 @@ export default class Timer extends Component {
         }, 1000)
     }
 
-    //This function will watch for the endGame state to update, if it does we will ensure our local state of endGame
-    //updates and we will then be able to end the game on the next second interval
+    // This function will watch for the endGame state to update, if it does we will ensure our local state of endGame
+    // updates and we will then be able to end the game on the next second interval
     componentDidUpdate(prevProps) {
         if (this.props.isEndGame !== prevProps.isEndGame)
             this.setState(({}) => ({
@@ -67,17 +66,18 @@ export default class Timer extends Component {
     }
 
 
-    //This will end the game and stop the timer, isEndGame being true will end the game elsewhere
+    // This will end the game and stop the timer, isEndGame being true will end the game elsewhere
     endTheGame() {
         const { isTurn, triggerGameOver, isEndGame, isStalemate } = this.state;
         clearInterval(this.myInterval);
-        //Handles the condition of timer running out of time
+
+        // Handles the condition of timer running out of time
         if (isTurn && !isEndGame && !isStalemate) {
             triggerGameOver();
         }
     }
 
-    //subtracting a minute
+    // subtracting a minute
     keepGoing() {
         this.setState(({ minutes }) => ({
             minutes: minutes - 1,

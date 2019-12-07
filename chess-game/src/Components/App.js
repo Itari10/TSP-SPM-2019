@@ -1485,7 +1485,7 @@ const App = (props) => {
             <EndGameScreen winner={(currentPlayer === 2) ? "White" : "Black"} />
             }
             {promoteInProgress &&
-            <PromotionScreen isTheme={getTheme} pcOwner={(currentPlayer === 2) ? Players.WHITE : Players.BLACK} update={doPromotion} />
+            <PromotionScreen isTheme={getTheme} pcOwner={(currentPlayer === Players.WHITE) ? Players.WHITE : Players.BLACK} update={doPromotion} />
             }
         </div>
     );

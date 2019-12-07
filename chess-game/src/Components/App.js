@@ -38,7 +38,7 @@ const App = (props) => {
 
     // REMEMBER: These states CANNOT be changed without using the corresponding SET methods.
     // Attempting to set them manually will NOT result in errors, but WILL cause unintended buggy behavior
-    const [boardState, setBoardState] =         React.useState( initializeBoard() );
+    const [boardState, setBoardState] =         React.useState( initializeBoard( 0 ) );
     const [currentPlayer, setCurrentPlayer] =   React.useState( Players.WHITE );
     const [updateBoard, setUpdateBoard] =       React.useState( true );                 // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );              // [-1,-1] means "NOTHING SELECTED"

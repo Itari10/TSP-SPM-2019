@@ -38,21 +38,22 @@ const App = (props) => {
 
     // REMEMBER: These states CANNOT be changed without using the corresponding SET methods.
     // Attempting to set them manually will NOT result in errors, but WILL cause unintended buggy behavior
-    const [boardState, setBoardState] =         React.useState( initializeBoard( 0 ) );
-    const [currentPlayer, setCurrentPlayer] =   React.useState( Players.WHITE );
-    const [updateBoard, setUpdateBoard] =       React.useState( true );                 // call setUpdateBoard() to re-render
-    const [selectedSquare, setSelectedSquare] = React.useState( [-1,-1] );              // [-1,-1] means "NOTHING SELECTED"
-    const [highlightedSquares, setHighlights] = React.useState( [] );                   // keeps track of currently highlighted squares
-    const [capturableSquares, setCapturables] = React.useState( [] );                   // squares that can be captured by en-passant
-    const [castleRooks, setCastleRooks] =       React.useState( [] );                   // rooks that can castle
-    const [promoteInProgress, setPromote] =     React.useState( false );
-    const [getTheme, setTheme] =                React.useState( Themes.TRADITIONAL );   // Keeps track of current theme
-    const [promotionPiece, setPromoPiece] =     React.useState( [0,0] );
-    //used to help with theme switching with the dungeon
-    const [dungeonBlack, setDungeonBlack] =     React.useState([]);                     // Keeps track of the amount of pieces in black dungeon
-    const [dungeonWhite, setDungeonWhite] =     React.useState([]);                     // Keeps track of the amount of pieces in white dungeon
-    const [dungeonBlackTypes, setDungeonBlackTypes] =     React.useState( [] );         // Keeps track of black dungeon piece types
-    const [dungeonWhiteTypes, setDungeonWhiteTypes] =     React.useState( [] );         // Keeps track of white dungeon piece types
+    const [boardState, setBoardState] =             React.useState( initializeBoard( 0 ) );
+    const [currentPlayer, setCurrentPlayer] =       React.useState( Players.WHITE );        // the current player
+    const [updateBoard, setUpdateBoard] =           React.useState( true );                 // call setUpdateBoard() to re-render
+    const [selectedSquare, setSelectedSquare] =     React.useState( [-1,-1] );              // [-1,-1] means "NOTHING SELECTED"
+    const [highlightedSquares, setHighlights] =     React.useState( [] );                   // currently highlighted squares
+    const [capturableSquares, setCapturables] =     React.useState( [] );                   // squares that can be captured by en-passant
+    const [castleRooks, setCastleRooks] =           React.useState( [] );                   // rooks that can castle
+    const [promoteInProgress, setPromote] =         React.useState( false );                // is there a promotion in progress
+    const [getTheme, setTheme] =                    React.useState( Themes.TRADITIONAL );   // the current theme
+    const [promotionPiece, setPromoPiece] =         React.useState( [0,0] );
+
+    // used to help with theme switching with the dungeon
+    const [dungeonBlack, setDungeonBlack] =             React.useState( [] );       // the number of pieces in black dungeon
+    const [dungeonWhite, setDungeonWhite] =             React.useState( [] );       // the number of pieces in white dungeon
+    const [dungeonBlackTypes, setDungeonBlackTypes] =   React.useState( [] );       // black dungeon piece types
+    const [dungeonWhiteTypes, setDungeonWhiteTypes] =   React.useState( [] );       // white dungeon piece types
 
     // swaps theme
     function swapTheme(x){
@@ -91,16 +92,12 @@ const App = (props) => {
         let blackCanMove = true;                // used in check/stale mate calculations
 
 
-        // if y == -2 flag is present, this is a special unit promotion squareClicked() call
+        // SPECIAL CASE FOR UNIT PROMOTION
         // promotes the pawn to the pcType stored in x, continues execution
-        if (y === -2) {
+        if ( y === -2 ) {
             boardMap[ promotionPiece[0] ][ promotionPiece[1] ].pcType = x;      // x will equal new chosen pcType
             setPromote(false);
             runEndOfTurnChecks(promotionPiece[0], promotionPiece[1], true);
-
-
-            // CANNOT return here because execution must continue
-            // to the program structure at the bottom of App
         }
 
         // makes board unresponsive if the game is over, or during unit promotion
@@ -349,7 +346,7 @@ const App = (props) => {
             setBoardState( boardMap );
             setSelectedSquare( [-1,-1] );       // clears selected square state
             deHighlightAllSquares();            // de-highlights all squares
-            swapTurn();
+            swapTurn();                         // swaps to the next player's turn
         }
 
         // adds the given piece to the dungeon
@@ -1285,12 +1282,6 @@ const App = (props) => {
                     if ( move.hasCapturable )                           // add any en-passant capturables
                         capturables.push(new Move( y, move.capX ))      // associated with this move
                 }
-                else {                                          // King is NOT SAFE if you make this move.
-                    if ( ! playerIsInCheck( pawnOwner ) )       // if you're NOT in check, this move will put us
-                        break;                                  // IN check, so we stop looking for new moves
-                    else
-                        continue;                           // however if you ARE in check, keep testing moves
-                }                                           // that could save your King unless we've hit something
             }
 
             boardMap[y][x].pcType = Pieces.PAWN;

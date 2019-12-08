@@ -371,27 +371,28 @@ describe('BASIC GAME-STATE TESTS', () => {
         });
     });
 
+    /*************************************  INSTRUCTIONS  *********************************************
+     *                                                                                                 *
+     *     Use clickSquareAt( y, x ) to simulate clicking the given square                             *
+     *     then test the properties of the board squares against what we would expect them to be       *
+     *     after clicking a given series of squares. You can simulate an entire game this way,         *
+     *     testing all kinds of things along the way. The most tests we have the better.               *
+     *                                                                                                 *
+     *                                                                                                 *
+     *     use        app = mount(<App />);                                                            *
+     *                board = app.find('Board')                                                        *
+     *                boardDiv = board.find('div.board');     if you want to re-render a new game      *
+     *                                                                                                 *
+     **************************************************************************************************/
+
+
+    // HELPER FUNCTION
     // clicks the square at the given coordinates
     function clickSquareAt(y, x){
         button = boardDiv.childAt(y).childAt(x).childAt(0);
         button.simulate('click');
     }
 });
-
-
-/*************************************  INSTRUCTIONS  *********************************************
- *                                                                                                 *
- *     Copy the clickSquareAt( y, x ) method to simulate clicking the given square                 *
- *     then test the properties of the board squares against what we would expect them to be       *
- *     after clicking a given series of squares. You can simulate an entire game this way,         *
- *     testing all kinds of things along the way. The most tests we have the better.               *
- *                                                                                                 *
- *                                                                                                 *
- *     use        app = mount(<App />);                                                            *
- *                board = app.find('Board')                                                        *
- *                boardDiv = board.find('div.board');     if you want to re-render a new game      *
- *                                                                                                 *
- **************************************************************************************************/
 
 
 // FIRST GAME SIMULATION
@@ -440,6 +441,7 @@ describe('GAME SIMULATION 1', () => {
         expect(board.prop('bState')[7][8].whiteCheckMate).to.equal(true);
     });
 
+    // HELPER FUNCTION
     // clicks the square at the given coordinates
     function clickSquareAt(y, x){
         button = boardDiv.childAt(y).childAt(x).childAt(0);
@@ -464,6 +466,7 @@ describe('GAME SIMULATION 2', () => {
 
     });
 
+    // HELPER FUNCTION
     // clicks the square at the given coordinates
     function clickSquareAt(y, x){
         button = boardDiv.childAt(y).childAt(x).childAt(0);
@@ -488,6 +491,7 @@ describe('GAME SIMULATION 3', () => {
 
     });
 
+    // HELPER FUNCTION
     // clicks the square at the given coordinates
     function clickSquareAt(y, x){
         button = boardDiv.childAt(y).childAt(x).childAt(0);

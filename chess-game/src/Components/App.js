@@ -48,8 +48,11 @@ const App = (props) => {
     const [promoteInProgress, setPromote] =     React.useState( false );
     const [getTheme, setTheme] =                React.useState( Themes.TRADITIONAL );   // Keeps track of current theme
     const [promotionPiece, setPromoPiece] =     React.useState( [0,0] );
-    const [dungeonOwners, setDungeonOwners] =   React.useState( [] );                   // Keeps track of the owners for dungeon
-    const [dungeonTypes, setDungeonTypes] =     React.useState( [] );                   // Keeps track of dungeon piece types
+    //used to help with theme switching with the dungeon
+    const [dungeonBlack, setDungeonBlack] =     React.useState([]);                     // Keeps track of the amount of pieces in black dungeon
+    const [dungeonWhite, setDungeonWhite] =     React.useState([]);                     // Keeps track of the amount of pieces in white dungeon
+    const [dungeonBlackTypes, setDungeonBlackTypes] =     React.useState( [] );         // Keeps track of black dungeon piece types
+    const [dungeonWhiteTypes, setDungeonWhiteTypes] =     React.useState( [] );         // Keeps track of white dungeon piece types
 
     // swaps theme
     function swapTheme(x){
@@ -357,19 +360,26 @@ const App = (props) => {
                 ownedBy: boardMap[y][x].pcOwner,
                 pieceType: boardMap[y][x].pcType
             };
-            let own = dungeonOwners;
-            let type = dungeonTypes;
-            own.push(boardMap[y][x].pcOwner);
-            type.push(boardMap[y][x].pcType);
-            setDungeonOwners(own);
-            setDungeonTypes(type);
             node.setAttribute("src", determineImage(parameters));
             node.setAttribute("class", "dungeonImage");
             let dungeon = "";
-            if (currentPlayer === Players.BLACK)
+            if (currentPlayer === Players.BLACK) {
                 dungeon = document.getElementById("2");
-            else
+                let own = dungeonBlack;
+                let type = dungeonBlackTypes;
+                own.push(boardMap[y][x].pcOwner);
+                type.push(boardMap[y][x].pcType);
+                setDungeonBlack(own);
+                setDungeonBlackTypes(type);
+            } else {
                 dungeon = document.getElementById("1");
+                let own = dungeonWhite;
+                let type = dungeonWhiteTypes;
+                own.push(boardMap[y][x].pcOwner);
+                type.push(boardMap[y][x].pcType);
+                setDungeonWhite(own);
+                setDungeonWhiteTypes(type);
+            }
             dungeon.appendChild(node);
         }
 
@@ -1454,8 +1464,10 @@ const App = (props) => {
                 <ThemeDropDown
                     theme={getTheme}
                     setFunc={swapTheme}
-                    dOwners={dungeonOwners}
-                    dTypes = {dungeonTypes}
+                    dbOwners={dungeonBlack}
+                    dbTypes={dungeonBlackTypes}
+                    dwOwners={dungeonWhite}
+                    dwTypes={dungeonWhiteTypes}
                 />
             </div>
             <div className="row">

@@ -88,16 +88,12 @@ const App = (props) => {
         let blackCanMove = true;                // used in check/stale mate calculations
 
 
-        // if y == -2 flag is present, this is a special unit promotion squareClicked() call
+        // SPECIAL CASE FOR UNIT PROMOTION
         // promotes the pawn to the pcType stored in x, continues execution
-        if (y === -2) {
+        if ( y === -2 ) {
             boardMap[ promotionPiece[0] ][ promotionPiece[1] ].pcType = x;      // x will equal new chosen pcType
             setPromote(false);
             runEndOfTurnChecks(promotionPiece[0], promotionPiece[1], true);
-
-
-            // CANNOT return here because execution must continue
-            // to the program structure at the bottom of App
         }
 
         // makes board unresponsive if the game is over, or during unit promotion
@@ -343,10 +339,10 @@ const App = (props) => {
                 boardData.isGameOver = true;
             }
 
-            setBoardState( boardMap );
+            setBoardState( boardMap );          // updates board state before turn swap
             setSelectedSquare( [-1,-1] );       // clears selected square state
             deHighlightAllSquares();            // de-highlights all squares
-            swapTurn();
+            swapTurn();                         // swaps to the next player's turn
         }
 
         // adds the given piece to the dungeon
@@ -1275,12 +1271,6 @@ const App = (props) => {
                     if ( move.hasCapturable )                           // add any en-passant capturables
                         capturables.push(new Move( y, move.capX ))      // associated with this move
                 }
-                else {                                          // King is NOT SAFE if you make this move.
-                    if ( ! playerIsInCheck( pawnOwner ) )       // if you're NOT in check, this move will put us
-                        break;                                  // IN check, so we stop looking for new moves
-                    else
-                        continue;                           // however if you ARE in check, keep testing moves
-                }                                           // that could save your King unless we've hit something
             }
 
             boardMap[y][x].pcType = Pieces.PAWN;

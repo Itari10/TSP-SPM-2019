@@ -24,13 +24,26 @@ const ThemeDropDown = (props) => {
         props.setFunc(themeOptions[data.value].value);
         let node = document.getElementsByClassName("dungeonImage");
         console.log(node[0]);
+        let x = 0; //pointer for black dungeon
+        let y = 0; //pointer for white dungeon
         for ( let i = 0; i < node.length; i++ ) {
-            let parameters = {
-                isTheme: themeOptions[data.value].value,
-                pieceType: props.dTypes[i],
-                ownedBy: props.dOwners[i]
-            };
-            node[i].setAttribute("src", determineImage(parameters));
+            if ( i < props.dbOwners.length ) {
+                let parameters = {
+                    isTheme: themeOptions[data.value].value,
+                    pieceType: props.dbTypes[x],
+                    ownedBy: props.dbOwners[x]
+                };
+                node[i].setAttribute("src", determineImage(parameters));
+                x++;
+            } else {
+                let parameters = {
+                    isTheme: themeOptions[data.value].value,
+                    pieceType: props.dwTypes[y],
+                    ownedBy: props.dwOwners[y]
+                };
+                node[i].setAttribute("src", determineImage(parameters));
+                y++;
+            }
         }
         // props.dungeonFunc();
     }

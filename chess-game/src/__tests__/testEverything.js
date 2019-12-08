@@ -1,6 +1,6 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';    // enzyme assertion methods
-import { expect } from 'chai';              // chai assertion methods
+import { shallow, mount } from 'enzyme';       // enzyme assertion methods
+import { expect } from 'chai';                          // chai assertion methods
 import App from '../Components/App';
 import Board from '../Components/App';
 import {Pieces} from '../Components/Board';
@@ -153,8 +153,8 @@ describe('GAME SETUP', () => {
             expect( board.prop('bState')[7][0].pcType ).to.equal( Pieces.ROOK );
             expect( board.prop('bState')[7][1].pcType ).to.equal( Pieces.KNIGHT );
             expect( board.prop('bState')[7][2].pcType ).to.equal( Pieces.BISHOP );
-            expect( board.prop('bState')[7][3].pcType ).to.equal( Pieces.KING );
-            expect( board.prop('bState')[7][4].pcType ).to.equal( Pieces.QUEEN );
+            expect( board.prop('bState')[7][3].pcType ).to.equal( Pieces.QUEEN );
+            expect( board.prop('bState')[7][4].pcType ).to.equal( Pieces.KING );
             expect( board.prop('bState')[7][5].pcType ).to.equal( Pieces.BISHOP );
             expect( board.prop('bState')[7][6].pcType ).to.equal( Pieces.KNIGHT );
             expect( board.prop('bState')[7][7].pcType ).to.equal( Pieces.ROOK );
@@ -181,14 +181,14 @@ describe('GAME SETUP', () => {
             for ( let x = 0; x < 8; x++ ){
                 currentButton = currentRow.childAt(x).childAt(0);
                 switch (x){
-                    case 0: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookWhite.png)');     break;
-                    case 1: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightWhite.png)');   break;
-                    case 2: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopWhite.png)');   break;
-                    case 3: expect(currentButton.prop('style').backgroundImage).to.equal('url(kingWhite.png)');     break;
-                    case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(queenWhite.gif)');    break;
-                    case 5: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopWhite.png)');   break;
-                    case 6: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightWhite.png)');   break;
-                    case 7: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookWhite.png)');     break;
+                    case 0: expect(currentButton.prop('style').backgroundImage).to.equal('url(whiteRook.png)');     break;
+                    case 1: expect(currentButton.prop('style').backgroundImage).to.equal('url(whiteKnight.png)');   break;
+                    case 2: expect(currentButton.prop('style').backgroundImage).to.equal('url(whiteBishop.png)');   break;
+                    case 3: expect(currentButton.prop('style').backgroundImage).to.equal('url(whiteQueen.png)');     break;
+                    case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(whiteKing.png)');    break;
+                    case 5: expect(currentButton.prop('style').backgroundImage).to.equal('url(whiteBishop.png)');   break;
+                    case 6: expect(currentButton.prop('style').backgroundImage).to.equal('url(whiteKnight.png)');   break;
+                    case 7: expect(currentButton.prop('style').backgroundImage).to.equal('url(whiteRook.png)');     break;
                 }
             }
 
@@ -196,7 +196,7 @@ describe('GAME SETUP', () => {
             currentRow = boardDiv.childAt(6);
             for ( let x = 0; x < 8; x++ ){
                 currentButton = currentRow.childAt(x).childAt(0);
-                expect(currentButton.prop('style').backgroundImage).to.equal('url(pawnWhite.png)');
+                expect(currentButton.prop('style').backgroundImage).to.equal('url(whitePawn.png)');
             }
         });
     });
@@ -209,8 +209,8 @@ describe('GAME SETUP', () => {
             expect( board.prop('bState')[0][0].pcType ).to.equal( Pieces.ROOK );
             expect( board.prop('bState')[0][1].pcType ).to.equal( Pieces.KNIGHT );
             expect( board.prop('bState')[0][2].pcType ).to.equal( Pieces.BISHOP );
-            expect( board.prop('bState')[0][3].pcType ).to.equal( Pieces.KING );
-            expect( board.prop('bState')[0][4].pcType ).to.equal( Pieces.QUEEN );
+            expect( board.prop('bState')[0][3].pcType ).to.equal( Pieces.QUEEN );
+            expect( board.prop('bState')[0][4].pcType ).to.equal( Pieces.KING );
             expect( board.prop('bState')[0][5].pcType ).to.equal( Pieces.BISHOP );
             expect( board.prop('bState')[0][6].pcType ).to.equal( Pieces.KNIGHT );
             expect( board.prop('bState')[0][7].pcType ).to.equal( Pieces.ROOK );
@@ -237,14 +237,14 @@ describe('GAME SETUP', () => {
             for ( let x = 0; x < 8; x++ ){
                 currentButton = currentRow.childAt(x).childAt(0);
                 switch (x){
-                    case 0: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookBlack.png)');     break;
-                    case 1: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightBlack.png)');   break;
-                    case 2: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopBlack.png)');   break;
-                    case 3: expect(currentButton.prop('style').backgroundImage).to.equal('url(kingBlack.png)');     break;
-                    case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(queenBlack.gif)');    break;
-                    case 5: expect(currentButton.prop('style').backgroundImage).to.equal('url(bishopBlack.png)');   break;
-                    case 6: expect(currentButton.prop('style').backgroundImage).to.equal('url(knightBlack.png)');   break;
-                    case 7: expect(currentButton.prop('style').backgroundImage).to.equal('url(rookBlack.png)');     break;
+                    case 0: expect(currentButton.prop('style').backgroundImage).to.equal('url(blackRook.png)');     break;
+                    case 1: expect(currentButton.prop('style').backgroundImage).to.equal('url(blackKnight.png)');   break;
+                    case 2: expect(currentButton.prop('style').backgroundImage).to.equal('url(blackBishop.png)');   break;
+                    case 3: expect(currentButton.prop('style').backgroundImage).to.equal('url(blackQueen.png)');     break;
+                    case 4: expect(currentButton.prop('style').backgroundImage).to.equal('url(blackKing.png)');    break;
+                    case 5: expect(currentButton.prop('style').backgroundImage).to.equal('url(blackBishop.png)');   break;
+                    case 6: expect(currentButton.prop('style').backgroundImage).to.equal('url(blackKnight.png)');   break;
+                    case 7: expect(currentButton.prop('style').backgroundImage).to.equal('url(blackRook.png)');     break;
                 }
             }
 
@@ -252,7 +252,7 @@ describe('GAME SETUP', () => {
             currentRow = boardDiv.childAt(1);
             for ( let x = 0; x < 8; x++ ){
                 currentButton = currentRow.childAt(x).childAt(0);
-                expect(currentButton.prop('style').backgroundImage).to.equal('url(pawnBlack.png)');
+                expect(currentButton.prop('style').backgroundImage).to.equal('url(blackPawn.png)');
             }
         });
     });
@@ -274,8 +274,8 @@ describe('GAME SETUP', () => {
     });
 });
 
-// GAME STATE TESTS
-describe('GAME STATE TESTS', () => {
+// basic game-state test
+describe('BASIC GAME-STATE TESTS', () => {
 
     let app = null;             // wrapper for the App Component
     let board = null;           // wrapper for the Board Component
@@ -283,7 +283,7 @@ describe('GAME STATE TESTS', () => {
     let button = null;          // wrapper for button to click
 
     app = mount(<App />);
-    board = app.find('Board');              // renders a new game
+    board = app.find('Board');
     boardDiv = board.find('div.board');
 
     describe('Basic Clicking', () => {
@@ -386,152 +386,60 @@ describe('GAME STATE TESTS', () => {
      **************************************************************************************************/
 
 
-    describe('Game simulation 1', () => {
+    // HELPER FUNCTION
+    // clicks the square at the given coordinates
+    function clickSquareAt(y, x){
+        button = boardDiv.childAt(y).childAt(x).childAt(0);
+        button.simulate('click');
+    }
+});
 
-        app = mount(<App />);
-        board = app.find('Board');                  // renders a new game
-        boardDiv = board.find('div.board');
 
-        test('Game ran as expected', () => {
-            clickSquareAt(6,4);
-            clickSquareAt(4,4);
-            clickSquareAt(1,3);
-            clickSquareAt(3,3);
-            clickSquareAt(4,4);
-            clickSquareAt(3,3);
-            expect(board.prop('bState')[7][8].blackPieces.length).to.equal( 15 );
-            clickSquareAt(0,3);
-            clickSquareAt(1,3);
-            clickSquareAt(7,4);
-            clickSquareAt(5,4);
-            clickSquareAt(1,3);
-            clickSquareAt(2,3);
+// FIRST GAME SIMULATION
+describe('GAME SIMULATION 1', () => {
 
-            // click queen, highlights a bunch of crap
-            clickSquareAt(5,4);
-            for ( let x = 0; x < 8; x++ ) {
-                if ( x === 4 ) continue;
-                expect(board.prop('bState')[5][x].isHighlighted).to.equal(true);
-            }
-            for ( let y = 1; y < 8; y++ ) {
-                if ( y === 5 ) continue;
-                expect(board.prop('bState')[y][4].isHighlighted).to.equal(true);
-            }
-            expect(board.prop('bState')[1][0].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[2][1].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[3][2].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[4][3].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[4][5].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[3][6].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[2][7].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[5][4].isSelected).to.equal(true);
+    let app = mount(<App />);
+    let board = app.find('Board');
+    let boardDiv = board.find('div.board');
+    let button = null;
 
-            clickSquareAt(5,4);
-            clickSquareAt(6,5);
-            clickSquareAt(5,5);
-            clickSquareAt(2,3);
-            clickSquareAt(3,3);
-            expect(board.prop('bState')[3][3].pcOwner).to.equal( Players.BLACK );
-            expect(board.prop('bState')[3][3].pcType).to.equal( Pieces.KING );
-            expect(board.prop('bState')[7][8].whitePieces.length).to.equal( 15 );
-            clickSquareAt(5,4);
-            clickSquareAt(5,3);
-            expect(board.prop('bState')[7][8].blackCheck).to.equal( true );
-            expect(board.prop('bState')[7][8].whiteCheck).to.equal( false );
-            clickSquareAt(3,3);
-            clickSquareAt(3,2);
-
-            // click queen, highlights a bunch of crap
-            clickSquareAt(5,3);
-            expect(board.prop('bState')[5][3].isSelected).to.equal(true);
-            for ( let y = 0; y < 5; y++ ) {
-                expect(board.prop('bState')[y][3].isHighlighted).to.equal(true);
-            }
-            expect(board.prop('bState')[5][0].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[5][1].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[5][2].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[5][4].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[6][4].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[2][0].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[3][1].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[4][2].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[4][4].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[3][5].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[2][6].isHighlighted).to.equal(true);
-            expect(board.prop('bState')[1][7].isHighlighted).to.equal(true);
-            clickSquareAt(5,3);
-            clickSquareAt(5,5);
-            clickSquareAt(4,5);
-            clickSquareAt(3,2);
-            clickSquareAt(4,1);
-            clickSquareAt(4,5);
-            clickSquareAt(3,5);
-            clickSquareAt(0,4);
-            clickSquareAt(0,3);
-            clickSquareAt(5,3);
-            clickSquareAt(3,1);
-
-            // should be checkmate
-            expect(board.prop('bState')[7][8].blackCheckMate).to.equal(true);
-        });
+    test('Game ran as expected', () => {
+        clickSquareAt(6,3);
+        //console.log(board.prop('bState'));
+        expect( board.prop('bState')[6][3].isSelected ).to.equal( true );
+        expect( board.prop('bState')[5][3].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[4][3].isHighlighted ).to.equal( true );
+        clickSquareAt(4,3);
+        expect( board.prop('bState')[5][3].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[4][3].isHighlighted ).to.equal( false );
+        clickSquareAt(1,4);
+        clickSquareAt(3,4);
+        clickSquareAt(4,3);
+        clickSquareAt(3,4);
+        expect(board.prop('bState')[7][8].blackPieces.length).to.equal( 15 );
+        clickSquareAt(0,3);
+        clickSquareAt(1,4);
+        clickSquareAt(7,4);
+        clickSquareAt(6,3);
+        clickSquareAt(1,4);
+        clickSquareAt(2,3);
+        //console.log(board.prop('bState'));
+        expect(board.prop('bState')[7][8].whiteCheck).to.equal( true );
+        clickSquareAt(6,3);
+        clickSquareAt(5,2);
+        clickSquareAt(2,3);
+        clickSquareAt(2,2);
+        expect(board.prop('bState')[7][8].whiteCheck).to.equal( true );
+        clickSquareAt(5,2);
+        clickSquareAt(5,1);
+        clickSquareAt(2,2);
+        clickSquareAt(3,2);
+        clickSquareAt(3,4);
+        clickSquareAt(2,4);
+        clickSquareAt(3,2);
+        clickSquareAt(4,1);
+        expect(board.prop('bState')[7][8].whiteCheckMate).to.equal(true);
     });
-
-
-    // describe('Game simulation 2', () => {
-    //
-    //     app = mount(<App />);
-    //     board = app.find('Board');                  // renders a new game
-    //     boardDiv = board.find('div.board');
-    //
-    //     test('Game ran as expected', () => {
-    //
-    //         // TODO: Add a series of clicks and periodically test the board state
-    //
-    //     });
-    // });
-    //
-    //
-    // describe('Game simulation 3', () => {
-    //
-    //     app = mount(<App />);
-    //     board = app.find('Board');                  // renders a new game
-    //     boardDiv = board.find('div.board');
-    //
-    //     test('Game ran as expected', () => {
-    //
-    //         // TODO: Add a series of clicks and periodically test the board state
-    //
-    //     });
-    // });
-    //
-    //
-    // describe('Game simulation 4', () => {
-    //
-    //     app = mount(<App />);
-    //     board = app.find('Board');                  // renders a new game
-    //     boardDiv = board.find('div.board');
-    //
-    //     test('Game ran as expected', () => {
-    //
-    //         // TODO: Add a series of clicks and periodically test the board state
-    //
-    //     });
-    // });
-    //
-    //
-    // describe('Game simulation 5', () => {
-    //
-    //     app = mount(<App />);
-    //     board = app.find('Board');                  // renders a new game
-    //     boardDiv = board.find('div.board');
-    //
-    //     test('Game ran as expected', () => {
-    //
-    //         // TODO: Add a series of clicks and periodically test the board state
-    //
-    //     });
-    // });
-
 
     // HELPER FUNCTION
     // clicks the square at the given coordinates
@@ -542,8 +450,51 @@ describe('GAME STATE TESTS', () => {
 });
 
 
+// SECOND GAME SIMULATION
+describe('GAME SIMULATION 2', () => {
+
+    let app = mount(<App />);
+    let board = app.find('Board');
+    let boardDiv = board.find('div.board');
+    let button = null;
+
+    test('Game ran as expected', () => {
 
 
+        // TODO: ADD TESTING CODE
 
 
+    });
 
+    // HELPER FUNCTION
+    // clicks the square at the given coordinates
+    function clickSquareAt(y, x){
+        button = boardDiv.childAt(y).childAt(x).childAt(0);
+        button.simulate('click');
+    }
+});
+
+
+// THIRD GAME SIMULATION
+describe('GAME SIMULATION 3', () => {
+
+    let app = mount(<App />);
+    let board = app.find('Board');
+    let boardDiv = board.find('div.board');
+    let button = null;
+
+    test('Game ran as expected', () => {
+
+
+        // TODO: ADD TESTING CODE
+
+
+    });
+
+    // HELPER FUNCTION
+    // clicks the square at the given coordinates
+    function clickSquareAt(y, x){
+        button = boardDiv.childAt(y).childAt(x).childAt(0);
+        button.simulate('click');
+    }
+});

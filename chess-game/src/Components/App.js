@@ -86,27 +86,27 @@ const App = (props) => {
         let boardData = boardMap[7][8];         // holds key information for check / checkmate calculations
         let whiteCanMove = true;                // used in check/stale mate calculation
         let blackCanMove = true;                // used in check/stale mate calculations
-        let justPromoted = false;               // special case after a unit promotion, skips to end of function
 
-        // if y == -2 flag is present, this is a unit promotion
+
+        // if y == -2 flag is present, this is a special unit promotion squareClicked() call
         // promotes the pawn to the pcType stored in x, continues execution
         if (y === -2) {
             boardMap[ promotionPiece[0] ][ promotionPiece[1] ].pcType = x;      // x will equal new chosen pcType
             setPromote(false);
-            runEndOfTurnChecks(promotionPiece[0], promotionPiece[1]);
-            justPromoted = true;
+            runEndOfTurnChecks(promotionPiece[0], promotionPiece[1], true);
 
-            // we CANNOT return here because execution must return
-            // the program structure at the bottom of App
+
+            // CANNOT return here because execution must continue
+            // to the program structure at the bottom of App
         }
 
         // makes board unresponsive if the game is over, or during unit promotion
-        if ( ! justPromoted && (boardData.isGameOver || promoteInProgress ))
+        else if ( boardData.isGameOver || promoteInProgress )
             return;
 
         // If you've click the square that's already selected...
         // deselect the square and unhighlight any highlighted squares
-        if ( ! justPromoted && y === selectedSquare[0] && x === selectedSquare[1]) {
+        else if ( y === selectedSquare[0] && x === selectedSquare[1] ) {
             setSelectedSquare([-1,-1]);
             boardMap[y][x].isSelected = false;
 
@@ -116,7 +116,7 @@ const App = (props) => {
         }
 
         // if you click on YOUR OWN piece...
-        else if ( ! justPromoted && boardMap[y][x].pcOwner === currentPlayer ) {
+        else if ( boardMap[y][x].pcOwner === currentPlayer ) {
 
             // and nothing is selected...
             // then select that piece
@@ -148,7 +148,7 @@ const App = (props) => {
 
         // Here a square is ALREADY SELECTED and you've clicked on one of the HIGHLIGHTED SQUARES
         // This is a successful move so the turn is swapped to the next player upon completion
-        else if ( ! justPromoted && selectedSquare[0] !== -1 && boardMap[y][x].isHighlighted === true ){
+        else if ( selectedSquare[0] !== -1 && boardMap[y][x].isHighlighted === true ){
 
             updatePieceListsNormalMove();               // updates each player's list of pieces
 
@@ -158,14 +158,24 @@ const App = (props) => {
             if ( currentPlayer === Players.BLACK )      // from any pawns that had it from last turn
                 clearWhiteEP();
 
-            // if a piece was captured, add it to the dungeon
-            if (boardMap[y][x].pcType !== Pieces.EMPTY)
-                addToDungeon(y, x);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  DISABLE FOR TESTING  ///////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            // // if a piece was captured, add it to the dungeon
+            // if (boardMap[y][x].pcType !== Pieces.EMPTY)
+            //     addToDungeon(y, x);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  DISABLE FOR TESTING  ///////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
             // move piece from selected square to clicked square
             boardMap[y][x].pcType =  boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcType;
             boardMap[y][x].pcOwner = boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcOwner;
-            boardMap[y][x].hasMoved = boardMap[ selectedSquare[0] ][ selectedSquare[1] ].hasMoved;
+            boardMap[y][x].hasMoved = true;
 
             // clear the selected square
             boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcType = Pieces.EMPTY;
@@ -278,10 +288,11 @@ const App = (props) => {
                     updatePieceListLeftCastle();
                 }
             }
-            runEndOfTurnChecks(y, x);           // runs end-of-game checkmate/stalemate checks
+            runEndOfTurnChecks();        // runs end-of-game checkmate/stalemate checks
         }
-        setBoardState( boardMap );              // updates the board state
-        setUpdateBoard( ! updateBoard );        // triggers a re-render
+        boardMap[7][8] = boardData;
+        setBoardState( boardMap );                  // updates the board state
+        setUpdateBoard( ! updateBoard );            // triggers a re-render
         // END OF MAIN CLICK FUNCTION
 
 
@@ -293,11 +304,9 @@ const App = (props) => {
 
         // runs a series of checks for stalemate and checkmate
         // this method is called the end of each successful turn
-        function runEndOfTurnChecks(y, x){
-
-            // tracks if the king or rook has moved for castling
-            if ( boardMap[y][x].pcType === Pieces.KING || Pieces.ROOK )
-                boardMap[y][x].hasMoved = true;
+        function runEndOfTurnChecks(){
+            boardData.whiteCheck = false;
+            boardData.blackCheck = false;
 
             // calculates check, checkmate and stalemate conditions for the next player
             if ( currentPlayer === Players.WHITE ){
@@ -334,10 +343,10 @@ const App = (props) => {
                 boardData.isGameOver = true;
             }
 
-            boardMap[7][8] = boardData;         // copies boardData into extra boardState slot
+            setBoardState( boardMap );
             setSelectedSquare( [-1,-1] );       // clears selected square state
             deHighlightAllSquares();            // de-highlights all squares
-            swapTurn();                         // swaps to the next player's turn
+            swapTurn();
         }
 
         // adds the given piece to the dungeon
@@ -1482,6 +1491,7 @@ const App = (props) => {
                 </div>
             </div>
             {   boardState[7][8].isGameOver &&
+                ( ! boardState[7][8].blackStaleMate && ! boardState[7][8].whiteStaleMate) &&
             <EndGameScreen winner={(currentPlayer === 2) ? "White" : "Black"} />
             }
             {promoteInProgress &&

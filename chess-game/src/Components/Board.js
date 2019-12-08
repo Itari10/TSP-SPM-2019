@@ -39,7 +39,7 @@ export class BoardData {
         this.whitePieces = [];
         this.blackPieces = [];
 
-        if ( mode === 0 || mode === 2 ){
+        if ( mode === 0 || mode === 9){
             this.bKingY = 0;
             this.bKingX = 4;
             this.wKingY = 7;
@@ -53,15 +53,6 @@ export class BoardData {
             this.wKingY = 4;
             this.wKingX = 5;
         }
-
-        // // DEMONSTRATING CHECK REMOVAL
-        // if ( mode === 2 ){
-        //     this.bKingY = 0;
-        //     this.bKingX = 4;
-        //     this.wKingY = 7;
-        //     this.wKingX = 4;
-        // }
-
     }
 }
 
@@ -199,7 +190,6 @@ export function initializeBoard( mode ){
         }
     }
 
-
     // DEMONSTRATING CHECK AVOIDANCE
     else if ( mode === 1 ){
         defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
@@ -270,16 +260,8 @@ export function initializeBoard( mode ){
         defaultBoard[7][4] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
     }
 
-
-    // DEMONSTRATING CHECK REMOVAL
-    else if ( mode === 2 ){
-
-    }
-
-
-
     // FOR TESTING STALEMATE
-    else if ( mode === 9){
+    else if ( mode === 9 ){
         defaultBoard[0][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
         defaultBoard[0][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[0][2] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
@@ -321,7 +303,6 @@ export function initializeBoard( mode ){
         }
     }
 
-
     // sets default board square colors
     for ( let y = 0; y < 8; y++ ){
         for ( let x = 0; x < 8; x++ ){
@@ -345,7 +326,6 @@ function createBlackPieceList(mode){
         }
     }
 
-
     // DEMONSTRATING CHECK AVOIDANCE
     else if ( mode === 1 ){
         blackPieceList.push( new Coordinate(0,1) );
@@ -362,14 +342,6 @@ function createBlackPieceList(mode){
         blackPieceList.push( new Coordinate(4,0) );
         blackPieceList.push( new Coordinate(5,1) );
     }
-
-
-    // DEMONSTRATING CHECK REMOVAL
-    else if ( mode === 2 ){
-
-
-    }
-
 
     // FOR TESTING STALEMATE
     else if ( mode === 9 ){
@@ -396,7 +368,6 @@ function createWhitePieceList( mode ){
         }
     }
 
-
     // DEMONSTRATING CHECK AVOIDANCE
     else if ( mode === 1 ){
         whitePieceList.push( new Coordinate(3,1) );
@@ -415,15 +386,6 @@ function createWhitePieceList( mode ){
         whitePieceList.push( new Coordinate(7,6) );
         whitePieceList.push( new Coordinate(7,7) );
     }
-
-
-    // DEMONSTRATING CHECK REMOVAL
-    else if ( mode === 2 ){
-
-
-
-    }
-
 
     // FOR TESTING STALEMATE
     else if ( mode === 9){

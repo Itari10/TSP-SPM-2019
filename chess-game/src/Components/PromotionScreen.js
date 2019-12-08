@@ -7,7 +7,7 @@ const PromotionScreen = (props) => {
 
     return (
         <div className="promotion">
-            <h1>Promote your guy here</h1>
+            <h1>Promote to which piece?</h1>
             <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.ROOK} update={props.update} />
             <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.QUEEN} update={props.update} />
             <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.BISHOP} update={props.update} />

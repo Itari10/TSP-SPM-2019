@@ -89,9 +89,9 @@ function determineBG(props){
         else
             return '#68b780';       // highlighting is slightly darker for dark squares
     }
-    if ( props.canCastle ){         // highlights rooks in yellow that will be moved
-        return '#fff18e';           // by the current castling move
-    }
+    // if ( props.canCastle ){         // highlights rooks in yellow that will be moved
+    //     return '#fff18e';           // by the current castling move
+    // }
     // if ( props.isCapturable ){       // highlights pieces capturable by en-passant
     //     return '#c184a2';            // in red during move selection
     // }

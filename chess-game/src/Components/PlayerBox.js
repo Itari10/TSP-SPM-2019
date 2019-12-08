@@ -65,7 +65,14 @@ const PlayerBox = (props) => {
         let staleMate = (props.staleMate ? ": STALEMATE" : "");
 
         // will not display "CHECK" if state is checkmate or stalemate
-        let check = (( !props.checkMate && !props.staleMate ) ? (props.inCheck ? ": CHECK" : "") : "");
+        let check = "";
+        if ( !props.checkMate && !props.staleMate ){
+            if ( props.inCheck )
+                check = ": CHECK";
+        }
+        else{
+            check = "";
+        }
 
         return player + checkMate + staleMate + check
     }

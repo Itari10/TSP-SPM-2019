@@ -39,6 +39,7 @@ export class BoardData {
         this.whitePieces = [];
         this.blackPieces = [];
 
+        // default and stalemate testing
         if ( mode === 0 || mode === 9){
             this.bKingY = 0;
             this.bKingX = 4;
@@ -46,12 +47,12 @@ export class BoardData {
             this.wKingX = 4;
         }
 
-        // DEMONSTRATING CHECK AVOIDANCE
+        // FOR DEMONSTRATING CHECK AVOIDANCE
         if ( mode === 1 ){
-            this.bKingY = 0;
-            this.bKingX = 4;
+            this.bKingY = 1;
+            this.bKingX = 6;
             this.wKingY = 4;
-            this.wKingX = 5;
+            this.wKingX = 7;
         }
     }
 }
@@ -79,7 +80,7 @@ const Board = (props) => {
     // renders the board based on the boardState passed from App
     return (
         <div className="board">
-            {createBoardJSX()};
+            {createBoardJSX()}
         </div>
     );
 
@@ -192,72 +193,82 @@ export function initializeBoard( mode ){
 
     // DEMONSTRATING CHECK AVOIDANCE
     else if ( mode === 1 ){
-        defaultBoard[0][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
-        defaultBoard[0][2] = new Piece(Pieces.QUEEN, Players.BLACK, false, false);
-        defaultBoard[0][4] = new Piece(Pieces.KING, Players.BLACK, false, false);
-        defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
-        defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
-        defaultBoard[1][1] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
-        defaultBoard[1][4] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
-        defaultBoard[1][6] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
-        defaultBoard[1][7] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
-        defaultBoard[2][5] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
-        defaultBoard[2][6] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
-        defaultBoard[3][1] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
-        defaultBoard[3][4] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
-        defaultBoard[3][7] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
-        defaultBoard[4][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
-        defaultBoard[4][0].hasMoved = true;
-        defaultBoard[4][3] = new Piece(Pieces.QUEEN, Players.WHITE, false, false);
-        defaultBoard[4][5] = new Piece(Pieces.KING, Players.WHITE, false, false);
-        defaultBoard[4][5].hasMoved = true;
-        defaultBoard[5][1] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
-        defaultBoard[5][2] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
-        defaultBoard[6][0] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
-        defaultBoard[6][3] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
-        defaultBoard[6][5] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
-        defaultBoard[6][6] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
-        defaultBoard[7][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
-        defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
-        defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
-        defaultBoard[7][6] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
-        defaultBoard[7][7] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
         defaultBoard[0][0] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[0][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[0][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[0][2] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[0][3] = new Piece(Pieces.QUEEN, Players.BLACK, false, false);
+        defaultBoard[0][4] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[0][5] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
         defaultBoard[0][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[1][0] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[1][2] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[0][7] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
+
+        defaultBoard[1][0] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
+        defaultBoard[1][0].hasMoved = true;
+        defaultBoard[1][1] = new Piece(Pieces.BISHOP, Players.BLACK, false, false);
+        defaultBoard[1][2] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
         defaultBoard[1][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[1][4] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
         defaultBoard[1][5] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[1][6] = new Piece(Pieces.KING, Players.BLACK, false, false);
+        defaultBoard[1][6].hasMoved = true;
+        defaultBoard[1][7] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
+
         defaultBoard[2][0] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[2][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[2][1] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
         defaultBoard[2][2] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[2][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[2][4] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[2][5] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
+        defaultBoard[2][6] = new Piece(Pieces.PAWN, Players.BLACK, false, false);
         defaultBoard[2][7] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+
         defaultBoard[3][0] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[3][1] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
         defaultBoard[3][2] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[3][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[3][4] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
         defaultBoard[3][5] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[3][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[3][7] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
+
+        defaultBoard[4][0] = new Piece(Pieces.ROOK, Players.BLACK, false, false);
+        defaultBoard[4][0].hasMoved = true;
         defaultBoard[4][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[4][2] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[4][4] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[4][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[4][4] = new Piece(Pieces.QUEEN, Players.WHITE, false, false);
+        defaultBoard[4][5] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[4][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[4][7] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[4][7] = new Piece(Pieces.KING, Players.WHITE, false, false);
+        defaultBoard[4][7].hasMoved = true;
+
         defaultBoard[5][0] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[5][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[5][2] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
         defaultBoard[5][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[5][4] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[5][5] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[5][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[5][5] = new Piece(Pieces.KNIGHT, Players.WHITE, false, false);
+        defaultBoard[5][6] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
         defaultBoard[5][7] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[6][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+
+        defaultBoard[6][0] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[6][1] = new Piece(Pieces.PAWN, Players.WHITE, false, false);
         defaultBoard[6][2] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[6][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[6][4] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[6][5] = new Piece(Pieces.KNIGHT, Players.BLACK, false, false);
+        defaultBoard[6][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[6][7] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+
+        defaultBoard[7][0] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
         defaultBoard[7][1] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[7][2] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
         defaultBoard[7][3] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
-        defaultBoard[7][4] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[7][4] = new Piece(Pieces.ROOK, Players.WHITE, false, false);
+        defaultBoard[7][4].hasMoved = true;
+        defaultBoard[7][5] = new Piece(Pieces.BISHOP, Players.WHITE, false, false);
+        defaultBoard[7][6] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
+        defaultBoard[7][7] = new Piece(Pieces.EMPTY, Players.NONE, false, false);
     }
 
     // FOR TESTING STALEMATE
@@ -328,19 +339,19 @@ function createBlackPieceList(mode){
 
     // DEMONSTRATING CHECK AVOIDANCE
     else if ( mode === 1 ){
-        blackPieceList.push( new Coordinate(0,1) );
-        blackPieceList.push( new Coordinate(0,2) );
-        blackPieceList.push( new Coordinate(0,4) );
+        blackPieceList.push( new Coordinate(0,3) );
         blackPieceList.push( new Coordinate(0,5) );
         blackPieceList.push( new Coordinate(0,7) );
         blackPieceList.push( new Coordinate(1,1) );
+        blackPieceList.push( new Coordinate(1,2) );
         blackPieceList.push( new Coordinate(1,4) );
         blackPieceList.push( new Coordinate(1,6) );
         blackPieceList.push( new Coordinate(1,7) );
+        blackPieceList.push( new Coordinate(2,1) );
         blackPieceList.push( new Coordinate(2,5) );
         blackPieceList.push( new Coordinate(2,6) );
         blackPieceList.push( new Coordinate(4,0) );
-        blackPieceList.push( new Coordinate(5,1) );
+        blackPieceList.push( new Coordinate(6,5) );
     }
 
     // FOR TESTING STALEMATE
@@ -370,21 +381,19 @@ function createWhitePieceList( mode ){
 
     // DEMONSTRATING CHECK AVOIDANCE
     else if ( mode === 1 ){
+        whitePieceList.push( new Coordinate(1,0) );
         whitePieceList.push( new Coordinate(3,1) );
         whitePieceList.push( new Coordinate(3,4) );
         whitePieceList.push( new Coordinate(3,7) );
-        whitePieceList.push( new Coordinate(4,3) );
-        whitePieceList.push( new Coordinate(4,5) );
+        whitePieceList.push( new Coordinate(4,4) );
+        whitePieceList.push( new Coordinate(4,7) );
         whitePieceList.push( new Coordinate(5,2) );
-        whitePieceList.push( new Coordinate(6,0) );
-        whitePieceList.push( new Coordinate(6,3) );
-        whitePieceList.push( new Coordinate(6,5) );
-        whitePieceList.push( new Coordinate(6,6) );
-        whitePieceList.push( new Coordinate(7,0) );
+        whitePieceList.push( new Coordinate(5,5) );
+        whitePieceList.push( new Coordinate(5,6) );
+        whitePieceList.push( new Coordinate(6,1) );
         whitePieceList.push( new Coordinate(7,2) );
+        whitePieceList.push( new Coordinate(7,4) );
         whitePieceList.push( new Coordinate(7,5) );
-        whitePieceList.push( new Coordinate(7,6) );
-        whitePieceList.push( new Coordinate(7,7) );
     }
 
     // FOR TESTING STALEMATE

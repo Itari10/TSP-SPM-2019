@@ -14,6 +14,6 @@ const PromotionScreen = (props) => {
             <PieceButton isTheme={props.isTheme} ownedBy={props.pcOwner} pieceType={Pieces.KNIGHT} update={props.update} />
         </div>
     );
-}
+};
 
 export default PromotionScreen;

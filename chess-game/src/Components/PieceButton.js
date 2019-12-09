@@ -13,6 +13,6 @@ const PieceButton = (props) => {
         >
         </button>
     );
-}
+};
 
 export default PieceButton;

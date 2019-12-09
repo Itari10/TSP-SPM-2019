@@ -1519,10 +1519,14 @@ const App = (props) => {
             </div>
             {   boardState[7][8].isGameOver &&
                 ( ! boardState[7][8].blackStaleMate && ! boardState[7][8].whiteStaleMate) &&
-            <EndGameScreen winner={winnerTitle()} />
+            <EndGameScreen winner=      {winnerTitle()}
+                           blackMate=   {boardState[7][8].blackCheckMate}
+                           whiteMate=   {boardState[7][8].whiteCheckMate}/>
             }
             {promoteInProgress &&
-            <PromotionScreen isTheme={getTheme} pcOwner={(currentPlayer === Players.WHITE) ? Players.WHITE : Players.BLACK} update={doPromotion} />
+            <PromotionScreen isTheme=   {getTheme}
+                             pcOwner=   {(currentPlayer === Players.WHITE) ? Players.WHITE : Players.BLACK}
+                             update=    {doPromotion} />
             }
         </div>
     );

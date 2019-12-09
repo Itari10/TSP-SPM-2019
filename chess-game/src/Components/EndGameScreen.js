@@ -22,6 +22,8 @@ const EndGameScreen = (props) => {
         }
         else if ( props.whiteMate )
             return "endGameScreenBlackWins";
+        else
+            return "endGameScreenBlackWins";
     }
 };
 

@@ -404,7 +404,6 @@ describe('GAME SIMULATION 1', () => {
 
     test('Game ran as expected', () => {
         clickSquareAt(6,3);
-        //console.log(board.prop('bState'));
         expect( board.prop('bState')[6][3].isSelected ).to.equal( true );
         expect( board.prop('bState')[5][3].isHighlighted ).to.equal( true );
         expect( board.prop('bState')[4][3].isHighlighted ).to.equal( true );
@@ -422,7 +421,6 @@ describe('GAME SIMULATION 1', () => {
         clickSquareAt(6,3);
         clickSquareAt(1,4);
         clickSquareAt(2,3);
-        //console.log(board.prop('bState'));
         expect(board.prop('bState')[7][8].whiteCheck).to.equal( true );
         clickSquareAt(6,3);
         clickSquareAt(5,2);
@@ -457,11 +455,131 @@ describe('GAME SIMULATION 2', () => {
     let button = null;
 
     test('Game ran as expected', () => {
+        clickSquareAt(6,4);
+        clickSquareAt(4,4);
+        clickSquareAt(1,4);
+        clickSquareAt(3,4);
+        clickSquareAt(7,3);
+        clickSquareAt(3,7);
+        clickSquareAt(1,5);
 
+        // should not highlight due to check-avoidance
+        expect( board.prop('bState')[1][5].isSelected ).to.equal( true );
+        expect( board.prop('bState')[2][5].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[3][5].isHighlighted ).to.equal( false );
 
-        // TODO: ADD TESTING CODE
+        clickSquareAt(1,6);
+        expect( board.prop('bState')[1][6].isSelected ).to.equal( true );
+        expect( board.prop('bState')[2][6].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[3][6].isHighlighted ).to.equal( true );
+        clickSquareAt(3,6);
+        clickSquareAt(7,1);
+        clickSquareAt(5,2);
+        clickSquareAt(0,3);
+        expect( board.prop('bState')[0][3].isSelected ).to.equal( true );
+        expect( board.prop('bState')[1][4].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[2][5].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[1][3].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[1][2].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[0][2].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[0][4].isHighlighted ).to.equal( false );
+        clickSquareAt(2,5);
+        clickSquareAt(6,1);
+        clickSquareAt(4,1);
+        clickSquareAt(2,5);
+        clickSquareAt(6,5);
+        expect(board.prop('bState')[7][8].whiteCheck).to.equal( true );
+        clickSquareAt(7,4);
+        expect( board.prop('bState')[7][4].isSelected ).to.equal( true );
+        expect( board.prop('bState')[7][3].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[6][5].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[6][4].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[7][3].hasMoved ).to.equal( false );
+        clickSquareAt(7,3);
+        expect( board.prop('bState')[7][3].hasMoved ).to.equal( true );
 
+        // clicks queen, highlights a bunch of crap
+        clickSquareAt(6,5);
+        expect( board.prop('bState')[6][5].isSelected ).to.equal( true );
+        expect( board.prop('bState')[2][1].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[3][2].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[4][3].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[5][4].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[2][5].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[3][5].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[4][5].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[5][5].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[5][6].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[4][7].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[6][3].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[6][4].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[6][6].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[7][4].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[7][5].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[7][6].isHighlighted ).to.equal( true );
+        clickSquareAt(2,5);
+        clickSquareAt(7,2);
+        clickSquareAt(5,0);
+        clickSquareAt(1,7);
+        clickSquareAt(2,7);
+        clickSquareAt(7,3);
+        clickSquareAt(7,4);
+        clickSquareAt(0,1);
+        clickSquareAt(2,2);
+        clickSquareAt(2,2);
+        clickSquareAt(3,7);
+        clickSquareAt(2,7);
+        clickSquareAt(1,1);
+        clickSquareAt(2,1);
+        clickSquareAt(7,4);
+        expect( board.prop('bState')[7][4].isSelected ).to.equal( true );
+        expect( board.prop('bState')[6][4].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[7][3].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[7][2].isHighlighted ).to.equal( false );
+        clickSquareAt(7,3);
+        clickSquareAt(0,2);
+        clickSquareAt(2,0);
+        clickSquareAt(4,1);
+        clickSquareAt(3,1);
 
+        // tests left-castling for black
+        clickSquareAt(0,4);
+        expect( board.prop('bState')[0][4].hasMoved ).to.equal( false );
+        expect( board.prop('bState')[0][4].isSelected ).to.equal( true );
+        expect( board.prop('bState')[0][2].isHighlighted ).to.equal( true );
+        clickSquareAt(0,2);
+        expect( board.prop('bState')[0][2].pcType ).to.equal( Pieces.KING );
+        expect( board.prop('bState')[0][3].pcType ).to.equal( Pieces.ROOK );
+        expect( board.prop('bState')[0][2].hasMoved ).to.equal( true );
+        expect( board.prop('bState')[0][3].hasMoved ).to.equal( true );
+
+        clickSquareAt(2,7);
+        clickSquareAt(0,5);
+        clickSquareAt(0,3);
+        expect( board.prop('bState')[0][4].isHighlighted ).to.equal( true );
+        clickSquareAt(0,4);
+        clickSquareAt(5,0);
+        clickSquareAt(1,4);
+        clickSquareAt(2,0);
+        expect( board.prop('bState')[1][1].isHighlighted ).to.equal( true );
+        clickSquareAt(1,1);
+        clickSquareAt(0,5);
+        expect( board.prop('bState')[0][4].isHighlighted ).to.equal( true );
+        clickSquareAt(0,4);
+        expect(board.prop('bState')[7][8].blackCheck).to.equal( true );
+
+        // tests check-removal
+        clickSquareAt(2,2);
+        expect( board.prop('bState')[0][3].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[1][4].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[4][3].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[4][1].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[3][0].isHighlighted ).to.equal( false );
+        expect( board.prop('bState')[0][1].isHighlighted ).to.equal( false );
+        clickSquareAt(0,3);
+        clickSquareAt(0,4);
+        clickSquareAt(0,3);
+        expect(board.prop('bState')[7][8].blackCheckMate).to.equal(true);
     });
 
     // clicks the square at the given coordinates
@@ -481,10 +599,74 @@ describe('GAME SIMULATION 3', () => {
     let button = null;
 
     test('Game ran as expected', () => {
+        clickSquareAt(6,7);
+        clickSquareAt(4,7);
+        clickSquareAt(0,1);
+        clickSquareAt(2,0);
+        clickSquareAt(4,7);
+        expect( board.prop('bState')[3][7].isHighlighted ).to.equal( true );
+        clickSquareAt(3,7);
 
+        // tests en-passant
+        clickSquareAt(1,6);
+        expect( board.prop('bState')[1][6].isSelected ).to.equal( true );
+        expect( board.prop('bState')[2][6].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[3][6].isHighlighted ).to.equal( true );
+        clickSquareAt(3,6);
+        clickSquareAt(3,7);
+        expect( board.prop('bState')[3][6].isCapturable ).to.equal( true );
+        expect( board.prop('bState')[3][7].isSelected ).to.equal( true );
+        expect( board.prop('bState')[2][6].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[2][7].isHighlighted ).to.equal( true );
+        clickSquareAt(2,6);
+        expect( board.prop('bState')[3][6].isCapturable ).to.equal( false );
+        expect( board.prop('bState')[3][6].pcType ).to.equal( Pieces.EMPTY );
+        expect( board.prop('bState')[3][6].pcOwner ).to.equal( Players.NONE );
+        expect( board.prop('bState')[2][6].pcType ).to.equal( Pieces.PAWN );
+        expect( board.prop('bState')[2][6].pcOwner ).to.equal( Players.WHITE );
+        expect(board.prop('bState')[7][8].blackPieces.length).to.equal( 15 );
+        clickSquareAt(1,4);
+        clickSquareAt(3,4);
+        clickSquareAt(7,7);
+        expect( board.prop('bState')[7][7].isSelected ).to.equal( true );
+        expect( board.prop('bState')[6][7].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[5][7].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[4][7].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[3][7].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[2][7].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[1][7].isHighlighted ).to.equal( true );
+        clickSquareAt(1,7);
+        expect(board.prop('bState')[7][8].blackPieces.length).to.equal( 14 );
+        clickSquareAt(3,4);
+        clickSquareAt(4,4);
+        clickSquareAt(6,5);
+        clickSquareAt(4,5);
 
-        // TODO: ADD TESTING CODE
-
+        // tests en-passant again
+        clickSquareAt(4,4);
+        expect( board.prop('bState')[4][5].isCapturable ).to.equal( true );
+        expect( board.prop('bState')[4][4].isSelected ).to.equal( true );
+        expect( board.prop('bState')[5][4].isHighlighted ).to.equal( true );
+        expect( board.prop('bState')[5][5].isHighlighted ).to.equal( true );
+        clickSquareAt(5,5);
+        expect( board.prop('bState')[4][5].isCapturable ).to.equal( false );
+        expect( board.prop('bState')[4][5].pcType ).to.equal( Pieces.EMPTY );
+        expect( board.prop('bState')[4][5].pcOwner ).to.equal( Players.NONE );
+        expect( board.prop('bState')[4][4].pcType ).to.equal( Pieces.EMPTY );
+        expect( board.prop('bState')[4][4].pcOwner ).to.equal( Players.NONE );
+        expect( board.prop('bState')[5][5].pcType ).to.equal( Pieces.PAWN );
+        expect( board.prop('bState')[5][5].pcOwner ).to.equal( Players.BLACK );
+        expect(board.prop('bState')[7][8].whitePieces.length).to.equal( 15 );
+        clickSquareAt(1,7);
+        clickSquareAt(0,7);
+        clickSquareAt(5,5);
+        clickSquareAt(6,5);
+        expect(board.prop('bState')[7][8].whiteCheck).to.equal( true );
+        clickSquareAt(7,4);
+        expect( board.prop('bState')[6][5].isHighlighted ).to.equal( true );
+        clickSquareAt(6,5);
+        expect(board.prop('bState')[7][8].whiteCheck).to.equal( false );
+        expect(board.prop('bState')[7][8].blackPieces.length).to.equal( 12 );
 
     });
 

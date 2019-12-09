@@ -182,19 +182,9 @@ const App = (props) => {
             if ( currentPlayer === Players.BLACK )      // from any pawns that had it from last turn
                 clearWhiteEP();
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  DISABLE FOR TESTING  ///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             // if a piece was captured, add it to the dungeon
             if (boardMap[y][x].pcType !== Pieces.EMPTY)
                 addToDungeon(y, x);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  DISABLE FOR TESTING  ///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
             // move piece from selected square to clicked square
             boardMap[y][x].pcType =  boardMap[ selectedSquare[0] ][ selectedSquare[1] ].pcType;
@@ -228,13 +218,13 @@ const App = (props) => {
                         if ( x > 0 &&
                             boardMap[y][x-1].pcType === Pieces.PAWN &&
                             boardMap[y][x-1].pcOwner === Players.WHITE){        // grants adjacent enemy pawns
-                            boardMap[y][x-1].canEpRight = true;                 // up-right en-passant
+                            boardMap[y][x-1].canEpLeft = true;                 // up-right en-passant
                         }
 
                         if ( x < 7 &&
                             boardMap[y][x+1].pcType === Pieces.PAWN &&          // grants adjacent enemy pawns
                             boardMap[y][x+1].pcOwner === Players.WHITE){        // up-left en-passant
-                            boardMap[y][x+1].canEpLeft = true;
+                            boardMap[y][x+1].canEpRight = true;
                         }
                     }
 
@@ -256,12 +246,12 @@ const App = (props) => {
                         if ( x > 0 &&
                             boardMap[y][x-1].pcType === Pieces.PAWN &&
                             boardMap[y][x-1].pcOwner === Players.BLACK){
-                            boardMap[y][x-1].canEpRight = true;
+                            boardMap[y][x-1].canEpLeft = true;
                         }
                         if ( x < 7 &&
                             boardMap[y][x+1].pcType === Pieces.PAWN &&
                             boardMap[y][x+1].pcOwner === Players.BLACK){
-                            boardMap[y][x+1].canEpLeft = true;
+                            boardMap[y][x+1].canEpRight = true;
                         }
                     }
                     else if ( boardMap[y+1][x].isCapturable ) {
@@ -375,6 +365,7 @@ const App = (props) => {
 
         // adds the given piece to the dungeon
         function addToDungeon (y, x) {
+
             let node = document.createElement("img");
             let parameters = {
                 isTheme: getTheme,
@@ -401,7 +392,17 @@ const App = (props) => {
                 setDungeonWhite(own);
                 setDungeonWhiteTypes(type);
             }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  COMMENT OUT THIS LINE FOR TESTING  /////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             dungeon.appendChild(node);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         }
 
         // CLEARS HIGHLIGHTING for all squares in the highlight list
@@ -462,8 +463,8 @@ const App = (props) => {
         function clearBlackEP(){
             for ( let i = 0; i < boardData.blackPieces.length; i++ ){
                 if ( boardMap[ boardData.blackPieces[i].y][ boardData.blackPieces[i].x ].pcType === Pieces.PAWN ) {
-                    boardMap[ boardData.blackPieces[i].y ][ boardData.blackPieces[i].x ].canEpRight = false;
                     boardMap[ boardData.blackPieces[i].y ][ boardData.blackPieces[i].x ].canEpLeft = false;
+                    boardMap[ boardData.blackPieces[i].y ][ boardData.blackPieces[i].x ].canEpRight = false;
                 }
             }
         }
@@ -472,8 +473,8 @@ const App = (props) => {
         function clearWhiteEP(){
             for ( let i = 0; i < boardData.whitePieces.length; i++ ){
                 if ( boardMap[ boardData.whitePieces[i].y][ boardData.whitePieces[i].x ].pcType === Pieces.PAWN ) {
-                    boardMap[ boardData.whitePieces[i].y ][ boardData.whitePieces[i].x ].canEpRight = false;
                     boardMap[ boardData.whitePieces[i].y ][ boardData.whitePieces[i].x ].canEpLeft = false;
+                    boardMap[ boardData.whitePieces[i].y ][ boardData.whitePieces[i].x ].canEpRight = false;
                 }
             }
         }
@@ -1245,25 +1246,25 @@ const App = (props) => {
                 // if you're white and CANNOT en-passant...
                 // AND there is NOT a black piece to your diagonal, then discard this move
                 if ((pawnOwner === Players.WHITE && boardMap[move.y][move.x].pcOwner !== Players.BLACK) &&
-                    ((boardMap[y][x].canEpRight === false && move.x === x+1) ||
-                     (boardMap[y][x].canEpLeft === false && move.x === x-1))){
+                    ((boardMap[y][x].canEpLeft === false && move.x === x+1) ||
+                     (boardMap[y][x].canEpRight === false && move.x === x-1))){
                         continue;
                 }
 
                 // if you're black and CANNOT en-passant...
                 // AND there is NOT an enemy piece to your diagonal, then discard this move
                 if ((pawnOwner === Players.BLACK && boardMap[move.y][move.x].pcOwner !== Players.WHITE) &&
-                     ((boardMap[y][x].canEpRight === false && move.x === x+1) ||
-                      (boardMap[y][x].canEpLeft === false && move.x === x-1))){
+                     ((boardMap[y][x].canEpLeft === false && move.x === x+1) ||
+                      (boardMap[y][x].canEpRight === false && move.x === x-1))){
                         continue;
                 }
 
                 // adds capturable flag to en-passant moves, if any
-                if (boardMap[y][x].canEpRight === true && move.x === x+1) {
+                if (boardMap[y][x].canEpLeft === true && move.x === x+1) {
                     move.hasCapturable = true;
                     move.capX = x+1;
                 }
-                else if (boardMap[y][x].canEpLeft === true && move.x === x-1) {
+                else if (boardMap[y][x].canEpRight === true && move.x === x-1) {
                     move.hasCapturable = true;
                     move.capX = x-1;
                 }

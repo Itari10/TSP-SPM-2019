@@ -91,6 +91,12 @@ const App = (props) => {
                     case Players.BLACK:   return  "Dogs";
                 }
             }
+            case Themes.POKEMON: {
+                switch ( currentPlayer ) {
+                    case Players.WHITE:   return    "Mewtwo";
+                    case Players.BLACK:   return    "Mew";
+                }
+            }
         }
     };
 

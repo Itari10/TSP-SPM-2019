@@ -93,6 +93,14 @@ const PlayerBox = (props) => {
                     case "2":   return  "Cats";
                 }
             }
+            case Themes.POKEMON: {
+                switch (props.playerNumber) {
+                    case "1":
+                        return "Mew";
+                    case "2":
+                        return "Mewtwo";
+                }
+            }
         }
     }
 };

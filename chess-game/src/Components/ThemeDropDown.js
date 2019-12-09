@@ -15,6 +15,8 @@ import {determineImage, Themes} from "./Square"
     3. add switch case for those files in determineImage() in Square.js
     4. add enum for it in Square.js
     5. add theme in themeOptions below
+    6. add switch case for determineTitle in PlayerBox.js
+    7. add switch case for winnerTitle in App.js
  */
 
 const ThemeDropDown = (props) => {
@@ -57,6 +59,10 @@ const ThemeDropDown = (props) => {
         {
             text: "Dogs vs Cats",
             value: Themes.DOGSandCATS
+        },
+        {
+            text: "Pokemon",
+            value: Themes.POKEMON
         }
     ];
 

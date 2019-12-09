@@ -2,6 +2,7 @@ import React from 'react';
 import '../Style/PlayerBox.css';
 import Timer from './Timer';
 import SurrenderButton from './SurrenderButton';
+import {Themes} from "./Square"
 
 
 const PlayerBox = (props) => {
@@ -58,7 +59,7 @@ const PlayerBox = (props) => {
 
     // determines the displayed heading of the PlayerBox based on states
     function determineHeading(){
-        let player = props.playerTitle;
+        let player = determineTitle();
 
         // these conditions will never be true at the same time
         let checkMate = (props.checkMate ? ": CHECKMATE" : "");
@@ -75,6 +76,24 @@ const PlayerBox = (props) => {
         }
 
         return player + checkMate + staleMate + check
+    }
+
+    //determines the playerTitle
+    function determineTitle() {
+        switch ( props.theme ) {
+            case Themes.TRADITIONAL: {
+                switch ( props.playerNumber ) {
+                    case "1":   return  "White";
+                    case "2":   return  "Black";
+                }
+            }
+            case Themes.DOGSandCATS: {
+                switch ( props.playerNumber ) {
+                    case "1":   return  "Dogs";
+                    case "2":   return  "Cats";
+                }
+            }
+        }
     }
 };
 

@@ -76,6 +76,24 @@ const App = (props) => {
         setUpdateBoard( ! updateBoard );
     };
 
+    // determines the text for the winner on the end game screen
+    function winnerTitle() {
+        switch ( getTheme ) {
+            case Themes.TRADITIONAL: {
+                switch ( currentPlayer ) {
+                    case Players.WHITE:   return  "Black";
+                    case Players.BLACK:   return  "White";
+                }
+            }
+            case Themes.DOGSandCATS: {
+                switch ( currentPlayer ) {
+                    case Players.WHITE:   return  "Cats";
+                    case Players.BLACK:   return  "Dogs";
+                }
+            }
+        }
+    };
+
     // calls squareClicked() with a special flag that
     // alters the method that a piece promotion just happened
     const doPromotion = (chosenPiece) => {
@@ -1464,7 +1482,6 @@ const App = (props) => {
             <div className="row">
                 <div className="col-sm-4">
                     <PlayerBox
-                        playerTitle =       "BLACK"
                         isTurn =            {currentPlayer === Players.BLACK}
                         triggerGameOver =   {endGame}
                         inCheck =           {boardState[7][8].blackCheck}
@@ -1472,10 +1489,10 @@ const App = (props) => {
                         staleMate =         {boardState[7][8].blackStaleMate}
                         playerNumber =      {"2"}
                         isEndGame =         {boardState[7][8].isGameOver}
+                        theme =             {getTheme}
                     />
                     <div className="spacer"/>
                     <PlayerBox
-                        playerTitle =       "WHITE"
                         isTurn =            {currentPlayer === Players.WHITE}
                         triggerGameOver =   {endGame}
                         inCheck =           {boardState[7][8].whiteCheck}
@@ -1483,6 +1500,7 @@ const App = (props) => {
                         staleMate =         {boardState[7][8].whiteStaleMate}
                         playerNumber =      {"1"}
                         isEndGame =         {boardState[7][8].isGameOver}
+                        theme =             {getTheme}
                     />
                 </div>
                 <div className="col-sm-8">
@@ -1495,7 +1513,7 @@ const App = (props) => {
             </div>
             {   boardState[7][8].isGameOver &&
                 ( ! boardState[7][8].blackStaleMate && ! boardState[7][8].whiteStaleMate) &&
-            <EndGameScreen winner={(currentPlayer === 2) ? "White" : "Black"} />
+            <EndGameScreen winner={winnerTitle()} />
             }
             {promoteInProgress &&
             <PromotionScreen isTheme={getTheme} pcOwner={(currentPlayer === Players.WHITE) ? Players.WHITE : Players.BLACK} update={doPromotion} />

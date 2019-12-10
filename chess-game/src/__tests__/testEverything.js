@@ -50,7 +50,11 @@ describe('APP STRUCTURE', () => {
     test('renders without crashing', () => {
 
         // this test WILL fail if <App /> doesn't render
-        app = shallow(<App />);
+        app = shallow(
+            <App
+                test = {true}
+            />
+            );
     });
 
     test('loads the Board component', () => {
@@ -71,7 +75,7 @@ describe('APP STRUCTURE', () => {
 // BOARD TESTS
 describe('BOARD STRUCTURE', () => {
 
-    let app = mount(<App />);       // wrapper for the App Component
+    let app = mount(<App test = {true} />);       // wrapper for the App Component
     let board = null;               // wrapper for the Board Component
     let boardDiv = null;            // wrapper for the actual board div inside Board Component
 
@@ -141,7 +145,7 @@ describe('BOARD STRUCTURE', () => {
 
 // BOARD SETUP TESTS
 describe('GAME SETUP', () => {
-    let app = mount(<App />);                       // wrapper for the App Component
+    let app = mount(<App test = {true} />);                       // wrapper for the App Component
     let board = app.find('Board');                  // wrapper for the Board Component
     let boardDiv = board.find('div.board');         // wrapper for the actual board div inside Board Component
 
@@ -282,7 +286,7 @@ describe('BASIC GAME-STATE TESTS', () => {
     let boardDiv = null;        // wrapper for the actual board div inside Board Component
     let button = null;          // wrapper for button to click
 
-    app = mount(<App />);
+    app = mount(<App test = {true} />);
     board = app.find('Board');
     boardDiv = board.find('div.board');
 
@@ -397,7 +401,7 @@ describe('BASIC GAME-STATE TESTS', () => {
 // FIRST GAME SIMULATION
 describe('GAME SIMULATION 1', () => {
 
-    let app = mount(<App />);
+    let app = mount(<App test = {true} />);
     let board = app.find('Board');
     let boardDiv = board.find('div.board');
     let button = null;
@@ -449,7 +453,7 @@ describe('GAME SIMULATION 1', () => {
 // SECOND GAME SIMULATION
 describe('GAME SIMULATION 2', () => {
 
-    let app = mount(<App />);
+    let app = mount(<App test = {true} />);
     let board = app.find('Board');
     let boardDiv = board.find('div.board');
     let button = null;
@@ -593,7 +597,7 @@ describe('GAME SIMULATION 2', () => {
 // THIRD GAME SIMULATION
 describe('GAME SIMULATION 3', () => {
 
-    let app = mount(<App />);
+    let app = mount(<App test = {true} />);
     let board = app.find('Board');
     let boardDiv = board.find('div.board');
     let button = null;

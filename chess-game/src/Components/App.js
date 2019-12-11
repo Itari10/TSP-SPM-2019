@@ -39,14 +39,14 @@ const App = (props) => {
     // REMEMBER: These states CANNOT be changed without using the corresponding SET methods.
     // Attempting to set them manually will NOT result in errors, but WILL cause unintended buggy behavior
     const [boardState, setBoardState] =             React.useState( initializeBoard( 0 ) );
-    const [currentPlayer, setCurrentPlayer] =       React.useState( Players.WHITE );        // the current player
+    const [currentPlayer, setCurrentPlayer] =       React.useState( Players.WHITE );                  // the current player
     const [updateBoard, setUpdateBoard] =           React.useState( true );                 // call setUpdateBoard() to re-render
     const [selectedSquare, setSelectedSquare] =     React.useState( [-1,-1] );              // [-1,-1] means "NOTHING SELECTED"
     const [highlightedSquares, setHighlights] =     React.useState( [] );                   // currently highlighted squares
     const [capturableSquares, setCapturables] =     React.useState( [] );                   // squares that can be captured by en-passant
     const [castleRooks, setCastleRooks] =           React.useState( [] );                   // rooks that can castle
+    const [getTheme, setTheme] =                    React.useState( Themes.TRADITIONAL );             // the current theme
     const [promoteInProgress, setPromote] =         React.useState( false );                // is there a promotion in progress
-    const [getTheme, setTheme] =                    React.useState( Themes.TRADITIONAL );   // the current theme
     const [promotionPiece, setPromoPiece] =         React.useState( [0,0] );
 
     // used to help with theme switching with the dungeon

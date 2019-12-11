@@ -17,6 +17,7 @@ import {determineImage, Themes} from "./Square"
     5. add theme in themeOptions below
     6. add switch case for determineTitle in PlayerBox.js
     7. add switch case for winnerTitle in App.js
+    8. add switch cases for the color functions in Square.js for changing determining the color of the board
  */
 
 const ThemeDropDown = (props) => {

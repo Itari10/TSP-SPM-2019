@@ -109,13 +109,31 @@ const Square = (props) => {
     );
 };
 
+// Functions that determines themes colors for the board
+function color1(x) {
+    switch(x) {
+        case Themes.TRADITIONAL: return '#ffddca';
+        case Themes.DOGSandCATS: return '#d9d9d9';
+        case Themes.POKEMON: return '#6e6e6e';
+        case Themes.RWBY: return '#c282ff';
+    }
+}
+function color2(x) {
+    switch(x) {
+        case Themes.TRADITIONAL: return '#d9a989';
+        case Themes.DOGSandCATS: return '#a3a8ff';
+        case Themes.POKEMON: return '#470000';
+        case Themes.RWBY: return '#5400a3';
+    }
+}
+
 // ADD THIS LINE INSIDE THE BUTTON FOR COORDINATES
 //             {props.y + ',' + props.x}
 
 // sets the background color of the Square based on its properties
 function determineBG(props){
     if ( props.isSelected ) {
-        return '#aae7ff';
+            return '#aae7ff';
     }
     if ( props.isHighlighted ){
         if ( props.defaultColor === '#d9a989' )
@@ -129,7 +147,12 @@ function determineBG(props){
     // if ( props.isCapturable ){       // highlights pieces capturable by en-passant
     //     return '#c184a2';            // in red during move selection
     // }
-    return props.defaultColor;
+    //return props.defaultColor;
+    if ( props.defaultColor === '#d9a989' ) {
+        return color1(props.isTheme);
+    } else {
+        return color2(props.isTheme);
+    }
 }
 
 // sets the piece image on the Square based on its properties

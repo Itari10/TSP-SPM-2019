@@ -97,6 +97,12 @@ const App = (props) => {
                     case Players.BLACK:   return    "Mew";
                 }
             }
+            case Themes.RWBY: {
+                switch ( currentPlayer ) {
+                    case Players.WHITE:   return    "Dark";
+                    case Players.BLACK:   return    "Light";
+                }
+            }
         }
     };
 

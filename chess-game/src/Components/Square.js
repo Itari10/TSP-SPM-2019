@@ -52,11 +52,28 @@ import blackQueen2 from "../Assets/PokemonTheme/blackQueen2.png";
 import blackPawn2 from "../Assets/PokemonTheme/blackPawn2.png";
 import blackPawnFaded2 from "../Assets/PokemonTheme/blackPawnFaded2.png";
 
+//RWBY Theme
+import whiteRook3 from "../Assets/RWBYTheme/whiteRook3.png";
+import whiteKnight3 from "../Assets/RWBYTheme/whiteKnight3.png";
+import whiteBishop3 from "../Assets/RWBYTheme/whiteBishop3.png";
+import whiteKing3 from "../Assets/RWBYTheme/whiteKing3.png";
+import whiteQueen3 from "../Assets/RWBYTheme/whiteQueen3.png";
+import whitePawn3 from "../Assets/RWBYTheme/whitePawn3.png";
+import whitePawnFaded3 from "../Assets/RWBYTheme/whitePawnFaded3.png";
+import blackRook3 from "../Assets/RWBYTheme/blackRook3.png";
+import blackKnight3 from "../Assets/RWBYTheme/blackKnight3.png";
+import blackBishop3 from "../Assets/RWBYTheme/blackBishop3.png";
+import blackKing3 from "../Assets/RWBYTheme/blackKing3.png";
+import blackQueen3 from "../Assets/RWBYTheme/blackQueen3.png";
+import blackPawn3 from "../Assets/RWBYTheme/blackPawn3.png";
+import blackPawnFaded3 from "../Assets/RWBYTheme/blackPawnFaded3.png";
+
 // themes enum
 export const Themes = {
     TRADITIONAL: 0,
     DOGSandCATS: 1,
-    POKEMON: 2
+    POKEMON: 2,
+    RWBY: 3
 };
 
 /** Properties you can access through props
@@ -206,6 +223,38 @@ export function determineImage( props ){
                         case Pieces.BISHOP: return blackBishop2;
                         case Pieces.QUEEN:  return blackQueen2;
                         case Pieces.KING:   return blackKing2;
+                        case Pieces.EMPTY:  return null;
+                        default:            return error;
+                    }
+                }
+                case Players.NONE :
+                default:                return null;        // empty spaces
+            }
+        }
+
+        // RWBY
+        case Themes.RWBY: {
+            switch (props.ownedBy) {
+                case Players.WHITE: {
+                    switch (props.pieceType) {
+                        case Pieces.ROOK:   return whiteRook3;
+                        case Pieces.PAWN:   return (props.isCapturable ? whitePawnFaded3 : whitePawn3);
+                        case Pieces.KNIGHT: return whiteKnight3;
+                        case Pieces.BISHOP: return whiteBishop3;
+                        case Pieces.QUEEN:  return whiteQueen3;
+                        case Pieces.KING:   return whiteKing3;
+                        case Pieces.EMPTY:  return null;
+                        default:            return error;
+                    }
+                }
+                case Players.BLACK: {
+                    switch (props.pieceType) {
+                        case Pieces.ROOK:   return blackRook3;
+                        case Pieces.PAWN:   return (props.isCapturable ? blackPawnFaded3 : blackPawn3);
+                        case Pieces.KNIGHT: return blackKnight3;
+                        case Pieces.BISHOP: return blackBishop3;
+                        case Pieces.QUEEN:  return blackQueen3;
+                        case Pieces.KING:   return blackKing3;
                         case Pieces.EMPTY:  return null;
                         default:            return error;
                     }

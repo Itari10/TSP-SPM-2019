@@ -63,6 +63,10 @@ const ThemeDropDown = (props) => {
         {
             text: "Pokemon",
             value: Themes.POKEMON
+        },
+        {
+            text: "RWBY",
+            value: Themes.RWBY
         }
     ];
 

@@ -109,6 +109,9 @@ const Square = (props) => {
     );
 };
 
+// ADD THIS LINE INSIDE THE BUTTON TO SHOW COORDINATES
+//             {props.y + ',' + props.x}
+
 // Functions that determines themes colors for the board
 function color1(x) {
     switch(x) {
@@ -126,9 +129,6 @@ function color2(x) {
         case Themes.RWBY: return '#5400a3';
     }
 }
-
-// ADD THIS LINE INSIDE THE BUTTON FOR COORDINATES
-//             {props.y + ',' + props.x}
 
 // sets the background color of the Square based on its properties
 function determineBG(props){

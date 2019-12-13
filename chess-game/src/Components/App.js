@@ -287,7 +287,7 @@ const App = (props) => {
                 // RIGHT-CASTLING
                 if ( x === selectedSquare[1] + 2 ){
                     boardMap[ selectedSquare[0] ][ 7 ].pcType = Pieces.EMPTY;
-                    boardMap[ selectedSquare[0] ][ 7 ].pcOwner = Pieces.NONE;
+                    boardMap[ selectedSquare[0] ][ 7 ].pcOwner = Players.NONE;
                     boardMap[ selectedSquare[0] ][ 5 ].pcType = Pieces.ROOK;
                     boardMap[ selectedSquare[0] ][ 5 ].pcOwner = currentPlayer;
                     boardMap[ selectedSquare[0] ][ 5 ].hasMoved = true;
@@ -299,7 +299,7 @@ const App = (props) => {
                 // LEFT-CASTLING
                 else if ( x === selectedSquare[1] - 2 ){
                     boardMap[ selectedSquare[0] ][ 0 ].pcType = Pieces.EMPTY;
-                    boardMap[ selectedSquare[0] ][ 0 ].pcOwner = Pieces.NONE;
+                    boardMap[ selectedSquare[0] ][ 0 ].pcOwner = Players.NONE;
                     boardMap[ selectedSquare[0] ][ 3 ].pcType = Pieces.ROOK;
                     boardMap[ selectedSquare[0] ][ 3 ].pcOwner = currentPlayer;
                     boardMap[ selectedSquare[0] ][ 3 ].hasMoved = true;

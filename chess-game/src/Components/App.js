@@ -349,6 +349,8 @@ const App = (props) => {
                 ( ! boardData.blackCheck && ! blackCanMove )){
                 boardData.whiteStaleMate = true;
                 boardData.blackStaleMate = true;
+                boardData.isGameOver = true;
+                endGame();
             }
 
             // determines DRAW status
@@ -1517,7 +1519,7 @@ const App = (props) => {
                 </div>
             </div>
             {   boardState[7][8].isGameOver &&
-                ( ! boardState[7][8].blackStaleMate && ! boardState[7][8].whiteStaleMate) &&
+
             <EndGameScreen winner=      {winnerTitle()}
                            blackMate=   {boardState[7][8].blackCheckMate}
                            whiteMate=   {boardState[7][8].whiteCheckMate}/>

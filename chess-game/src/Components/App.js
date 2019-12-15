@@ -1522,7 +1522,8 @@ const App = (props) => {
 
             <EndGameScreen winner=      {winnerTitle()}
                            blackMate=   {boardState[7][8].blackCheckMate}
-                           whiteMate=   {boardState[7][8].whiteCheckMate}/>
+                           whiteMate=   {boardState[7][8].whiteCheckMate}
+                           staleMate=   {boardState[7][8].whiteStaleMate} />
             }
             {promoteInProgress &&
             <PromotionScreen isTheme=   {getTheme}

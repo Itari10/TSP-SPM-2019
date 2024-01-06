@@ -68,7 +68,7 @@ const ThemeDropDown = (props) => {
 
     //renders dropdown
     return (
-        <div>
+        <div style={{alignItems: 'end', display: 'flex'}}>
             <Dropdown
                 placeholder='THEME SELECTOR'
                 selection

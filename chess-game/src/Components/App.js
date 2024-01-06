@@ -1469,14 +1469,11 @@ const App = (props) => {
         }
     };
 
-
     // renders the game
     return (
         <div className="App">
-            <div className="Header">
-                <h1>CHESS</h1>
-            </div>
-            <div className="col-sm-4">
+
+            <div className="row" style={{margin: '0 0 10px 20px'}}>
                 <ThemeDropDown
                     theme={getTheme}
                     setFunc={swapTheme}
@@ -1485,6 +1482,17 @@ const App = (props) => {
                     dwOwners={dungeonWhite}
                     dwTypes={dungeonWhiteTypes}
                 />
+                <div style={{width: '80%'}}>
+                    <div className="Header" >
+                        {"React Chess"}
+                    </div>
+                    <div className="SubTitle" >
+                        {"Created by team \"Pawn Stars\" of MTU's 2019 \"Team Software Project\":"}
+                    </div>
+                    <div className="SubTitle2" >
+                        {"Joe Kurtz, Nick McCarter, Justin Martin, and Caleb Melnychenko"}
+                    </div>
+                </div>
             </div>
             <div className="row">
                 <div className="col-sm-4">

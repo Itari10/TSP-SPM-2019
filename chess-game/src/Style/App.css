@@ -9,19 +9,34 @@ body {
 }
 .Header {
   text-align: center;
-  text-shadow: -2px -2px #a7384b;
-  color: red;
-  font-size: 30px;
+  text-shadow: -2px -2px #1f1f1f;
+  color: rgb(163, 163, 163);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bold;
+  font-size: 45px;
+  padding-top: 15px;
 }
-h1 {
-  padding-top: 10px;
-  margin-block-start: 0;
-  font-size: 40px;
+.SubTitle {
+  /* max-width: 450px; */
+  height: auto;
+  margin: 15px auto 0px auto;
+  padding: 5px;
+
+  text-align: center;
+  text-shadow: -1px -1px #1f1f1f;
+  color: rgb(124, 124, 124);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 18px;
 }
-h2 {
-  padding-top: 10px;
-  margin-block-start: 0;
-  font-size: 25px;
+.SubTitle2 {
+  /* max-width: 450px; */
+  margin: 0 auto;
+  text-align: center;
+  text-shadow: -1px -1px #1f1f1f;
+  color: rgb(221, 199, 0);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bold;
+  font-size: 15px;
 }
 button:focus {
   outline: none;

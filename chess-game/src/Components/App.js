@@ -45,8 +45,8 @@ const App = (props) => {
     const [highlightedSquares, setHighlights] =     React.useState( [] );                   // currently highlighted squares
     const [capturableSquares, setCapturables] =     React.useState( [] );                   // squares that can be captured by en-passant
     const [castleRooks, setCastleRooks] =           React.useState( [] );                   // rooks that can castle
-    const [promoteInProgress, setPromote] =         React.useState( false );                // is there a promotion in progress
     const [getTheme, setTheme] =                    React.useState( Themes.TRADITIONAL );   // the current theme
+    const [promoteInProgress, setPromote] =         React.useState( false );                // is there a promotion in progress
     const [promotionPiece, setPromoPiece] =         React.useState( [0,0] );
 
     // used to help with theme switching with the dungeon
@@ -95,6 +95,12 @@ const App = (props) => {
                 switch ( currentPlayer ) {
                     case Players.WHITE:   return    "Mewtwo";
                     case Players.BLACK:   return    "Mew";
+                }
+            }
+            case Themes.RWBY: {
+                switch ( currentPlayer ) {
+                    case Players.WHITE:   return    "Dark";
+                    case Players.BLACK:   return    "Light";
                 }
             }
         }
@@ -281,7 +287,7 @@ const App = (props) => {
                 // RIGHT-CASTLING
                 if ( x === selectedSquare[1] + 2 ){
                     boardMap[ selectedSquare[0] ][ 7 ].pcType = Pieces.EMPTY;
-                    boardMap[ selectedSquare[0] ][ 7 ].pcOwner = Pieces.NONE;
+                    boardMap[ selectedSquare[0] ][ 7 ].pcOwner = Players.NONE;
                     boardMap[ selectedSquare[0] ][ 5 ].pcType = Pieces.ROOK;
                     boardMap[ selectedSquare[0] ][ 5 ].pcOwner = currentPlayer;
                     boardMap[ selectedSquare[0] ][ 5 ].hasMoved = true;
@@ -293,7 +299,7 @@ const App = (props) => {
                 // LEFT-CASTLING
                 else if ( x === selectedSquare[1] - 2 ){
                     boardMap[ selectedSquare[0] ][ 0 ].pcType = Pieces.EMPTY;
-                    boardMap[ selectedSquare[0] ][ 0 ].pcOwner = Pieces.NONE;
+                    boardMap[ selectedSquare[0] ][ 0 ].pcOwner = Players.NONE;
                     boardMap[ selectedSquare[0] ][ 3 ].pcType = Pieces.ROOK;
                     boardMap[ selectedSquare[0] ][ 3 ].pcOwner = currentPlayer;
                     boardMap[ selectedSquare[0] ][ 3 ].hasMoved = true;
@@ -324,12 +330,12 @@ const App = (props) => {
 
             // calculates check, checkmate and stalemate conditions for the next player
             if ( currentPlayer === Players.WHITE ){
-                blackCanMove = canBlackMove();
                 boardData.blackCheck = ! squareIsSafe( boardData.bKingY, boardData.bKingX );
+                blackCanMove = canBlackMove();               
             }
             else if ( currentPlayer === Players.BLACK ){
-                whiteCanMove = canWhiteMove();
                 boardData.whiteCheck = ! squareIsSafe( boardData.wKingY, boardData.wKingX );
+                whiteCanMove = canWhiteMove();                
             }
 
             // determines CHECKMATE status
@@ -343,6 +349,8 @@ const App = (props) => {
                 ( ! boardData.blackCheck && ! blackCanMove )){
                 boardData.whiteStaleMate = true;
                 boardData.blackStaleMate = true;
+                boardData.isGameOver = true;
+                endGame();
             }
 
             // determines DRAW status
@@ -392,16 +400,8 @@ const App = (props) => {
                 setDungeonWhite(own);
                 setDungeonWhiteTypes(type);
             }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  COMMENT OUT THIS LINE FOR TESTING  /////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        if (!props.test)
             dungeon.appendChild(node);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         }
 
@@ -1527,10 +1527,11 @@ const App = (props) => {
                 </div>
             </div>
             {   boardState[7][8].isGameOver &&
-                ( ! boardState[7][8].blackStaleMate && ! boardState[7][8].whiteStaleMate) &&
+
             <EndGameScreen winner=      {winnerTitle()}
                            blackMate=   {boardState[7][8].blackCheckMate}
-                           whiteMate=   {boardState[7][8].whiteCheckMate}/>
+                           whiteMate=   {boardState[7][8].whiteCheckMate}
+                           staleMate=   {boardState[7][8].whiteStaleMate} />
             }
             {promoteInProgress &&
             <PromotionScreen isTheme=   {getTheme}

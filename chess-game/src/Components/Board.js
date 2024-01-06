@@ -1,5 +1,6 @@
 import React from 'react';
 import Square from './Square';
+import {Themes} from './Square';
 
 // class used as a container to hold piece info
 class Piece{
@@ -135,7 +136,7 @@ const Board = (props) => {
 // Performs the initial first-time board creation
 // when the game starts. Fills an [8][8] array with
 // Piece objects containing starting-state of a chessboard
-export function initializeBoard( mode ){
+export function initializeBoard( mode, theme ){
 
     // creates an [8][8] of nulls
     let defaultBoard = new Array(8);

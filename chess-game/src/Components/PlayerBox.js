@@ -101,6 +101,14 @@ const PlayerBox = (props) => {
                         return "Mewtwo";
                 }
             }
+            case Themes.RWBY: {
+                switch (props.playerNumber) {
+                    case "1":
+                        return "Light";
+                    case "2":
+                        return "Dark";
+                }
+            }
         }
     }
 };

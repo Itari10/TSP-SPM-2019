@@ -4,7 +4,7 @@ import '../Style/EndGame.css'
 const EndGameScreen = (props) => {
     return (
         <div className={determineBoxLocation()}>
-            <h1>{props.winner} Wins!</h1>
+            <h1>{determineHeadingText()}</h1>
             <button
                 className=  "resetButton"
                 onClick=    {()=>{window.location.reload()}}
@@ -24,6 +24,13 @@ const EndGameScreen = (props) => {
             return "endGameScreenBlackWins";
         else
             return "endGameScreenBlackWins";
+    }
+
+    function determineHeadingText(){
+        if ( ! props.staleMate )
+            return props.winner + "Wins!";
+        else
+            return "Stalemate!"
     }
 };
 
